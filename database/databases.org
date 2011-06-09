@@ -1,0 +1,41 @@
+* Reference databases
+
+  Apart from the [[http://www.stackoverflow.com][Stackoverflow]] clones no system provides esteem / rating points.
+
+** CiteSeerX
+   - Publication management system.
+   - Multiple databases:
+        - citeseerx: stores main information for publications
+        - myciteseerx: stores personal information about a contributor / author
+        - csxcitegraph: stores citations
+   - No tables for role-based access?
+
+** Open Journal System
+   - No SQL-file to create data model: only xml representation.
+   - For easier reference: [[http://pkp.sfu.ca/ojs/docs/technicalreference/2.1/designOverviewDatabaseDesign.html][OJS Online]]
+   - No tables for role-based access?
+
+** Stackoverflow clones
+   - Need to analyse clones as original application is not open source.
+        - Only information is early release of data model: [[http://sqlserverpedia.com/wiki/Understanding_the_StackOverflow_Database_Schema][Schema Stackoverflow]]
+*** OSQA
+    - Python based stackoverflow clone [[http://www.osqa.net/][OSQA]]
+
+*** Shapado
+    - Ruby based stackoverflow clone [[http://shapado.com/][Shapado]]
+
+*** Reddit
+    - Vote-based news-aggregator [[http://www.reddit.com/][reddit]]
+    - Reddit is open source: [[https://github.com/reddit/reddit/wiki][Github repo]]
+    - Written mainly in python.
+    - Reddit is grand-scale, distributed application hosted on amazon AWS service: over 8.000.000 unique visitors a day.
+
+*** Digg
+    - Resembles reddit [[http://www.digg.com][Digg]]
+    - Written mainly in PHP
+
+** RBAC (Role-based access)
+   Use role-based access that is implemented in a framework?
+   - [[http://pypi.python.org/pypi/django-rbac/0.9][Django]]
+   - [[http://www.web2py.com/book/default/chapter/08][web2py]]
+   - [[http://active-rbac.rubyforge.org/][Rails]]

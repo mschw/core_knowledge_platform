@@ -1,0 +1,554 @@
+12:43:22 [   Info][      wbprivate]: WbContext::init
+12:43:24 [   Info][     grt.python]: Traceback (most recent call last):
+
+12:43:24 [   Info][     grt.python]:   File "/usr/lib/mysql-workbench/modules/wb_utils_grt.py", line 119, in <module>
+
+12:43:24 [   Info][     grt.python]:     
+12:43:24 [   Info][     grt.python]: if [int(i) for i in pyversion.split(" ")[1].strip().split(".")] < [2, 6, 0]:
+
+12:43:24 [   Info][     grt.python]: ValueError
+12:43:24 [   Info][     grt.python]: : 
+12:43:24 [   Info][     grt.python]: invalid literal for int() with base 10: '1+'
+12:43:24 [   Info][     grt.python]: 
+
+12:43:24 [   Info][         (null)]: Failed loading module '/usr/lib/mysql-workbench/modules/wb_utils_grt.py' (python)
+12:43:25 [   Info][     grt.python]: Ready.
+
+12:43:25 [   Info][     grt.python]: 
+
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:26 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:27 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:34 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:41 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:43:45 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:00 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2ce6710
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2ce31c0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2ce3650
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2ce5dd0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2ce5850
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2cfff60
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2cfffe0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2ce8530
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2d024c0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:02 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Default)' does not have CheckMenuItem at 0x2b3b180
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'Workbench (Simplified)' does not have CheckMenuItem at 0x2b543f0
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b3cb40
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2998da0
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'Crow's Foot (IE)' does not have CheckMenuItem at 0x2b53030
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'Classic' does not have CheckMenuItem at 0x2b382a0
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'Connect to Columns' does not have CheckMenuItem at 0x2b37ba0
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'UML' does not have CheckMenuItem at 0x2b37ce0
+12:44:04 [  Error][   mforms.linux]: Passed MenuItem 'IDEF1X' does not have CheckMenuItem at 0x2b53220
+13:36:06 [   Info][     grt.python]: SystemError
+13:36:06 [   Info][     grt.python]: : 
+13:36:06 [   Info][     grt.python]: null argument to internal routine
+13:36:06 [   Info][     grt.python]: 
+
