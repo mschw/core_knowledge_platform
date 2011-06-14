@@ -1,0 +1,5 @@
+# Using glob syntax
+syntax: glob
+
+# Ignore compiled python files:
+*.pyc
