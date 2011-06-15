@@ -45,18 +45,34 @@ class Rating(models.Model):
     rating = models.DecimalField()
 
 class Publication(models.Model):
-    """Abstract base class for concrete publication types."""
-    title = models.CharField(max_length=255)
-    citation_count = models.IntegerField()
+    """Class to store publication metadata in the system."""
+    address          = models.CharField(max_length = 255, blank = True)
+    booktitle        = models.CharField(max_length = 255, blank = True)
+    chapter          = models.CharField(max_length = 255, blank = True)
+    edition          = models.CharField(max_length = 255, blank = True)
+    editor           = models.CharField(max_length = 255, blank = True)
+    how_published    = models.CharField(max_length = 255, blank = True)
+    institution      = models.CharField(max_length = 255, blank = True)
+    journal          = models.CharField(max_length = 255, blank = True)
+    number           = models.CharField(max_length = 255, blank = True)
+    organization     = models.CharField(max_length = 255, blank = True)
+    pages            = models.CharField(max_length = 255, blank = True)
+    publisher        = models.CharField(max_length = 255, blank = True)
+    series           = models.CharField(max_length = 255, blank = True)
+    publication_type = models.CharField(max_length = 255, blank = True)
+    volume           = models.CharField(max_length = 255, blank = True)
+    citation_count   = models.IntegerField(blank   = True)
+    title            = models.CharField(max_length = 255)
+    month            = models.CharField(max_length = 255, blank = True)
+    note             = models.TextField(blank      = True)
+    year             = models.IntegerField(blank   = True)
     # TODO: check how to reference integrated user subsystem
-    # owner = models.ForeignKey(User)
-    authors = models.ManyToManyField(Author)
-    comments = models.ManyToManyField(Comment)
-    tags = models.ManyToManyField(Tag)
-    rating = models.ForeignKey(Rating)
+    owner        = models.ForeignKey(User)
+    authors      = models.ManyToManyField(Author)
+    comments     = models.ManyToManyField(Comment)
+    tags         = models.ManyToManyField(Tag)
+    rating       = models.ForeignKey(Rating)
     peer_reviews = models.ForeignKey(PeerReview)
-    class Meta(object):
-        abstract = True
 
 class ReferenceMaterial(models.Model):
     """Represents a reference to special material associated with a publications.
@@ -66,4 +82,3 @@ class ReferenceMaterial(models.Model):
     url = models.URLField()
     notes = models.TextField()
 
-        
