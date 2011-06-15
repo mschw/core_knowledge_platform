@@ -1,11 +1,11 @@
 from django.db import models
-from django.contrib.auth import User
+from django.contrib.auth.models import User
 
 # Publication related classes
 
 class Author(models.Model):
     """Represents an author in the model.
-    Authors are not equal to users."""
+    Authors are not equal to Users."""
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
@@ -28,9 +28,9 @@ class Comment(models.Model):
     vote = models.ForeignKey(Vote)
 
 class Esteem(models.Model):
-    """Represents the esteem a user can obtain.
-    Esteem is tied to a user and a specific tag."""
-    user = models.ForeignKey(User)
+    """Represents the esteem a User can obtain.
+    Esteem is tied to a User and a specific tag."""
+    User = models.ForeignKey(User)
     tag = models.ForeignKey(Tag)
     value = models.IntegerField()
 
@@ -41,32 +41,33 @@ class PeerReview(models.Model):
     review = models.TextField()
 
 class Rating(models.Model):
-    """Represents a vote cast by a user for a publication of comment."""
-    rating = models.DecimalField()
+    """Represents a vote cast by a User for a publication of comment."""
+    rating = models.DecimalField(max_digits=3, decimal_places=2)
 
 class Publication(models.Model):
     """Class to store publication metadata in the system."""
-    address          = models.CharField(max_length = 255, blank = True)
-    booktitle        = models.CharField(max_length = 255, blank = True)
-    chapter          = models.CharField(max_length = 255, blank = True)
-    edition          = models.CharField(max_length = 255, blank = True)
-    editor           = models.CharField(max_length = 255, blank = True)
-    how_published    = models.CharField(max_length = 255, blank = True)
-    institution      = models.CharField(max_length = 255, blank = True)
-    journal          = models.CharField(max_length = 255, blank = True)
-    number           = models.CharField(max_length = 255, blank = True)
-    organization     = models.CharField(max_length = 255, blank = True)
-    pages            = models.CharField(max_length = 255, blank = True)
-    publisher        = models.CharField(max_length = 255, blank = True)
-    series           = models.CharField(max_length = 255, blank = True)
-    publication_type = models.CharField(max_length = 255, blank = True)
-    volume           = models.CharField(max_length = 255, blank = True)
+    address          = models.CharField(max_length = 255, blank = True, null = True)
+    booktitle        = models.CharField(max_length = 255, blank = True, null = True)
+    chapter          = models.CharField(max_length = 255, blank = True, null = True)
+    edition          = models.CharField(max_length = 255, blank = True, null = True)
+    editor           = models.CharField(max_length = 255, blank = True, null = True)
+    how_published    = models.CharField(max_length = 255, blank = True, null = True)
+    institution      = models.CharField(max_length = 255, blank = True, null = True)
+    isbn             = models.CharField(max_length = 255, blank = True, null = True)
+    journal          = models.CharField(max_length = 255, blank = True, null = True)
+    number           = models.CharField(max_length = 255, blank = True, null = True)
+    organization     = models.CharField(max_length = 255, blank = True, null = True)
+    pages            = models.CharField(max_length = 255, blank = True, null = True)
+    publisher        = models.CharField(max_length = 255, blank = True, null = True)
+    series           = models.CharField(max_length = 255, blank = True, null = True)
+    publication_type = models.CharField(max_length = 255, blank = True, null = True)
+    volume           = models.CharField(max_length = 255, blank = True, null = True)
     citation_count   = models.IntegerField(blank   = True)
     title            = models.CharField(max_length = 255)
     month            = models.CharField(max_length = 255, blank = True)
     note             = models.TextField(blank      = True)
     year             = models.IntegerField(blank   = True)
-    # TODO: check how to reference integrated user subsystem
+    # TODO: check how to reference integrated User subsystem
     owner        = models.ForeignKey(User)
     authors      = models.ManyToManyField(Author)
     comments     = models.ManyToManyField(Comment)
