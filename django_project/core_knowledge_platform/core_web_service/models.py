@@ -8,8 +8,8 @@ class Author(models.Model):
     Authors are not equal to Users."""
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
+    affiliation = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
-    h_index = models.CharField(max_length=255)
 
 class Vote(models.Model):
     """Represents a vote (either an up or downvote) for a comment."""
@@ -34,16 +34,6 @@ class Esteem(models.Model):
     tag = models.ForeignKey(Tag)
     value = models.IntegerField()
 
-class PeerReview(models.Model):
-    """Represents a peer review."""
-    peer_reviewer = models.OneToOneField(User)
-    title = models.CharField(max_length=255)
-    review = models.TextField()
-
-class Rating(models.Model):
-    """Represents a vote cast by a User for a publication of comment."""
-    rating = models.DecimalField(max_digits=3, decimal_places=2)
-
 class Publication(models.Model):
     """Class to store publication metadata in the system."""
     address          = models.CharField(max_length = 255, blank = True, null = True)
@@ -62,7 +52,6 @@ class Publication(models.Model):
     series           = models.CharField(max_length = 255, blank = True, null = True)
     publication_type = models.CharField(max_length = 255, blank = True, null = True)
     volume           = models.CharField(max_length = 255, blank = True, null = True)
-    citation_count   = models.IntegerField(blank   = True)
     title            = models.CharField(max_length = 255)
     month            = models.CharField(max_length = 255, blank = True)
     note             = models.TextField(blank      = True)
@@ -72,8 +61,32 @@ class Publication(models.Model):
     authors      = models.ManyToManyField(Author)
     comments     = models.ManyToManyField(Comment)
     tags         = models.ManyToManyField(Tag)
-    rating       = models.ForeignKey(Rating)
-    peer_reviews = models.ForeignKey(PeerReview)
+
+class FurtherFields(models.Model):
+    """A key-value storage that will store values that are not part of the publication table."""
+    key = models.CharField(max_length=255)
+    value = models.TextField()
+    publication = models.ForeignKey(Publication)
+
+class PeerReviewTemplates(object):
+    """Represent templates for a peer review report."""
+    template_text = models.TextField()
+    # Storing the path to the binary file containing a template.
+    # 4096 - Maximum path length on a UNIX file system: /usr/src/linux-2.4.20-8/include/linux/limits.h.
+    template_binary_path = models.CharField(max_length=4096)
+    
+class PeerReview(models.Model):
+    """Represents a peer review."""
+    peer_reviewer = models.OneToOneField(User)
+    publication = models.ForeignKey(Publication)
+    template = models.ForeignKey(PeerReviewTemplates)
+    title = models.CharField(max_length=255)
+    review = models.TextField()
+
+class Rating(models.Model):
+    """Represents a vote cast by a User for a publication of comment."""
+    publication = models.ForeignKey(Publication)
+    rating = models.DecimalField(max_digits=4, decimal_places=2)
 
 class ReferenceMaterial(models.Model):
     """Represents a reference to special material associated with a publications.
