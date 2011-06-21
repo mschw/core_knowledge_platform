@@ -1,5 +1,6 @@
 import unittest
 from bibtex_parser import BibTeXParser
+from pyparsing import ParseException
 
 class BibTeXParserTests(unittest.TestCase):
     """Class to store BibTeXParser unittests"""
@@ -17,8 +18,14 @@ class BibTeXParserTests(unittest.TestCase):
         parsed = self.parser.parse_to_bibtex(bibtex)
         self.assertEqual({'none': ['book', {}]}, parsed)
 
+    def test_parse_single_field(self):
+        """Parsing a single key = value pair."""
+        field = "name = {value}"
+        parsed = self.parser.field.parseString(field).asList()
+        self.assertEqual(['name', 'value'], parsed)
+
     def test_entry_with_single_attribute_in_quotes(self):
-        """docstring for test_entry_with_single_attribute"""
+        """Parsing an attribute enclosed in quotes."""
         bibtex = """@book{key,
                     value = "test"
                     }"""
@@ -27,7 +34,7 @@ class BibTeXParserTests(unittest.TestCase):
         self.assertEqual(result_dict, parsed)
 
     def test_entry_with_single_attribute_in_braces(self):
-        """docstring for test_entry_with_single_attribute"""
+        """Parsing an attribute enclosed in braces."""
         bibtex = """@book{key,
                     value = {test}
                     }"""
@@ -45,14 +52,32 @@ class BibTeXParserTests(unittest.TestCase):
         result_dict = {'key': ['book', {'value': 'test', 'value2': 'test2'}]}
         self.assertEqual(result_dict, parsed)
 
+    def test_braces_within_delimeters(self):
+        """docstring for test_braces_within_delimeters"""
+        bibtex = """@book{key,
+                          value = {t{e}st},
+                          value2 = "t{e}st2"
+                          }"""
+        parsed = self.parser.parse_to_bibtex(bibtex)
+        result_dict = {'key': ['book', {'value': 't{e}st', 'value2': 't{e}st2'}]}
+        self.assertEqual(result_dict, parsed)
+
+    def test_number_can_be_unquoted(self):
+        """docstring for test_number_can_be_unquoted"""
+        bibtex = """@book{key,
+                          value2 = 2008
+                          }"""
+        parsed = self.parser.parse_to_bibtex(bibtex)
+        result_dict = {'key': ['book', {'value2', '2008'}]}
+        self.assertEqual(result_dict, parsed)
+
     def test_delimeters_can_not_be_mixed(self):
         """docstring for test_delimeters_can_not_be_mixed"""
-        pass
-    
-    def test_parse_single_field(self):
-        field = "name = {value}"
-        parsed = self.parser.field.parseString(field).asList()
-        self.assertEqual([['name', 'value']], parsed)
+        bibtex = """@book{key,
+                    value = "test},
+                    value2 = {test2"
+                    }"""
+        self.assertRaises(ParseException, self.parser.parse_to_bibtex, bibtex)
 
 if __name__ == '__main__':
     unittest.main()
