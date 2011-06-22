@@ -68,7 +68,7 @@ class FurtherFields(models.Model):
     value = models.TextField()
     publication = models.ForeignKey(Publication)
 
-class PeerReviewTemplates(object):
+class PeerReviewTemplates(models.Model):
     """Represent templates for a peer review report."""
     template_text = models.TextField()
     # Storing the path to the binary file containing a template.
