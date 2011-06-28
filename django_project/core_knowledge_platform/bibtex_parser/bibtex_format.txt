@@ -1,0 +1,26 @@
+=================================
+Description of the BibTeX-format:
+=================================
+
+The implemented parser will only allow basic BibTeX strings to be parsed.
+There is no support for @string or @preamble entries.
+The supported entries must conform to the following description of the BibTeX format in Bachus-Naur-Form:
+
+1. Bachus-Naur-Form
+===================
+
+Refer to: http://artis.imag.fr/~Xavier.Decoret/resources/xdkbibtex/bibtex_summary.html
+
+<comment>   :== %
+<entry>     :== <bib-entry> | <preamble-entry> | <string-entry>
+<bib-entry> :== '@'<type> '{' <key> (',' <fields>)'}'
+<type>      :== 'book' | ...
+<fields> :== <field> ("," <fields>)
+<field>     :== <name> '=' <seperator><value><seperator>
+<seperator> :== ',' | '"'
+<key>       :== <value>
+<value>     :== [a-zA-Z0-9+_-:.{}%]+
+<name>      :== [a-zA-Z]+
+<number> :== [0-9]+
+
+<seperator> need to be balanced -> " needs to be closed with " and { needs to be closed with }.
