@@ -3,7 +3,7 @@ from collections import defaultdict
 from pyparsing import Word, alphanums, nums, Optional, Suppress, ZeroOrMore, Group, nestedExpr, QuotedString, originalTextFor 
 
 
-class BibTeXParser(object):
+class BibtexParser(object):
     """Class used to parse BibTeX entries to Python objects."""
     at = Suppress('@')
     left_brace = Suppress('{')
