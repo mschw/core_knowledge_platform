@@ -17,7 +17,7 @@ class Vote(models.Model):
 
 class Tag(models.Model):
     """Represents a tag that can be added to a publication"""
-    name = models.CharField(max_length=75)
+    name = models.SlugField(max_length=75)
     description = models.CharField(max_length=511)
 
 class Comment(models.Model):
@@ -54,8 +54,8 @@ class Publication(models.Model):
     volume           = models.CharField(max_length = 255, blank = True, null = True)
     title            = models.CharField(max_length = 255)
     month            = models.CharField(max_length = 255, blank = True)
-    note             = models.TextField(blank      = True)
-    year             = models.IntegerField(blank   = True)
+    note             = models.TextField(blank      = True, null = True)
+    year             = models.IntegerField(blank   = True, null = True)
     # TODO: check how to reference integrated User subsystem
     owner        = models.ForeignKey(User)
     authors      = models.ManyToManyField(Author)
@@ -82,6 +82,10 @@ class PeerReview(models.Model):
     template = models.ForeignKey(PeerReviewTemplates)
     title = models.CharField(max_length=255)
     review = models.TextField()
+    class Meta:
+        permissions = (
+                "can_view", "Can see the available peer reviews.",
+                )
 
 class Rating(models.Model):
     """Represents a vote cast by a User for a publication of comment."""

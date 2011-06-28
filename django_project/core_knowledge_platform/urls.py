@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-import core_web_service.views
+from core_web_service.views import Publications, PublicationDetail
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -7,10 +7,10 @@ import core_web_service.views
 
 urlpatterns = patterns('',
         # $ at the end will transfer the query string to the view function.
-        (r'^publication/$', core_web_service.views.publications),
-        (r'^publication/(\d+)$', core_web_service.views.publication),
-        (r'^author/$', core_web_service.views.authors),
-        (r'^author/(\d+)$', core_web_service.views.author),
+        (r'^publications/$', Publications()),
+        (r'^publication/(\d+)$', PublicationDetail()),
+        (r'^authors/$', 'authors'),
+        (r'^author/(\d+)$', 'author'),
     # Example:
     # (r'^core_knowledge_platform/', include('core_knowledge_platform.foo.urls')),
 
