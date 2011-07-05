@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<comment xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <title>
+        {{ comment.title }}
+    </title>
+    <text>
+        {{ comment.text }}
+    </text>
+    <votes>
+        {% for vote in comment.votes.all %}
+        <vote>
+            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"
+        </vote>
+        {% endfor %}
+    </votes>
+</comment>

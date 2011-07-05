@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<publication xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <address>
+        {{ publication.address }}
+    </address>
+    <booktitle>
+        {{ publication.booktitle }}
+    </booktitle>
+    <chapter>
+        {{ publication.chapter }}
+    </chapter>
+    <edition>
+        {{ publication.edition }}
+    </edition>
+    <editor>
+        {{ publication.editor }}
+    </editor>
+    <howpublished>
+        {{ publication.howpublished }}
+    </howpublished>
+    <institution>
+        {{ publication.institution }}
+    </institution>
+    <isbn>
+        {{ publication.isbn }}
+    </isbn>
+    <journal>
+        {{ publication.journal }}
+    </journal>
+    <number>
+        {{ publication.number }}
+    </number>
+    <organization>
+        {{ publication.organization }}
+    </organization>
+    <pages>
+        {{ publication.pages }}
+    </pages>
+    <publisher>
+        {{ publication.publisher }}
+    </publisher>
+    <series>
+        {{ publication.series }}
+    </series>
+    <publicationtype>
+        {{ publication.publicationtype }}
+    </publicationtype>
+    <volume>
+        {{ publication.volume }}
+    </volume>
+    <title>
+        {{ publication.title }}
+    </title>
+    <month>
+        {{ publication.month }}
+    </month>
+    <note>
+        {{ publication.note }}
+    </note>
+    <year>
+        {{ publication.year }}
+    </year>
+    <owner>
+        <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
+    </owner>
+    <authors>    
+        {% for author in publication.author.all %}
+        <author>
+            <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
+        </author>
+        {% endfor %}
+    </authors>
+    <comments>    
+        {% for comment in publication.comments.all %}
+        <comment>
+            <atom:link rel="comment" type="application/xml" href="http://{{ url }}/comment/{{ comment.id }}" />
+        </comment>
+        {% endfor %}
+    </comments>
+    <tags>
+        {% for tag in publication.tags.all %}
+        <tag>
+            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" >{{ tag.id }}</atom:link>
+        </tag>
+        {% endfor %}
+    </tags>
+    {% for field in publication.furtherfield.all %}
+        <{{ field.key }}>
+        {{ field.value }}
+        </{{ field.key }}>
+    {% endfor %}
+</publication>

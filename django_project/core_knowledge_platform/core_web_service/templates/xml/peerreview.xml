@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<peerreview xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <peerreviewer>
+        <atom:link rel="user" type="application/xml" href="http://{{ url
+            }}/user/{{ peerreview.peer_reviewer.id }}"/>
+    </peerreviewer>
+    <publication>
+        <atom:link rel="publicaiton" type="application/xml" href="http://{{
+            url }}/publication/{{ peerreview.publication.id }}"/>
+    </publication>
+    <template>
+        <atom:link rel="template" type="application/xml" href="http://{{ url
+            }}/peerreviewtemplate/{{ peerreview.template.id }}"/>
+    </template>
+    <title>
+        {{ peerreview.title }}
+    </title>
+    <review>
+        {{ peerreview.review }}
+    </review>
+</peerreview>

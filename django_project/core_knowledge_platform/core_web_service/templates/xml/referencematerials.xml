@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<referencematerials xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for referencematerial in referencematerials %}
+    <referencematerial>
+        <atom:link rel="referencematerial" type="application/xml" href="http://{{ url }}/referencematerial/{{ referencematerial.id }}"/>
+    </referencematerial>
+    {% endfor %}
+</referencematerials>

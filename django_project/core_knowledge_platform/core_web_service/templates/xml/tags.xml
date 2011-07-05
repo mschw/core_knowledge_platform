@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tags xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for tag in tags %}
+    <tag>
+        <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}"/>
+    </tag>
+    {% endfor %}
+</tags>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<authors xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for author in author_list %}
+        <author>
+            <atom:link rel="author" type="application/xml"
+                href="http://{{ url }}/author/{{ author.id }}" />
+        </author>
+    {% endfor %}
+</authors>

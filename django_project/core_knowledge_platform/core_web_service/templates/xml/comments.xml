@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<comments xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for comment in comments %}
+    <comment>
+        <atom:link rel="comment" type="application/xml" href="http://{{ url }}/comment/{{ comment.id }}"/>
+    </comment>
+    {% endfor %}
+</comments>

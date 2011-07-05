@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<peerreviews xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for peerreview in peerreviews %}
+    <peerreview>
+        <atom:link rel="peerreview" type="application/xml" href="http://{{ url }}/peerreview/{{ peerreview.id }}"/>
+    </peerreview>
+    {% endfor %}
+</peerreviews>

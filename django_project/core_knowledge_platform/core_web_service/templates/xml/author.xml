@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<author xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <name>
+        {{ author.name }}
+    </name>
+    <address>
+        {{ author.address }}
+    </address>
+    <affiliation>
+        {{ author.affiliaton }}
+    </affiliation>
+    <email>
+        {{ author.email }}
+    </email>
+</author>

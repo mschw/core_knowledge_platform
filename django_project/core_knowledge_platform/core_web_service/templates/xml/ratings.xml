@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ratings xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for rating in ratings %}
+    <rating>
+        <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
+    </rating>
+    {% endfor %}
+</ratings>

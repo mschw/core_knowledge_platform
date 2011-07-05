@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<publications xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for publication in publication_list %}
+        <publication>
+            <atom:link rel="publication" type="application/xml"
+                href="http://{{ url }}/publication/{{ publication.id }}" />
+        </publication>
+    {% endfor %}
+</publications>
