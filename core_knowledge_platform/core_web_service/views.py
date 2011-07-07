@@ -63,7 +63,7 @@ class RestView(object):
         response.status_code = self.UNSUPPORTED_MEDIA_TYPE_STATUS
         return response
 
-    def render_response(self, request, template_name, dictionary):
+    def render_response(self, request, template_name, dictionary=None):
         """Render an appropriate template an returns the response object.
 
         Will determine which template to use based on the HTTP accept header.
@@ -77,6 +77,8 @@ class RestView(object):
         Returns:
             response: the response object with the rendered template.
         """
+        if dictionary is None:
+            dictionary = {}
         response_type = self._get_allowed_response_types(request)
         dictionary['url'] = service_url
         Context(dictionary)
@@ -448,3 +450,12 @@ class TagDetail(RestView):
         """docstring for DELETE"""
         pass
         
+
+class Overview(RestView):
+    """Displays an overview over the webservice."""
+    allowed_methods = ("GET")
+
+    def GET(self):
+        """docstring for GET"""
+        response = self.render_response(request, 'overview')
+        return response

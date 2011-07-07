@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <publication>
+        <atom:link rel="publications" type="application/xml" href="http://{{ url }}/publication/"/>
+    </publication>
+    <author>
+        <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/"/>
+    </author>
+    <tag>
+        <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/"/>
+    </tag>
+</services>

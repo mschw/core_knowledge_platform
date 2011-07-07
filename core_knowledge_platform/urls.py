@@ -4,8 +4,9 @@ from core_web_service.views import Authors, AuthorDetail, Comments, CommentDetai
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns('core_web_service.views',
         # $ at the end will transfer the query string to the view function.
+        (r'^/$', 'overview'),
         (r'^author/$', Authors()),
         (r'^author/(\d+)$', AuthorDetail()),
         (r'^comment/(\d+)$', CommentDetail()),
