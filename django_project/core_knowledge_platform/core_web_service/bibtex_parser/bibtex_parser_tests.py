@@ -1,12 +1,12 @@
 import unittest
-from bibtex_parser import BibTeXParser
+from bibtex_parser import BibtexParser
 from pyparsing import ParseException
 
 class BibTeXParserTests(unittest.TestCase):
     """Class to store BibTeXParser unittests"""
 
     def setUp(self):
-        self.parser = BibTeXParser()
+        self.parser = BibtexParser()
 
     def test_empty_bibtex_entry(self):
         """Parsing nothing will return nothing."""
@@ -68,7 +68,7 @@ class BibTeXParserTests(unittest.TestCase):
                           value2 = 2008
                           }"""
         parsed = self.parser.parse_to_bibtex(bibtex)
-        result_dict = {'key': ['book', {'value2', '2008'}]}
+        result_dict = {'key': ['book', {'value2': '2008'}]}
         self.assertEqual(result_dict, parsed)
 
     def test_delimeters_can_not_be_mixed(self):
@@ -78,6 +78,20 @@ class BibTeXParserTests(unittest.TestCase):
                     value2 = {test2"
                     }"""
         self.assertRaises(ParseException, self.parser.parse_to_bibtex, bibtex)
+
+    #def test_parsing_multiple_entries(self):
+    #    bibtex = """@book{key,
+    #                value = "test",
+    #                value2 = "test2"
+    #                }
+    #                
+    #                @book{key2,
+    #                value = "test",
+    #                value2 = "test2"
+    #                }"""
+    #    parsed = self.parser.parse_to_bibtex(bibtex)
+    #    result_dict = {'key': ['book', {'value2', '2008'}], 'key2': ['book', {'value2', '2008'}]}
+    #    self.assertEqual(result_dict, parsed)
 
 if __name__ == '__main__':
     unittest.main()

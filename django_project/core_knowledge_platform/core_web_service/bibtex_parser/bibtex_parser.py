@@ -1,7 +1,6 @@
+import re
 from collections import defaultdict
-
 from pyparsing import Word, alphanums, nums, Optional, Suppress, ZeroOrMore, Group, nestedExpr, QuotedString, originalTextFor 
-
 
 class BibtexParser(object):
     """Class used to parse BibTeX entries to Python objects."""
@@ -38,9 +37,11 @@ class BibtexParser(object):
         if not bibtex_string:
             raise ValueError("Supplied string was not a valid BibTeX entry.")
         else:
+            #result_list = list()
+            #single_entries = re.split("(@[\\w\\s]*{[\\w\\s,\\{\\}""\\[\\]]*})", bibtex_string)
             result = self.bib_entry.parseString(bibtex_string)
             dictionary = self._create_nested_dictionaries(result)
-            return dictionary 
+            return dictionary
 
     def _create_nested_dictionaries(self, result):
         dictionary = defaultdict(list)
