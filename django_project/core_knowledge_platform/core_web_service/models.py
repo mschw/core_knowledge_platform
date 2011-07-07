@@ -88,12 +88,12 @@ class PeerReview(models.Model):
     """Represents a peer review."""
     peer_reviewer = models.OneToOneField(User)
     publication = models.ForeignKey(Publication)
-    template = models.ForeignKey(PeerReviewTemplates)
+    template = models.ForeignKey(PeerReviewTemplate)
     title = models.CharField(max_length=255)
     review = models.TextField()
     class Meta:
         permissions = (
-                "can_view", "Can see the available peer reviews.",
+                ("can_view", "Can see the available peer reviews."),
                 )
 
 
