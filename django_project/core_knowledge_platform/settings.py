@@ -1,3 +1,4 @@
+import os
 # Django settings for core_knowledge_platform project.
 
 DEBUG = True
@@ -81,6 +82,8 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'core_knowledge_platform.urls'
 
 TEMPLATE_DIRS = (
+        os.path.join(os.path.dirname('__file__'), 'core_web_service/templates/').replace('\\', '/'),
+        os.path.join(os.path.dirname('__file__'), 'core_web_service/templates/xml/').replace('\\', '/'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -98,5 +101,5 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     # South is a database migration layer.
-    'south'
+    'south',
 )
