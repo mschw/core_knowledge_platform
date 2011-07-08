@@ -7,6 +7,27 @@ class BibTeXParserTests(unittest.TestCase):
 
     def setUp(self):
         self.parser = BibtexParser()
+        self.book_bibtex = """@book{Anderson2007,
+    title = {{What is Web 2.0?: ideas, technologies and implications for education}},
+    publisher = {Citeseer},
+    year = {2007},
+    author = {Andersen, P.},
+    booktitle = {Technology},
+    file = {:media/datapart/Dokumente/eBooks/master\_thesis/Articles/10.1.1.108.9995.pdf:pdf},
+    keywords = {Web 2.0},
+    url = {http://www.jisc.ac.uk/media/documents/techwatch/tsw0701b.pdf}
+}"""
+        self.book_dict = {'Anderson2007': ['book', {
+            'title': 'What is Web 2.0?: ideas, technologies and implications for education',
+            'publisher': 'Citeseer',
+            'year': '2007',
+            'author': 'Andersen, P.',
+            'booktitle': 'Technology',
+            'file': ':media/datapart/Dokumente/eBooks/master\_thesis/Articles/10.1.1.108.9995.pdf:pdf',
+            'keywords': 'Web 2.0',
+            'url': 'http://www.jisc.ac.uk/media/documents/techwatch/tsw0701b.pdf'
+            }]
+            }
 
     def test_empty_bibtex_entry(self):
         """Parsing nothing will return nothing."""
@@ -78,6 +99,12 @@ class BibTeXParserTests(unittest.TestCase):
                     value2 = {test2"
                     }"""
         self.assertRaises(ParseException, self.parser.parse_to_bibtex, bibtex)
+
+    def test_complex_book_insertion(self):
+        parsed = self.parser.parse_to_bibtex(self.book_bibtex)
+        print parsed
+        self.assertEqual(self.book_dict, parsed)
+
 
     #def test_parsing_multiple_entries(self):
     #    bibtex = """@book{key,

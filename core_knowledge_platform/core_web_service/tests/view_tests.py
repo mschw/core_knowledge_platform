@@ -1,5 +1,6 @@
 from django.utils import unittest
 from django.test.client import Client
+from django.core.urlresolvers import reverse
 
 class ViewTests(unittest.TestCase):
 
@@ -18,18 +19,18 @@ class ViewTests(unittest.TestCase):
         self.client = Client()
 
     def test_get_publications_returns_200(self):
-        result = self.client.get('/publication/', HTTP_ACCEPT='application/xml')
+        result = self.client.get(reverse('core_web_service.views.publications'), HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, self.OK_STATUS)
 
     def test_delete_list_of_publications_not_allowed(self):
-        result = self.client.delete('/publication/')
-        self.assertEqual(result.status_code, self.FORBIDDEN_STATUS)
+        result = self.client.delete(reverse('core_web_service.views.publications'))
+        self.assertEqual(result.status_code, self.METHOD_NOT_ALLOWED_STATUS)
 
     def test_put_list_of_publications_not_allowed(self):
-        result = self.client.put('/publication/')
-        self.assertEqual(result.status_code, self.FORBIDDEN_STATUS)
+        result = self.client.put(reverse('core_web_service.views.publications'))
+        self.assertEqual(result.status_code, self.METHOD_NOT_ALLOWED_STATUS)
 
     def test_post_list_of_publications_returns_201(self):
-        result = self.client.post('/publication/')
+        result = self.client.post(reverse('core_web_service.views.publications'))
         self.assertEqual(result.status_code, self.CREATED_STATUS)
 
