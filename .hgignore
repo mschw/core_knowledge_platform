@@ -3,3 +3,6 @@ syntax: glob
 
 # Ignore compiled python files:
 *.pyc
+
+# Ignore compiled documentation:
+core_knowledge_platform/doc/doc
