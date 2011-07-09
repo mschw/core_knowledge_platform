@@ -13,18 +13,18 @@ class MissingValueException(Exception):
         
 
 required_fields_by_publication_type = {
-        'article': ['author', 'journal', 'title', 'year'],
+        'article': ['journal', 'title', 'year'],
         'book': ['publisher', 'title', 'year'],
         'booklet': [],
-        'inbook': ['author', 'chapter', 'editor', 'pages', 'publisher', 'year'],
-        'incollection': ['author', 'booktitle', 'publisher', 'title', 'year'],
+        'inbook': ['chapter', 'editor', 'pages', 'publisher', 'year'],
+        'incollection': ['booktitle', 'publisher', 'title', 'year'],
         'manual': ['title'],
-        'masterthesis': ['author', 'school', 'title', 'year'],
+        'masterthesis': ['school', 'title', 'year'],
         'misc': [],
-        'phdthesis': ['author', 'school', 'title', 'year'],
+        'phdthesis': ['school', 'title', 'year'],
         'proceedings': ['title', 'year'],
-        'techreport': ['author', 'institution', 'title', 'year'],
-        'unpublished': ['author', 'note', 'title'],
+        'techreport': ['institution', 'title', 'year'],
+        'unpublished': ['note', 'title'],
         }
 
 def insert_bibtex_publication(bibtex, owner):
