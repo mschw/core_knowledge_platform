@@ -1,7 +1,7 @@
 from django.utils import unittest
 from core_web_service.models import Publication
 from django.contrib.auth.models import User
-from core_web_service.business_layer import insert_bibtex_publication, MissingValueException
+from core_web_service.business_layer import insert_bibtex_publication, MissingValueException, validate_required_fields
 
 class BusinessLogicTests(unittest.TestCase):
 
@@ -35,9 +35,12 @@ class BusinessLogicTests(unittest.TestCase):
 }"""
         self.user = User(username="Tester")
 
-    def test_insert_book_bibtex(self):
-        publication = insert_bibtex_publication(self.book_bibtex, self.user)
-        self.assertEqual(self.book, publication)
+    def test_raise_exception_incomplete_publication(self):
+        publication = Publication(publication_type="book")
+        with self.assertRaises(MissingValueException):
+            validate_required_fields(publication)
 
-    def test_insert_book_missing_title(self):
-        self.assertRaises(MissingValueException, insert_bibtex_publication, self.invalid_bibtex, self.user)
+    def test_insert_book_bibtex(self):
+        publications = insert_bibtex_publication(self.book_bibtex, self.user)
+        expected_publications = [self.book]
+        self.assertEqual(len(expected_publications), len(publications))

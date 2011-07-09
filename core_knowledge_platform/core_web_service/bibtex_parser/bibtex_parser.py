@@ -21,7 +21,7 @@ class BibtexParser(object):
 
     entry_type = value('entry_type')
     field_value = (braced_value | quoted_value | number)('field_value')
-    key = value('key')
+    key = Suppress(value('key'))
     field_name = value('field_name')
     field = (field_name + equal + field_value)
     fields = Group(field) + ZeroOrMore(comma + Group(field))

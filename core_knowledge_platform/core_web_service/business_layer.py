@@ -1,5 +1,6 @@
-from bibtex_parser import external_parser 
+from bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, FurtherFields, Tag, User
+import pdb
 
 class MissingValueException(Exception):
     """Raise when a publication is missing a required attribute."""
@@ -13,7 +14,7 @@ class MissingValueException(Exception):
 
 required_fields_by_publication_type = {
         'article': ['author', 'journal', 'title', 'year'],
-        'book': ['author', 'editor', 'publisher', 'title', 'year'],
+        'book': ['publisher', 'title', 'year'],
         'booklet': [],
         'inbook': ['author', 'chapter', 'editor', 'pages', 'publisher', 'year'],
         'incollection': ['author', 'booktitle', 'publisher', 'title', 'year'],
@@ -39,51 +40,64 @@ def insert_bibtex_publication(bibtex, owner):
         owner: the user object that will insert the publication.
     """
     # TODO: check that owner is a user object.
-    parsed_list = external_parser.entry.parseString(bibtex)
-    publication_type = parsed_list.entrytype
-    fields = []
-    tags = []
-    publication = Publication()
-    publication.publication_type = publication_type
-    User.objects.get_or_create(owner)
-    publication.owner = owner
-    for key, value in values.items():
-        try:
-            # Set the fields that are present in the publication table.
+    inserted_publication = []
+    parser = BibtexParser()
+    entries = parser.bib_entry.searchString(bibtex)
+    for entry in entries:
+        #insert_publication_from_list(entry)
+        publication = Publication()
+        publication.publication_type = entry.entry_type
+        owner, created = User.objects.get_or_create(username=owner.username)
+        publication.owner = owner
+        authors = []
+        further_fields = []
+        tags = []
+        for field in entry.fields.asList():
+            key = field[0]
+            value = field[1]
             if key == "keyword":
+                #create tag
                 keywords = value.split(',')
                 for k in keywords:
                     tag = Tag.objects.get_or_create(name=k)
                     publication.tags.add(tag)
                     tags.append(tag)
-            #elif key == "author":
-            #    authors = value.split('and')
-            # TODO: autoreference an existing author via bibtex.
-            #    author = search_authors()
-            #    publication.authors.add(author)
+            elif key == "author":
+                #create author
+                parsed_authors = [author.strip() for author in value.split('and')]
+                for author in parsed_authors:
+                    #a, created = Author.objects.get_or_create(name__icontains=author)
+                    #if created:
+                    a = Author()
+                    a.name = author
+                    a.save()
+                    authors.append(a)
             else:
-                getattr(publication, key)
-                setattr(publication, key, value)
-        except AttributeError:
-            # TODO: log problem
-            # Add remaining fields to the further fields table.
-            field = FurtherFields()
-            field.key = key
-            field.value = value
-            field.publication = publication
-            fields.append(field)
-    try:
-        validate_required_fields(publication)
-        publication.save()
-        for field in fields:
-            field.save()
-        for tag in tags:
-            tag.publication_set.add(publication)
-            tag.save()
-        return publication
-    except MissingValueException:
-        # TODO: log
-        pass
+                #insert into publication or furtherfield
+                try:
+                    getattr(publication, key)
+                    setattr(publication, key, value)
+                except AttributeError:
+                    further_field = FurtherFields()
+                    further_field.key = key
+                    further_field.value = value
+                    further_fields.append(further_field)
+        try:
+            validate_required_fields(publication)
+            publication.save()
+            for field in further_fields:
+                field.publication = publication
+                field.save()
+            for tag in tags:
+                tag.publication_set.add(publication)
+                tag.save()
+            for author in authors:
+                publication.authors.add(author)
+                publication.save()
+            inserted_publication.append(publication)
+        except MissingValueException, e:
+            raise e
+    return inserted_publication
 
 def validate_required_fields(publication):
     """Check if a publication has all fields that are required according to its type.
@@ -93,10 +107,26 @@ def validate_required_fields(publication):
     Arguments:
         publication: the publication object to be validated.
     """
-    pass
+    publication_type = publication.publication_type
+    fields = required_fields_by_publication_type[publication_type]
+    all_fields_present = True
+    errors = []
+    for field in fields:
+        try:
+            attribute = getattr(publication, field)
+            if (attribute is None) or (len(attribute) == 0):
+                all_fields_present = False
+                errors.append('Publication of type %s is missing field %s' % (publication_type, field))
+        except AttributeError:
+            all_fields_present = False
+            errors.append('Publication of type %s is missing field %s' % (publication_type, field))
+    errors = "".join(errors)
+    if all_fields_present:
+        return True
+    else:
+        raise MissingValueException(errors)
 
 def search_authors(search_value, fields_to_search=None):
     """"""
     if fields_to_search is None:
         fields_to_search = []
-    return Author.objects.all(id=1)
