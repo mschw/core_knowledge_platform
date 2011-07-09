@@ -53,8 +53,8 @@ def insert_bibtex_publication(bibtex, owner):
         further_fields = []
         tags = []
         for field in entry.fields.asList():
-            key = field[0]
-            value = field[1]
+            key = field[0].lower()
+            value = field[1].lower()
             if key == "keyword":
                 #create tag
                 keywords = value.split(',')
@@ -107,7 +107,7 @@ def validate_required_fields(publication):
     Arguments:
         publication: the publication object to be validated.
     """
-    publication_type = publication.publication_type
+    publication_type = publication.publication_type.lower()
     fields = required_fields_by_publication_type[publication_type]
     all_fields_present = True
     errors = []
