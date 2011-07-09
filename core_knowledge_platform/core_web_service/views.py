@@ -3,6 +3,7 @@ import re
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from core_web_service.models import Author, Comment, Esteem, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
 import business_layer as application_logic
@@ -341,6 +342,7 @@ class PeerReviewTemplateDetail(RestView):
         pass
 
 
+@csrf_exempt
 class Publications(RestView):
     """Class to handle rendering of the publication list view."""
     allowed_methods = ('GET', 'POST')
@@ -354,6 +356,7 @@ class Publications(RestView):
         return response
 
     @staticmethod
+    @csrf_exempt
     def POST(request):
         """Inserts publications via POST request."""
         content_type = request.META['CONTENT_TYPE']
@@ -371,6 +374,7 @@ class Publications(RestView):
         return response
 
 
+@csrf_exempt
 class PublicationDetail(RestView):
     """Object to handle rendering of the publication detail view."""
     allowed_methods = ('GET', 'PUT', 'POST', 'DELETE')
@@ -388,6 +392,7 @@ class PublicationDetail(RestView):
         return response
 
     @staticmethod
+    @csrf_exempt
     def PUT(request):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
