@@ -13,7 +13,7 @@ class MissingValueException(Exception):
         
 
 required_fields_by_publication_type = {
-        'article': ['journal', 'title', 'year'],
+        'article': ['title', 'year'],
         'book': ['publisher', 'title', 'year'],
         'booklet': [],
         'inbook': ['chapter', 'editor', 'pages', 'publisher', 'year'],
@@ -108,7 +108,10 @@ def validate_required_fields(publication):
         publication: the publication object to be validated.
     """
     publication_type = publication.publication_type.lower()
-    fields = required_fields_by_publication_type[publication_type]
+    try:
+        fields = required_fields_by_publication_type[publication_type]
+    except KeyError:
+        return True
     all_fields_present = True
     errors = []
     for field in fields:
