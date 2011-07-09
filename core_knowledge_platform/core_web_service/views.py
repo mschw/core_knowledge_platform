@@ -343,7 +343,7 @@ class PeerReviewTemplateDetail(RestView):
 
 class Publications(RestView):
     """Class to handle rendering of the publication list view."""
-    allowed_methods = ('GET')
+    allowed_methods = ('GET', 'POST')
 
     @staticmethod
     def GET(request):
@@ -351,6 +351,23 @@ class Publications(RestView):
         publication_list = Publication.objects.all()
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
+        return response
+
+    @staticmethod
+    def POST(request):
+        """Inserts publications via POST request."""
+        content_type = request.META['CONTENT_TYPE']
+        bibtex_data = request.raw_post_data
+        owner = request.user
+        if not owner:
+            owner = User.get_or_create(name='Anonymous')
+        if 'application/x-bibtex' in content_type:
+            inserted_publications = application_logic.insert_bibtex_publication(bibtex_data, owner)
+        else:
+            pass
+        values = {'publication_list': inserted_publications}
+        response = RestView.render_response(request, 'publications', values)
+        response.status_code = RestView.CREATED_STATUS
         return response
 
 
@@ -374,15 +391,18 @@ class PublicationDetail(RestView):
     def PUT(request):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
-        content_type = request.META.HTTP_CONTENT_TYPE
+        content_type = request.META['CONTENT_TYPE']
         # TODO: use the user object to set the owner of the publication.
         publication_data = request.raw_post_data
         owner = request.user
         if 'application/x-bibtex' in content_type:
-            application_logic.insert_bibtex_publication(publication_data, owner)
+            inserted_publication = application_logic.insert_bibtex_publication(publication_data, owner)
         else:
-            application_logic.insert_publication(publication_data, owner)
-        pass
+            inserted_publication = application_logic.insert_publication(publication_data, owner)
+        values = {'publication': inserted_publication}
+        response = RestView.render_response(request, 'publication', values)
+        response.status_code = RestView.CREATED_STATUS
+        return response
 
     @staticmethod
     def POST(request):
