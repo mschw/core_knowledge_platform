@@ -65,7 +65,7 @@
         <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
     </owner>
     <authors>    
-        {% for author in publication.author.all %}
+        {% for author in publication.authors.all %}
         <author>
             <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
         </author>

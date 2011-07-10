@@ -59,7 +59,7 @@ class Publication(models.Model):
     publication_type = models.CharField(max_length = 255, blank = True, null = True)
     volume           = models.CharField(max_length = 255, blank = True, null = True)
     title            = models.CharField(max_length = 255)
-    month            = models.CharField(max_length = 255, blank = True)
+    month            = models.CharField(max_length = 255, blank = True, null = True)
     note             = models.TextField(blank      = True, null = True)
     year             = models.IntegerField(blank   = True, null = True)
     # TODO: check how to reference integrated User subsystem
