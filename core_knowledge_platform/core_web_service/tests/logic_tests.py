@@ -1,7 +1,7 @@
 from django.utils import unittest
 from core_web_service.models import Publication
 from django.contrib.auth.models import User
-from core_web_service.business_layer import insert_bibtex_publication, MissingValueException, validate_required_fields
+from core_web_service.business_logic.insert import insert_bibtex_publication, MissingValueException, validate_required_fields
 
 class BusinessLogicTests(unittest.TestCase):
 

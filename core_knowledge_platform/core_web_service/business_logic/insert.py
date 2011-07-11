@@ -1,6 +1,5 @@
 from bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, FurtherFields, Tag, User
-import pdb
 
 class MissingValueException(Exception):
     """Raise when a publication is missing a required attribute."""
@@ -128,8 +127,3 @@ def validate_required_fields(publication):
         return True
     else:
         raise MissingValueException(errors)
-
-def search_authors(search_value, fields_to_search=None):
-    """"""
-    if fields_to_search is None:
-        fields_to_search = []

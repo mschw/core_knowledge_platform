@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from core_web_service.models import Author, Comment, Esteem, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
-import business_layer as application_logic
+from core_web_service.business_logic import search, insert
 
 # Create your views here.
 
@@ -347,10 +347,22 @@ class Publications(RestView):
     """Class to handle rendering of the publication list view."""
     allowed_methods = ('GET', 'POST')
 
+    def search_publications(parameters):
+        """Search the publications stored in the backend."""
+        publications = search.search_publications(parameters)
+        return publications
+
     @staticmethod
     def GET(request):
-        """Returns all publications stored in the database."""
-        publication_list = Publication.objects.all()
+        """Returns publications stored in the database.
+        
+        If called with a query string the publications will be searched,
+        otherwise all publications will be returned."""
+        get_parameters = request.GET
+        if get_parameters:
+            publication_list = Publications.search_publications(get_parameters)
+        else:
+            publication_list = Publication.objects.all()
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
         return response
@@ -365,7 +377,7 @@ class Publications(RestView):
         if not owner:
             owner = User.get_or_create(name='Anonymous')
         if 'application/x-bibtex' in content_type:
-            inserted_publications = application_logic.insert_bibtex_publication(bibtex_data, owner)
+            inserted_publications = insert.insert_bibtex_publication(bibtex_data, owner)
         else:
             pass
         values = {'publication_list': inserted_publications}
@@ -401,9 +413,9 @@ class PublicationDetail(RestView):
         publication_data = request.raw_post_data
         owner = request.user
         if 'application/x-bibtex' in content_type:
-            inserted_publication = application_logic.insert_bibtex_publication(publication_data, owner)
+            inserted_publication = insert.insert_bibtex_publication(publication_data, owner)
         else:
-            inserted_publication = application_logic.insert_publication(publication_data, owner)
+            inserted_publication = insert.insert_publication(publication_data, owner)
         values = {'publication': inserted_publication}
         response = RestView.render_response(request, 'publication', values)
         response.status_code = RestView.CREATED_STATUS
