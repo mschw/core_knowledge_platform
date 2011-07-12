@@ -374,6 +374,7 @@ class Publications(RestView):
         content_type = request.META['CONTENT_TYPE']
         bibtex_data = request.raw_post_data
         owner = request.user
+        inserted_publications = None
         if not owner:
             owner = User.get_or_create(name='Anonymous')
         if 'application/x-bibtex' in content_type:

@@ -1,12 +1,13 @@
 from django.conf.urls.defaults import *
-from core_web_service.views import Authors, AuthorDetail, Comments, CommentDetail, EsteemDetail, PeerReviews, PeerReviewDetail, PeerReviewTemplates, PeerReviewTemplateDetail, Publications, PublicationDetail, RatingDetail, ReferenceMaterialDetail, Tags, TagDetail
+from django.contrib import admin
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
-# admin.autodiscover()
+admin.autodiscover()
 
 urlpatterns = patterns('core_web_service.views',
         # $ at the end will transfer the query string to the view function.
-        (r'^/$', 'overview'),
+        (r'^$', 'overview'),
+        (r'^admin/', include(admin.site.urls)),
         (r'^author/$', 'authors'),
         (r'^author/(\d+)$', 'author_detail'),
         (r'^comment/(\d+)$', 'comment_detail'),

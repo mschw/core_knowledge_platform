@@ -1,4 +1,4 @@
-from bibtex_parser.bibtex_parser import BibtexParser
+from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, FurtherFields, Tag, User
 
 class MissingValueException(Exception):
