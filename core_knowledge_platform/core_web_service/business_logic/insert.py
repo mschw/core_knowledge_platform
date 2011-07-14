@@ -1,5 +1,5 @@
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
-from core_web_service.models import Author, Publication, FurtherFields, Tag, User
+from core_web_service.models import Author, Publication, FurtherFields, Keyword, User
 from abc import ABCMeta, abstractmethod
 from xml.etree.ElementTree import ElementTree, XML
 import pdb
@@ -118,14 +118,13 @@ def insert_bibtex_publication(bibtex, owner):
         keywords = []
         for field in entry.fields.asList():
             key = field[0].lower()
-            value = field[1].lower()
-            if key == "keyword":
+            value = field[1]
+            if key == "keywords":
                 #create keyword
                 kw = value.split(',')
                 for k in kw:
-                    keyword = Tag.objects.get_or_create(name=k)
-                    publication.keywords.add(keyword)
-                    keywords.append(keyword)
+                    keyw, created = Keyword.objects.get_or_create(keyword=k)
+                    keywords.append(keyw)
             elif key == "author":
                 #create author
                 parsed_authors = [author.strip() for author in value.split('and')]

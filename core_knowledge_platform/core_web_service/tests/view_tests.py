@@ -31,6 +31,6 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(result.status_code, self.METHOD_NOT_ALLOWED_STATUS)
 
     def test_post_list_of_publications_returns_201(self):
-        result = self.client.post(reverse('core_web_service.views.publications'), HTTP_ACCEPT='application/xml')
+        result = self.client.post('/publication/', HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, self.CREATED_STATUS)
 

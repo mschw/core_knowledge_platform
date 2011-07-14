@@ -386,8 +386,6 @@ class Publications(RestView):
         
         If called with a query string the publications will be searched,
         otherwise all publications will be returned."""
-        pdb.set_trace()
-        
         pub_parameters = None
         auth_parameters = None
         key_parameters = None

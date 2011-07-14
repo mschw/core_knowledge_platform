@@ -115,5 +115,4 @@ class BusinessLogicTests(unittest.TestCase):
         user = xml_inserter.insert_user(xml)
         self.assertEqual(user.username, "John")
         self.assertEqual(user.email, 'Scott@scott.scott')
-        self.assertEqual(user.last_name, "Pilgrim")
         self.assertNotEqual(user.password, 'test')

@@ -27,7 +27,7 @@ def build_query(search_query):
 def search_authors(search_items):
     """Search authors matching the provided arguments."""
     query = build_query(search_items)
-    result = Author.objects.filter(operator.or_(query))
+    result = Author.objects.filter(reduce(operator.or_, query))
     return result
 
 def _search_publications(search_items):
@@ -54,8 +54,8 @@ def search_publications(publication_terms, author_terms, keyword_terms):
         publications = Publication.objects.all()
     if author_terms:
         authors = search_authors(author_terms)
-        publications = publications.objects.filter(authors=authors)
+        publications = publications.filter(authors=authors)
     if keyword_terms:
         keywords = search_keywords(keyword_terms)
-        publications = publications.objects.filter(keywords=keywords)
+        publications = publications.filter(keywords=keywords)
     return publications
