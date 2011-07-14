@@ -55,7 +55,7 @@ class Publication(models.Model):
             (REVIEWED_STATUS, 'Reviewed'),
             (IN_REVIEW_STATUS, 'Being reviewed'),
             )
-    abstract = models.TextField()
+    abstract = models.TextField(blank=True)
     address = models.CharField(max_length = 255, blank = True, null = True)
     booktitle = models.CharField(max_length = 255, blank = True, null = True)
     chapter = models.CharField(max_length = 255, blank = True, null = True)
@@ -92,7 +92,7 @@ class PaperGroup(models.Model):
     blind_review = models.BooleanField()
     editors = models.ManyToManyField(User)
     referees = models.ManyToManyField(User)
-    publication = models.ManyToManyField(Publication)
+    publications = models.ManyToManyField(Publication)
     tags = models.ManyToManyField(Tag)
 
 

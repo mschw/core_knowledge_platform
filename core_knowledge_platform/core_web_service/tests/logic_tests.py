@@ -3,7 +3,7 @@ from core_web_service.models import Publication
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import QueryDict
-from core_web_service.business_logic.insert import insert_bibtex_publication, MissingValueException, validate_required_fields
+from core_web_service.business_logic.insert import insert_bibtex_publication, MissingValueException, validate_required_fields, XmlInserter
 from core_web_service.business_logic.search import build_query
 
 class BusinessLogicTests(unittest.TestCase):
@@ -80,3 +80,40 @@ class BusinessLogicTests(unittest.TestCase):
         """Raise AttributeError if no arguments are provided."""
         dictionairy = {'key': None}
         self.assertRaises(AttributeError, build_query, dictionairy)
+
+    def test_xml_user_parser(self):
+        """Attempts to parse a user from xml."""
+        xml = """<?xml version="1.0" encoding="utf-8"?>
+<user xmlns="http://test"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <username>
+        John
+    </username>
+    <first_name>
+        Scott
+    </first_name>
+    <last_name>
+        Pilgrim
+    </last_name>
+    <password>
+        test
+    </password>
+    <email>
+        Scott@Scott.Scott
+    </email>
+    <degree>
+        
+    </degree>
+    <institution>
+        
+    </institution>
+    <fields>
+        
+    </fields>
+</user>"""
+        xml_inserter = XmlInserter()
+        user = xml_inserter.insert_user(xml)
+        self.assertEqual(user.username, "John")
+        self.assertEqual(user.email, 'Scott@scott.scott')
+        self.assertEqual(user.last_name, "Pilgrim")
+        self.assertNotEqual(user.password, 'test')

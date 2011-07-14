@@ -104,3 +104,5 @@ INSTALLED_APPS = (
     # South is a database migration layer.
     'south',
 )
+
+AUTH_PROFILE_MODULE = "core_web_service.UserProfile"

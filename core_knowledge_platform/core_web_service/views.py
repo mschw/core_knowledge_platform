@@ -4,6 +4,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from core_web_service.models import Author, Comment, Esteem, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
 from core_web_service.business_logic import search, insert
@@ -45,12 +46,23 @@ class RestView(object):
     UNSUPPORTED_MEDIA_TYPE_STATUS = 415
     INTERNAL_SERVER_ERROR_STATUS = 500
 
+    allowed_formats = ('application/xml', 'application/json')
+
     def __call__(self, request, *args, **kwargs):
         """Calls the appropriate function corresponding to the HTTP-method."""
         method = nonalpha_re.sub('', request.method.upper())
         if not method in self.allowed_methods:
             return RestView.method_not_allowed(method)
         return getattr(self, method)(request, *args, **kwargs)
+
+    @staticmethod
+    def validate_sent_format(request):
+        """Determine whether a sent format is accepted by the web service."""
+        sent_format = request.META['content-type']
+        if sent_format in RestView.allowed_formats:
+            return True
+        else:
+            return False
 
     @staticmethod
     def method_not_allowed(method):
@@ -65,6 +77,16 @@ class RestView(object):
         response = HttpResponse('The allow response types are not supported by the service: %s' % (formats))
         response.status_code = RestView.UNSUPPORTED_MEDIA_TYPE_STATUS
         return response
+
+    @staticmethod
+    def unsupported_format_sent(sent_format):
+        """Return a message stating that the sent format can not be interpreted by the web service.
+        
+        Arugments:
+            sent_format: the format sent by a request.
+        """
+        response = HttpResponse('The sent format %s can not be understood by the service - please sent one of the following: %s' % (sent_format, RestView.allowed_formats))
+        response.status_code = RestView.BAD_REQUEST_STATUS
 
     @staticmethod
     def render_response(request, template_name, dictionary=None):
@@ -360,9 +382,9 @@ class Publications(RestView):
         otherwise all publications will be returned."""
         get_parameters = request.GET
         if get_parameters:
-            publication_list = Publications.search_publications(get_parameters)
+            publication_list = Publications.search_publications(get_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
         else:
-            publication_list = Publication.objects.all()
+            publication_list = Publication.objects.exclude(review_status=Publication.IN_REVIEW_STATUS)
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
         return response
@@ -544,6 +566,56 @@ class Overview(RestView):
         response = RestView.render_response(request, 'overview')
         return response
 
+class UserDetail(RestView):
+    """Display user details."""
+    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    
+    @staticmethod
+    def GET(request, user_id):
+        """Return the information for a given user."""
+        pass
+
+    @staticmethod
+    def POST(request):
+        """Create a new user."""
+        if RestView.validate_sent_format(request):
+            data = request.raw_post_data
+            if data:
+                user = insert.insert_user(data)
+                values = {'users': user}
+                response = RestView.render_response('users', values)
+            else:
+                response = HttpResponse("No data provided")
+                response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
+        else:
+            return RestView.unsupported_format_sent(request.META['content-type'])
+
+    @staticmethod
+    def PUT(request):
+        """Change an existing user."""
+        pass
+
+    @staticmethod
+    def DELETE(self):
+        """Delete an existing user."""
+        pass
+
+def login(request):
+    """Log a user in."""
+    username = request.POST['username']
+    password = request.POST['password']
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        auth.login(user)
+        return HttpResponse("Logged In.")
+    else:
+        return HttpResponse("Invalid credentials.")
+
+def logout(request):
+    """Log a user out."""
+    auth.logout(request)
+    return HttpResponse("Logged out.")
 
 authors = Authors()
 author_detail = AuthorDetail()
@@ -561,3 +633,4 @@ rating_detail = RatingDetail()
 reference_material_detail = ReferenceMaterialDetail()
 tags = Tags()
 tag_detail = TagDetail()
+user_detail = UserDetail()

@@ -85,9 +85,11 @@
         </tag>
         {% endfor %}
     </tags>
-    {% for field in publication.furtherfield.all %}
-        <{{ field.key }}>
-        {{ field.value }}
-        </{{ field.key }}>
-    {% endfor %}
+    <fields>
+        {% for field in publication.furtherfield.all %}
+            <{{ field.key }}>
+            {{ field.value }}
+            </{{ field.key }}>
+        {% endfor %}
+    </fields>
 </publication>

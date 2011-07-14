@@ -1,5 +1,9 @@
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, FurtherFields, Tag, User
+from abc import ABCMeta, abstractmethod
+from xml.etree.ElementTree import ElementTree, XML
+import pdb
+
 
 class MissingValueException(Exception):
     """Raise when a publication is missing a required attribute."""
@@ -9,6 +13,67 @@ class MissingValueException(Exception):
     
     def __str__(self):
         return repr(self.message)
+        
+
+def get_inserter(content_type):
+    """Returns an inserter based on the provided content-type.
+    
+    Factory function that returns a fitting parser based on the content-type that
+    should be inserted.
+    
+    Attributes:
+        content_type: the content-type the user wants to insert - should be either
+            xml or json.
+    
+    Returns:
+        inserter: an inserter that can be used to insert the given format."""
+    if 'xml' in content_type:
+        return XmlInserter()
+    elif 'json' in content_type:
+        return JsonInserter()
+    else:
+        raise AttributeError("No inserter for specified value present.")
+
+
+class Inserter(object):
+    """Abstracts insertion logic via strategy pattern.
+    """
+    __metaclass__ = ABCMeta
+    def __init__(self):
+        super(Inserter, self).__init__()
+
+    @abstractmethod
+    def insert_user(self, data):
+        """Inserts a user object into the database."""
+        pass
+
+
+class XmlInserter(Inserter):
+    """Used to insert objects based on xml representations."""
+    def __init__(self):
+        super(XmlInserter, self).__init__()
+        
+    def insert_user(self, data):
+        """Creates a new user from the provided values."""
+        node_tree = XML(data)
+        namespace = self._get_namespace(node_tree)
+        username = node_tree.find('{%s}username' % (namespace)).text.strip()
+        password = node_tree.find('{%s}password' % (namespace)).text.strip()
+        email = node_tree.find('{%s}email' % (namespace)).text.strip()
+        user = User.objects.create_user(username, email, password)
+        return user
+
+    def _get_namespace(self, element):
+        """Return the main namespace for a given ElementTree.element"""
+        namespace = element.tag[1:].split("}")[0]
+        return namespace
+
+
+class JsonInserter(Inserter):
+    """Used to insert objects based on json representations."""
+    def __init__(self, arg):
+        super(JsonInserter, self).__init__()
+        self.arg = arg
         
 
 required_fields_by_publication_type = {
@@ -30,7 +95,7 @@ def insert_bibtex_publication(bibtex, owner):
     """Will insert a publication from a bibtex string.
 
     This function will parse the bibtex format and perform the following transformations:
-    - Keywords will be transformed into tags.
+    - Keywords will be transformed into keywords.
     - Each fields not suitable for the publication table will be inserted into a
       key-value-pair into the furtherfields table.
 
@@ -50,17 +115,17 @@ def insert_bibtex_publication(bibtex, owner):
         publication.owner = owner
         authors = []
         further_fields = []
-        tags = []
+        keywords = []
         for field in entry.fields.asList():
             key = field[0].lower()
             value = field[1].lower()
             if key == "keyword":
-                #create tag
-                keywords = value.split(',')
-                for k in keywords:
-                    tag = Tag.objects.get_or_create(name=k)
-                    publication.tags.add(tag)
-                    tags.append(tag)
+                #create keyword
+                kw = value.split(',')
+                for k in kw:
+                    keyword = Tag.objects.get_or_create(name=k)
+                    publication.keywords.add(keyword)
+                    keywords.append(keyword)
             elif key == "author":
                 #create author
                 parsed_authors = [author.strip() for author in value.split('and')]
@@ -87,9 +152,9 @@ def insert_bibtex_publication(bibtex, owner):
             for field in further_fields:
                 field.publication = publication
                 field.save()
-            for tag in tags:
-                tag.publication_set.add(publication)
-                tag.save()
+            for keyword in keywords:
+                keyword.publication_set.add(publication)
+                keyword.save()
             for author in authors:
                 publication.authors.add(author)
                 publication.save()

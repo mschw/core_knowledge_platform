@@ -25,6 +25,9 @@ urlpatterns = patterns('core_web_service.views',
         (r'^referencematerial/(\d+)$', 'reference_material_detail'),
         (r'^tag/$', 'tags'),
         (r'^tag/(\d+)$', 'tag_detail'),
+        (r'^user/(\d+)$', 'user_detail'),
+        (r'^user/login/', 'login'),
+        (r'^user/logout/', 'logout'),
     # Example:
     # (r'^core_knowledge_platform/', include('core_knowledge_platform.foo.urls')),
 
