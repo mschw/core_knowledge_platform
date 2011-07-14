@@ -1,12 +1,14 @@
 import re
+import pdb
 
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse
+from django.http import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from core_web_service.models import Author, Comment, Esteem, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
+from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
 from core_web_service.business_logic import search, insert
 
 # Create your views here.
@@ -139,7 +141,11 @@ class Authors(RestView):
     @staticmethod
     def GET(request):
         """Returns a list of links to all authors in the system."""
-        author_list = Author.objects.all()
+        get_parameters = request.GET
+        if get_parameters:
+            author_list = search.search_authors(get_parameters)
+        else:
+            author_list = Author.objects.all()
         values = {'author_list': author_list}
         response = RestView.render_response(request, 'authors', values)
         return response
@@ -375,16 +381,23 @@ class Publications(RestView):
         return publications
 
     @staticmethod
-    def GET(request):
+    def GET(request, pub_search=None, auth_search=None, key_search=None):
         """Returns publications stored in the database.
         
         If called with a query string the publications will be searched,
         otherwise all publications will be returned."""
-        get_parameters = request.GET
-        if get_parameters:
-            publication_list = Publications.search_publications(get_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
-        else:
-            publication_list = Publication.objects.exclude(review_status=Publication.IN_REVIEW_STATUS)
+        pdb.set_trace()
+        
+        pub_parameters = None
+        auth_parameters = None
+        key_parameters = None
+        if pub_search:
+            pub_parameters = QueryDict(pub_search)
+        if auth_search:
+            auth_parameters = QueryDict(auth_search)
+        if key_search:
+            key_parameters = QueryDict(key_search)
+        publication_list = search.search_publications(pub_parameters, auth_parameters, key_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
         return response
@@ -566,6 +579,52 @@ class Overview(RestView):
         response = RestView.render_response(request, 'overview')
         return response
 
+
+class PaperGroups(RestView):
+    """Display an overview over the available papergroups."""
+    allowed_methods = ("GET", "POST")
+
+    @staticmethod
+    def GET(request):
+        """Return a list of all papergroups."""
+        papergroups = PaperGroup.objects.all()
+        values = {'papergroups': papergroups}
+        response = RestView.render_response('papergroups', values)
+        return response
+
+    @staticmethod
+    def POST(request):
+        """Create a new papergroup from the specified data."""
+        pass
+
+
+class PaperGroupDetail(RestView):
+    """Display information about a specific papergroup."""
+    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+
+    @staticmethod
+    def GET(request, papergroup_id):
+        """Return specific information about one papergroup."""
+        papergroup = PaperGroup.objects.get(id=papergroup_id)
+        values = {'papergroup': papergroup}
+        response = RestView.render_response('papergroup', values)
+        return response
+
+    @staticmethod
+    def POST(request):
+        """"""
+        pass
+
+    @staticmethod
+    def PUT(request):
+        """"""
+        pass
+
+    @staticmethod
+    def DELETE(request):
+        """docstring for DELETE"""
+        pass
+
 class UserDetail(RestView):
     """Display user details."""
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
@@ -623,6 +682,8 @@ comments = Comments()
 comment_detail = CommentDetail()
 esteem_detail = EsteemDetail()
 overview = Overview()
+papergroups = PaperGroups()
+papergroup_detail = PaperGroupDetail()
 peerreviews = PeerReviews()
 peerreview_detail = PeerReviewDetail()
 peerreview_templates = PeerReviewTemplates()

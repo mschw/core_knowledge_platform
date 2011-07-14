@@ -90,8 +90,8 @@ class PaperGroup(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     blind_review = models.BooleanField()
-    editors = models.ManyToManyField(User)
-    referees = models.ManyToManyField(User)
+    editors = models.ManyToManyField(User, related_name='papergroup_editors')
+    referees = models.ManyToManyField(User, related_name='papergroup_referees')
     publications = models.ManyToManyField(Publication)
     tags = models.ManyToManyField(Tag)
 
