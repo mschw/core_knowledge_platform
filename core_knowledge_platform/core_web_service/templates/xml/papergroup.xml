@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<papergroup xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <title>
+        {{ papergroup.title }}
+    </title>
+    <description>
+        {{ papergroup.description }}
+    </description>
+    <blind_review>
+        {{ papergroup.blind_review }}
+    </blind_review>
+    <editors>
+    {% for editor in papergroup.editors.all() %}
+        <editor>
+            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ editor.id }}" />
+        </editor>
+    {% endfor %}
+    </editors>
+    <referees>
+    {% for referee in papergroup.referees.all() %}
+        <referee>
+            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ referee.id }}" />
+        </referee>
+    {% endfor %}
+    </referees>
+    <tags>
+    {% for tag in papergroup.tags.all() %}
+        <tag>
+            <atom:link rel="user" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" />
+        </tag>
+    {% endfor %}
+    </tags>
+    <publications>
+    {% for publication in papergroup.publications.all() %}
+        <publication>
+            <atom:link rel="user" type="application/xml" href="http://{{ url }}/publication/{{ publication.id }}" />
+        </publication>
+    {% endfor %}
+    </publications>
+</papergroup>

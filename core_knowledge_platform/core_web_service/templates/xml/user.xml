@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <username>
+        {{ user.username }}
+    </username>
+    <first_name>
+        {{ user.first_name }}
+    </first_name>
+    <last_name>
+        {{ user.last_name }}
+    </last_name>
+    <email>
+        {{ user.email }}
+    </email>
+    <degree>
+        {{ user.get_profile.degree }}
+    </degree>
+    <institution>
+        {{ user.get_profile.institution }}
+    </institution>
+    <fields>    
+        {% for field in user.get_profile.further_fields %}
+        <{{ field.key }}>
+            {{ field.value }}
+        </{{field.key}}>
+        {% endfor %}
+    </fields>
+</user>
