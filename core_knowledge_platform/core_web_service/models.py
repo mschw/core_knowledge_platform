@@ -40,33 +40,60 @@ class Esteem(models.Model):
     value = models.IntegerField()
 
 
+class Keyword(models.Model):
+    """Stores keywords for a publication that were specified by the author."""
+    keyword = models.CharField(max_length=255, blank = True, null = True)
+
+
 class Publication(models.Model):
     """Class to store publication metadata in the system."""
-    address          = models.CharField(max_length = 255, blank = True, null = True)
-    booktitle        = models.CharField(max_length = 255, blank = True, null = True)
-    chapter          = models.CharField(max_length = 255, blank = True, null = True)
-    edition          = models.CharField(max_length = 255, blank = True, null = True)
-    editor           = models.CharField(max_length = 255, blank = True, null = True)
-    how_published    = models.CharField(max_length = 255, blank = True, null = True)
-    institution      = models.CharField(max_length = 255, blank = True, null = True)
-    isbn             = models.CharField(max_length = 255, blank = True, null = True)
-    journal          = models.CharField(max_length = 255, blank = True, null = True)
-    number           = models.CharField(max_length = 255, blank = True, null = True)
-    organization     = models.CharField(max_length = 255, blank = True, null = True)
-    pages            = models.CharField(max_length = 255, blank = True, null = True)
-    publisher        = models.CharField(max_length = 255, blank = True, null = True)
-    series           = models.CharField(max_length = 255, blank = True, null = True)
+    PUBLIC_STATUS = 1
+    REVIEWED_STATUS = 2
+    IN_REVIEW_STATUS = 3
+    STATUS_CHOICES = (
+            (PUBLIC_STATUS, 'Public'),
+            (REVIEWED_STATUS, 'Reviewed'),
+            (IN_REVIEW_STATUS, 'Being reviewed'),
+            )
+    abstract = models.TextField()
+    address = models.CharField(max_length = 255, blank = True, null = True)
+    booktitle = models.CharField(max_length = 255, blank = True, null = True)
+    chapter = models.CharField(max_length = 255, blank = True, null = True)
+    edition = models.CharField(max_length = 255, blank = True, null = True)
+    editor = models.CharField(max_length = 255, blank = True, null = True)
+    how_published = models.CharField(max_length = 255, blank = True, null = True)
+    institution = models.CharField(max_length = 255, blank = True, null = True)
+    isbn = models.CharField(max_length = 255, blank = True, null = True)
+    journal = models.CharField(max_length = 255, blank = True, null = True)
+    number = models.CharField(max_length = 255, blank = True, null = True)
+    organization = models.CharField(max_length = 255, blank = True, null = True)
+    pages = models.CharField(max_length = 255, blank = True, null = True)
+    publisher = models.CharField(max_length = 255, blank = True, null = True)
+    review_status = models.IntegerField(choices=STATUS_CHOICES, default=PUBLIC_STATUS)
+    series = models.CharField(max_length = 255, blank = True, null = True)
     publication_type = models.CharField(max_length = 255, blank = True, null = True)
-    volume           = models.CharField(max_length = 255, blank = True, null = True)
-    title            = models.CharField(max_length = 255)
-    month            = models.CharField(max_length = 255, blank = True, null = True)
-    note             = models.TextField(blank      = True, null = True)
-    year             = models.IntegerField(blank   = True, null = True)
+    volume = models.CharField(max_length = 255, blank = True, null = True)
+    title = models.CharField(max_length = 255)
+    month = models.CharField(max_length = 255, blank = True, null = True)
+    note = models.TextField(blank = True, null = True)
+    year = models.IntegerField(blank = True, null = True)
     # TODO: check how to reference integrated User subsystem
-    owner        = models.ForeignKey(User)
-    authors      = models.ManyToManyField(Author)
-    comments     = models.ManyToManyField(Comment)
-    tags         = models.ManyToManyField(Tag)
+    owner = models.ForeignKey(User)
+    authors = models.ManyToManyField(Author)
+    comments = models.ManyToManyField(Comment)
+    tags = models.ManyToManyField(Tag)
+    keywords = models.ManyToManyField(Keyword)
+
+
+class PaperGroup(models.Model):
+    """Store an editor for a certain group."""
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    blind_review = models.BooleanField()
+    editors = models.ManyToManyField(User)
+    referees = models.ManyToManyField(User)
+    publication = models.ManyToManyField(Publication)
+    tags = models.ManyToManyField(Tag)
 
 
 class FurtherFields(models.Model):
@@ -111,3 +138,11 @@ class ReferenceMaterial(models.Model):
     url = models.URLField()
     notes = models.TextField()
 
+
+class UserProfile(models.Model):
+    """Stores additional information about a user not in the system."""
+    user = models.ForeignKey(User, unique=True)
+    degree = models.CharField(max_length=255, blank=True, null=True)
+    authenticated_professional = models.BooleanField()
+    institution = models.CharField(max_length=255, blank=True, null=True)
+    further_fields = models.ForeignKey(FurtherFields)
