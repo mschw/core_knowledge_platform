@@ -1,7 +1,7 @@
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, FurtherFields, Keyword, User
 from abc import ABCMeta, abstractmethod
-from xml.etree.ElementTree import ElementTree, XML
+from xml.etree.ElementTree import XML
 import pdb
 
 
@@ -13,6 +13,47 @@ class MissingValueException(Exception):
     
     def __str__(self):
         return repr(self.message)
+        
+
+
+class Inserter(object):
+    """Abstracts insertion logic via strategy pattern.
+    """
+    __metaclass__ = ABCMeta
+    def __init__(self):
+        super(Inserter, self).__init__()
+
+    @abstractmethod
+    def insert_user(self, data):
+        """Creates a new user from the provided values."""
+        pass
+
+
+class XmlInserter(Inserter):
+    """Used to insert objects based on xml representations."""
+    def __init__(self):
+        super(XmlInserter, self).__init__()
+        
+    def insert_user(self, data):
+        node_tree = XML(data)
+        namespace = self._get_namespace(node_tree)
+        username = node_tree.find('{%s}username' % (namespace)).text.strip()
+        password = node_tree.find('{%s}password' % (namespace)).text.strip()
+        email = node_tree.find('{%s}email' % (namespace)).text.strip()
+        user = User.objects.create_user(username, email, password)
+        return user
+
+    def _get_namespace(self, element):
+        """Return the main namespace for a given ElementTree.element."""
+        namespace = element.tag[1:].split("}")[0]
+        return namespace
+
+
+class JsonInserter(Inserter):
+    """Used to insert objects based on json representations."""
+    def __init__(self, arg):
+        super(JsonInserter, self).__init__()
+        self.arg = arg
         
 
 def get_inserter(content_type):
@@ -33,63 +74,6 @@ def get_inserter(content_type):
         return JsonInserter()
     else:
         raise AttributeError("No inserter for specified value present.")
-
-
-class Inserter(object):
-    """Abstracts insertion logic via strategy pattern.
-    """
-    __metaclass__ = ABCMeta
-    def __init__(self):
-        super(Inserter, self).__init__()
-
-    @abstractmethod
-    def insert_user(self, data):
-        """Inserts a user object into the database."""
-        pass
-
-
-class XmlInserter(Inserter):
-    """Used to insert objects based on xml representations."""
-    def __init__(self):
-        super(XmlInserter, self).__init__()
-        
-    def insert_user(self, data):
-        """Creates a new user from the provided values."""
-        node_tree = XML(data)
-        namespace = self._get_namespace(node_tree)
-        username = node_tree.find('{%s}username' % (namespace)).text.strip()
-        password = node_tree.find('{%s}password' % (namespace)).text.strip()
-        email = node_tree.find('{%s}email' % (namespace)).text.strip()
-        user = User.objects.create_user(username, email, password)
-        return user
-
-    def _get_namespace(self, element):
-        """Return the main namespace for a given ElementTree.element"""
-        namespace = element.tag[1:].split("}")[0]
-        return namespace
-
-
-class JsonInserter(Inserter):
-    """Used to insert objects based on json representations."""
-    def __init__(self, arg):
-        super(JsonInserter, self).__init__()
-        self.arg = arg
-        
-
-required_fields_by_publication_type = {
-        'article': ['title', 'year'],
-        'book': ['publisher', 'title', 'year'],
-        'booklet': [],
-        'inbook': ['chapter', 'editor', 'pages', 'publisher', 'year'],
-        'incollection': ['booktitle', 'publisher', 'title', 'year'],
-        'manual': ['title'],
-        'masterthesis': ['school', 'title', 'year'],
-        'misc': [],
-        'phdthesis': ['school', 'title', 'year'],
-        'proceedings': ['title', 'year'],
-        'techreport': ['institution', 'title', 'year'],
-        'unpublished': ['note', 'title'],
-        }
 
 def insert_bibtex_publication(bibtex, owner):
     """Will insert a publication from a bibtex string.
@@ -161,6 +145,21 @@ def insert_bibtex_publication(bibtex, owner):
         except MissingValueException, e:
             raise e
     return inserted_publication
+
+required_fields_by_publication_type = {
+        'article': ['title', 'year'],
+        'book': ['publisher', 'title', 'year'],
+        'booklet': [],
+        'inbook': ['chapter', 'editor', 'pages', 'publisher', 'year'],
+        'incollection': ['booktitle', 'publisher', 'title', 'year'],
+        'manual': ['title'],
+        'masterthesis': ['school', 'title', 'year'],
+        'misc': [],
+        'phdthesis': ['school', 'title', 'year'],
+        'proceedings': ['title', 'year'],
+        'techreport': ['institution', 'title', 'year'],
+        'unpublished': ['note', 'title'],
+        }
 
 def validate_required_fields(publication):
     """Check if a publication has all fields that are required according to its type.

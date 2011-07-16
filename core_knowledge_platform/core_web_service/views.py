@@ -48,19 +48,33 @@ class RestView(object):
     UNSUPPORTED_MEDIA_TYPE_STATUS = 415
     INTERNAL_SERVER_ERROR_STATUS = 500
 
-    allowed_formats = ('application/xml', 'application/json')
+    allowed_formats = ('application/xml', 'application/json', 'application/x-bibtex')
 
     def __call__(self, request, *args, **kwargs):
         """Calls the appropriate function corresponding to the HTTP-method."""
         method = nonalpha_re.sub('', request.method.upper())
         if not method in self.allowed_methods:
             return RestView.method_not_allowed(method)
+        try:
+            accepted_format = request.META['HTTP_ACCEPT']
+            if not accepted_format in RestView.allowed_formats:
+                return RestView.unsupported_format_requested(accepted_format)
+        except KeyError:
+            return RestView.unsupported_format_requested('No format specified')
+        try:
+            content_type = request.META['CONTENT_TYPE']
+            if content_type:
+                if not content_type in RestView.allowed_formats:
+                    return RestView.unsupported_format_requested(content_type)
+        except KeyError:
+            # TODO: Decide if action is necessary ? GET has no content.
+            pass
         return getattr(self, method)(request, *args, **kwargs)
 
     @staticmethod
     def validate_sent_format(request):
         """Determine whether a sent format is accepted by the web service."""
-        sent_format = request.META['content-type']
+        sent_format = request.META['CONTENT_TYPE']
         if sent_format in RestView.allowed_formats:
             return True
         else:
@@ -111,7 +125,7 @@ class RestView(object):
         dictionary['url'] = service_url
         Context(dictionary)
         for response in response_type:
-            # TODO: the first that is encountered will be used to render a response.
+            # XXX: the first that is encountered will be used to render a response.
             if 'xml' in response.lower():
                 suffix = 'xml'
                 break
@@ -375,11 +389,6 @@ class Publications(RestView):
     """Class to handle rendering of the publication list view."""
     allowed_methods = ('GET', 'POST')
 
-    def search_publications(parameters):
-        """Search the publications stored in the backend."""
-        publications = search.search_publications(parameters)
-        return publications
-
     @staticmethod
     def GET(request, pub_search=None, auth_search=None, key_search=None):
         """Returns publications stored in the database.
@@ -395,7 +404,8 @@ class Publications(RestView):
             auth_parameters = QueryDict(auth_search)
         if key_search:
             key_parameters = QueryDict(key_search)
-        publication_list = search.search_publications(pub_parameters, auth_parameters, key_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
+        publication_list = search.search_publications(pub_parameters, auth_parameters,
+                key_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
         return response
@@ -405,15 +415,16 @@ class Publications(RestView):
     def POST(request):
         """Inserts publications via POST request."""
         content_type = request.META['CONTENT_TYPE']
-        bibtex_data = request.raw_post_data
+        data = request.raw_post_data
         owner = request.user
         inserted_publications = None
         if not owner:
             owner = User.get_or_create(name='Anonymous')
         if 'application/x-bibtex' in content_type:
-            inserted_publications = insert.insert_bibtex_publication(bibtex_data, owner)
+            inserted_publications = insert.insert_bibtex_publication(data, owner)
         else:
-            pass
+            inserter = insert.get_inserter(content_type)
+            inserter.insert_publication(data)
         values = {'publication_list': inserted_publications}
         response = RestView.render_response(request, 'publications', values)
         response.status_code = RestView.CREATED_STATUS
@@ -443,13 +454,13 @@ class PublicationDetail(RestView):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
         content_type = request.META['CONTENT_TYPE']
-        # TODO: use the user object to set the owner of the publication.
-        publication_data = request.raw_post_data
+        data = request.raw_post_data
         owner = request.user
         if 'application/x-bibtex' in content_type:
-            inserted_publication = insert.insert_bibtex_publication(publication_data, owner)
+            inserted_publication = insert.insert_bibtex_publication(data, owner)
         else:
-            inserted_publication = insert.insert_publication(publication_data, owner)
+            inserter = insert.get_inserter(content_type)
+            inserter.insert_publication(data)
         values = {'publication': inserted_publication}
         response = RestView.render_response(request, 'publication', values)
         response.status_code = RestView.CREATED_STATUS
