@@ -48,7 +48,7 @@ class RestView(object):
     UNSUPPORTED_MEDIA_TYPE_STATUS = 415
     INTERNAL_SERVER_ERROR_STATUS = 500
 
-    allowed_formats = ('application/xml', 'application/json', 'application/x-bibtex')
+    allowed_formats = ('xml', 'json', 'bibtex')
 
     def __call__(self, request, *args, **kwargs):
         """Calls the appropriate function corresponding to the HTTP-method."""
@@ -57,18 +57,25 @@ class RestView(object):
             return RestView.method_not_allowed(method)
         try:
             accepted_format = request.META['HTTP_ACCEPT']
-            if not accepted_format in RestView.allowed_formats:
-                return RestView.unsupported_format_requested(accepted_format)
+            valid_accept = False
+            for f in RestView.allowed_formats:
+                if f in accepted_format:
+                    valid_accept = True
+                if not valid_accept:
+                    return RestView.unsupported_format_requested(accepted_format)
         except KeyError:
             return RestView.unsupported_format_requested('No format specified')
-        try:
-            content_type = request.META['CONTENT_TYPE']
-            if content_type:
-                if not content_type in RestView.allowed_formats:
-                    return RestView.unsupported_format_requested(content_type)
-        except KeyError:
-            # TODO: Decide if action is necessary ? GET has no content.
-            pass
+        #try:
+        #    content_type = request.META['CONTENT_TYPE']
+        #    valid_request = False
+        #    for f in RestView.allowed_formats:
+        #        if f in content_type:
+        #            valid_request = True
+        #        if not valid_request:
+        #            return RestView.unsupported_format_requested(accepted_format)
+        #except KeyError:
+        #    # TODO: Decide if action is necessary ? GET has no content.
+        #    pass
         return getattr(self, method)(request, *args, **kwargs)
 
     @staticmethod
@@ -134,11 +141,13 @@ class RestView(object):
                 break
         if not suffix:
             return RestView.unsupported_format_requested(response_type)
-        suffix = ".%s" % (suffix)
-        template = get_template(template_name + suffix)
+        dotted_suffix = ".%s" % (suffix)
+        template = get_template(template_name + dotted_suffix)
         response = template.render(Context(dictionary))
-        response.status_code = 200
-        return HttpResponse(response)
+        return_response = HttpResponse(response)
+        return_response.status_code = 200
+        return_response['Content-Type'] = 'application/%s' % (suffix)
+        return return_response
 
     @staticmethod
     def _get_allowed_response_types(request):
