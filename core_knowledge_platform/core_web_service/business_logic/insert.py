@@ -1,7 +1,7 @@
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, FurtherFields, Keyword, User
 from abc import ABCMeta, abstractmethod
-from xml.etree.ElementTree import XML
+from xml.etree.ElementTree import XML, Element
 import pdb
 
 
@@ -13,7 +13,6 @@ class MissingValueException(Exception):
     
     def __str__(self):
         return repr(self.message)
-        
 
 
 class Inserter(object):
@@ -33,14 +32,43 @@ class XmlInserter(Inserter):
     """Used to insert objects based on xml representations."""
     def __init__(self):
         super(XmlInserter, self).__init__()
+
+    def _parse_xml_to_dict(self, data):
+        """Parses a xml document and returns a dictionary of values.
         
-    def insert_user(self, data):
+        Only works for a nested depth of 2 levels:
+            <a>
+                <b>
+                </b>
+            </a>
+        """
+        parsed_dict = dict()
         node_tree = XML(data)
+        node = Element()
         namespace = self._get_namespace(node_tree)
-        username = node_tree.find('{%s}username' % (namespace)).text.strip()
-        password = node_tree.find('{%s}password' % (namespace)).text.strip()
-        email = node_tree.find('{%s}email' % (namespace)).text.strip()
-        user = User.objects.create_user(username, email, password)
+        namespace = "{%s}" % (namespace)
+        for node in node_tree:
+            tag = node.tag.replace(namespace, "")
+            if len(node) > 0:
+                parsed_dict[tag] = []
+                for subnode in node:
+                    parsed_dict[tag].append(subnode)
+            else:
+                parsed_dict[tag] = node.text.strip()
+        return parsed_dict
+
+    def insert_user(self, data):
+        parsed_data = self._parse_xml_to_dict(data)
+        user = User.objects.create_user(parsed_data['username'], parsed_data['email'],
+                parsed_data['password'])
+        return user
+
+    def change_user(self, user_id, data):
+        user = User.objects.get(id=user_id)
+        values = self._parse_xml_to_dict(data)
+        user.username = values['username']
+        user.email = values['email']
+        user.save()
         return user
 
     def _get_namespace(self, element):
@@ -54,7 +82,7 @@ class JsonInserter(Inserter):
     def __init__(self, arg):
         super(JsonInserter, self).__init__()
         self.arg = arg
-        
+
 
 def get_inserter(content_type):
     """Returns an inserter based on the provided content-type.

@@ -3,7 +3,7 @@ import pdb
 
 from django.template.loader import get_template
 from django.template import Context
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.http import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
@@ -66,7 +66,7 @@ class RestView(object):
         except KeyError:
             return RestView.unsupported_format_requested('No format specified')
         #try:
-        #    content_type = request.META['CONTENT_TYPE']
+        #    content_type = RestView.get_content_type(request)
         #    valid_request = False
         #    for f in RestView.allowed_formats:
         #        if f in content_type:
@@ -81,11 +81,11 @@ class RestView(object):
     @staticmethod
     def validate_sent_format(request):
         """Determine whether a sent format is accepted by the web service."""
-        sent_format = request.META['CONTENT_TYPE']
-        if sent_format in RestView.allowed_formats:
-            return True
-        else:
-            return False
+        sent_format = RestView.get_content_type(request)
+        for f in RestView.allowed_formats:
+            if f in sent_format:
+                return True
+        return False
 
     @staticmethod
     def method_not_allowed(method):
@@ -110,6 +110,7 @@ class RestView(object):
         """
         response = HttpResponse('The sent format %s can not be understood by the service - please sent one of the following: %s' % (sent_format, RestView.allowed_formats))
         response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
     @staticmethod
     def render_response(request, template_name, dictionary=None):
@@ -155,6 +156,12 @@ class RestView(object):
         accept_header = request.META['HTTP_ACCEPT']
         list_of_values = accept_header.split(',')
         return list_of_values
+
+    @staticmethod
+    def get_content_type(request):
+        """Returns the content type of a request."""
+        content_type = request.META['CONTENT_TYPE']
+        return content_type
 
 
 class Authors(RestView):
@@ -333,9 +340,15 @@ class PeerReviewDetail(RestView):
         return response
 
     @staticmethod
+    @login_required
     def POST(request, values):
-        """docstring for POST"""
-        pass
+        """Creates a new peer review."""
+        if request.user.has_perm('core_web_service.add_peerreview'):
+            pass
+        else:
+            response = HttpResponse("Invalid priviledges.")
+            response.status_code = RestView.FORBIDDEN_STATUS
+            return response
 
     @staticmethod
     def PUT(request, values):
@@ -423,7 +436,7 @@ class Publications(RestView):
     @csrf_exempt
     def POST(request):
         """Inserts publications via POST request."""
-        content_type = request.META['CONTENT_TYPE']
+        content_type = RestView.get_content_type(request)
         data = request.raw_post_data
         owner = request.user
         inserted_publications = None
@@ -462,30 +475,34 @@ class PublicationDetail(RestView):
     def PUT(request):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
-        content_type = request.META['CONTENT_TYPE']
-        data = request.raw_post_data
-        owner = request.user
-        if 'application/x-bibtex' in content_type:
-            inserted_publication = insert.insert_bibtex_publication(data, owner)
-        else:
-            inserter = insert.get_inserter(content_type)
-            inserter.insert_publication(data)
+        inserted_publication = PublicationDetail._insert_publication(request)
         values = {'publication': inserted_publication}
         response = RestView.render_response(request, 'publication', values)
         response.status_code = RestView.CREATED_STATUS
         return response
 
     @staticmethod
+    def _insert_publication(request):
+        content_type = RestView.get_content_type(request)
+        data = request.raw_post_data
+        owner = request.user
+        if 'application/x-bibtex' in content_type:
+            inserted_publication = insert.insert_bibtex_publication(data, owner)
+        else:
+            inserter = insert.get_inserter(content_type)
+            inserted_publication = inserter.insert_publication(data)
+        return inserted_publication
+
+    @staticmethod
     def POST(request):
         """Creates a new resource of the publication type.
 
         On successful creation the response Location header will contain the location the resource can be addressed at."""
-        publication = Publication()
-        publication.save()
-        publication = {'publication': publication}
+        inserted_publication = PublicationDetail._insert_publication(request)
+        publication = {'publication': inserted_publication}
         response = RestView.render_response(request, 'publication', publication)
         response.status_code = RestView.CREATED_STATUS 
-        response['Location'] = "%s/publication/%s" % (service_url, publication.id)
+        response['Location'] = "%s/publication/%s" % (service_url, inserted_publication.id)
         return response
 
     @staticmethod
@@ -504,23 +521,25 @@ class RatingDetail(RestView):
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
 
     @staticmethod
-    def GET(rating_id):
+    def GET(request, rating_id):
         """docstring for GET"""
         rating = Rating.objects.get(id=rating_id)
-        pass
+        values = {'rating': rating}
+        response = RestView.render_response(request, 'rating', values)
+        return response
     
     @staticmethod
-    def POST():
+    def POST(request):
         """docstring for POST"""
         pass
 
     @staticmethod
-    def PUT():
+    def PUT(request):
         """docstring for PUT"""
         pass
 
     @staticmethod
-    def DELETE():
+    def DELETE(request):
         """docstring for DELETE"""
         pass
         
@@ -531,23 +550,25 @@ class ReferenceMaterialDetail(RestView):
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
 
     @staticmethod
-    def GET(material_id):
+    def GET(request, material_id):
         """docstring for GET"""
         reference_material = ReferenceMaterial.objects.get(id=material_id)
-        pass
+        values = {'referencematerial': reference_material}
+        response = RestView.render_response(request, 'referencematerial', values)
+        return response
 
     @staticmethod
-    def POST():
+    def POST(request):
         """docstring for POST"""
         pass
         
     @staticmethod
-    def PUT():
+    def PUT(request):
         """docstring for PUT"""
         pass
 
     @staticmethod
-    def DELETE():
+    def DELETE(request):
         """docstring for DELETE"""
         pass
 
@@ -607,7 +628,7 @@ class PaperGroups(RestView):
         """Return a list of all papergroups."""
         papergroups = PaperGroup.objects.all()
         values = {'papergroups': papergroups}
-        response = RestView.render_response('papergroups', values)
+        response = RestView.render_response(request, 'papergroups', values)
         return response
 
     @staticmethod
@@ -625,7 +646,7 @@ class PaperGroupDetail(RestView):
         """Return specific information about one papergroup."""
         papergroup = PaperGroup.objects.get(id=papergroup_id)
         values = {'papergroup': papergroup}
-        response = RestView.render_response('papergroup', values)
+        response = RestView.render_response(request, 'papergroup', values)
         return response
 
     @staticmethod
@@ -643,14 +664,10 @@ class PaperGroupDetail(RestView):
         """docstring for DELETE"""
         pass
 
-class UserDetail(RestView):
-    """Display user details."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
-    
-    @staticmethod
-    def GET(request, user_id):
-        """Return the information for a given user."""
-        pass
+
+class Users(RestView):
+    """Used to create user accounts."""
+    allowed_methods = ("POST")
 
     @staticmethod
     def POST(request):
@@ -658,20 +675,45 @@ class UserDetail(RestView):
         if RestView.validate_sent_format(request):
             data = request.raw_post_data
             if data:
-                user = insert.insert_user(data)
+                inserter = insert.get_inserter(RestView.get_content_type(request))
+                user = inserter.insert_user(data)
                 values = {'users': user}
-                response = RestView.render_response('users', values)
+                response = RestView.render_response(request, 'user', values)
+                response.status_code = RestView.CREATED_STATUS
+                response['Location'] = "%s/user/%s" % (service_url, user.id)
             else:
                 response = HttpResponse("No data provided")
                 response.status_code = RestView.BAD_REQUEST_STATUS
             return response
         else:
-            return RestView.unsupported_format_sent(request.META['content-type'])
+            return RestView.unsupported_format_sent(RestView.get_content_type(request))
+
+
+class UserDetail(RestView):
+    """Display user details."""
+    allowed_methods = ("GET", "PUT", "DELETE")
+    
+    @staticmethod
+    def GET(request, user_id):
+        """Return the information for a given user."""
+        pass
 
     @staticmethod
-    def PUT(request):
+    def PUT(request, user_id):
         """Change an existing user."""
-        pass
+        if RestView.validate_sent_format(request):
+            data = request.raw_post_data
+            if data:
+                inserter = insert.get_inserter(RestView.get_content_type(request))
+                user = inserter.change_user(user_id, data)
+                values = {'users': user}
+                response = RestView.render_response(request, 'users', values)
+            else:
+                response = HttpResponse("No data provided")
+                response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
+        else:
+            return RestView.unsupported_format_sent(RestView.get_content_type(request))
 
     @staticmethod
     def DELETE(self):
@@ -684,10 +726,12 @@ def login(request):
     password = request.POST['password']
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
-        auth.login(user)
+        auth.login(request, user)
         return HttpResponse("Logged In.")
     else:
-        return HttpResponse("Invalid credentials.")
+        response = HttpResponse("Invalid credentials.")
+        response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
 def logout(request):
     """Log a user out."""
@@ -712,4 +756,5 @@ rating_detail = RatingDetail()
 reference_material_detail = ReferenceMaterialDetail()
 tags = Tags()
 tag_detail = TagDetail()
+users = Users()
 user_detail = UserDetail()

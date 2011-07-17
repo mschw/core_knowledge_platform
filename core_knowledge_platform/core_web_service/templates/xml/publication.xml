@@ -40,6 +40,9 @@
     <publisher>
         {{ publication.publisher }}
     </publisher>
+    <review_status>
+        {{ publication.review_status }}
+    </review_status>
     <series>
         {{ publication.series }}
     </series>
@@ -64,13 +67,29 @@
     <owner>
         <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
     </owner>
-    <authors>    
-        {% for author in publication.authors.all %}
-        <author>
-            <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
-        </author>
+    {% if publication.review_status == 3 %}
+        {% for pg in publication.paper_groups.all %}
+            {% if not pg.blind_review %}
+                {% if request.user in pg.referees %}
+                    <authors>    
+                        {% for author in publication.authors.all %}
+                        <author>
+                            <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
+                        </author>
+                        {% endfor %}
+                    </authors>
+                {% endif %}
+            {% endif %}
         {% endfor %}
-    </authors>
+    {% else %}
+        <authors>    
+            {% for author in publication.authors.all %}
+            <author>
+                <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
+            </author>
+            {% endfor %}
+        </authors>
+    {% endif %}
     <comments>    
         {% for comment in publication.comments.all %}
         <comment>
@@ -85,6 +104,13 @@
         </tag>
         {% endfor %}
     </tags>
+    <referencematerials>
+        {% for rm in publication.referencematerials.all %}
+        <referencematerial>
+            <atom:link rel="referencematerial" type="application/xml" href="http://{{ url }}/referencematerial/{{ rm.id }}"/>
+        </referencematerial>
+        {% endfor %}
+    </referencematerials>
     <fields>
         {% for field in publication.furtherfield.all %}
             <{{ field.key }}>

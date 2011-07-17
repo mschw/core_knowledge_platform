@@ -99,7 +99,7 @@ class BusinessLogicTests(unittest.TestCase):
         test
     </password>
     <email>
-        Scott@Scott.Scott
+        Scott@scott.scott
     </email>
     <degree>
         
