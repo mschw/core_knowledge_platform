@@ -1,3 +1,4 @@
+from core_web_service.models import Esteem
 from core_web_service.models import Vote
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Author, Publication, ProfileField, FurtherField, Keyword, User
@@ -139,14 +140,25 @@ class XmlInserter(Inserter):
         comment.text = parsed_data['text']
         for field in parsed_data['votes']:
             vote_id = self._get_id_from_atom_link(field)
-            vote = Vote.objects(id=vote_id)
-            comment.vote.add(vote)
+            vote = Vote.objects.get(id=vote_id)
+            comment.vote = vote
         comment.save()
         return comment
 
     def modify_esteem(self, data, esteem_id=None):
         """Create or modify an esteem object according to the specified value."""
-        pass
+        # FIXME: fix xml data schema to match parser ?
+        parsed_data = self._parse_xml_to_dict(data)
+        if esteem_id:
+            esteem = Esteem.objects.get(id=esteem_id)
+        else:
+            esteem = Esteem()
+        user = self._get_id_from_atom_link(parsed_data['user'])
+        tag = self._get_id_from_atom_link(parsed_data['tag'])
+        esteem.user = user
+        esteem.tag = tag
+        esteem.value = parsed_data['value']
+        return esteem
 
     def modify_papergroup(self, data, papergroup_id=None):
         """Create or modify a papergroup object according to the specified value."""

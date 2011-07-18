@@ -26,9 +26,9 @@ class Tag(models.Model):
 
 class Comment(models.Model):
     """Represents a comment. Comments can be added to publications and other comments."""
+    # FIXME: only one vote per comment?
     title = models.CharField(max_length=75)
     text = models.TextField()
-    # TODO: Include relationships
     vote = models.ForeignKey(Vote)
 
 
