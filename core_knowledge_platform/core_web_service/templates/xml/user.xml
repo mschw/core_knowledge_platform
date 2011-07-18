@@ -20,7 +20,7 @@
         {{ user.get_profile.institution }}
     </institution>
     <fields>    
-        {% for field in user.get_profile.further_fields %}
+        {% for field in user.get_profile.profile_field.all %}
         <{{ field.key }}>
             {{ field.value }}
         </{{field.key}}>

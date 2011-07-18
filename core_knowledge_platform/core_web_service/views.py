@@ -3,7 +3,7 @@ import pdb
 
 from django.template.loader import get_template
 from django.template import Context
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 from django.http import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
@@ -170,7 +170,9 @@ class Authors(RestView):
 
     @staticmethod
     def GET(request):
-        """Returns a list of links to all authors in the system."""
+        """Return a list of links to authors in the system.
+        
+        If queried with parameters, a search will be performed."""
         get_parameters = request.GET
         if get_parameters:
             author_list = search.search_authors(get_parameters)
@@ -198,16 +200,19 @@ class AuthorDetail(RestView):
         return response
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def POST():
         """Creates a new author and returns the resource-url."""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT():
         """Modifies an existing author resource."""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE():
         """Deletes an existing author resource."""
         pass
@@ -248,16 +253,19 @@ class CommentDetail(RestView):
         return response
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def POST():
         """docstring for POST"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT():
         """docstring for PUT"""
         pass
     
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE():
         """docstring for DELETE"""
         pass
@@ -297,11 +305,13 @@ class EsteemDetail(RestView):
         return response
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def POST():
         """docstring for POST"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT():
         """docstring for PUT"""
         pass
@@ -309,9 +319,10 @@ class EsteemDetail(RestView):
 
 class PeerReviews(RestView):
     """Returns list of peer reviews."""
-    allowed_methods = ("GET")
+    allowed_methods = ("GET", "POST")
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def GET(request, publication_id):
         """Return a list of peer reviews for a certain publication."""
         try:
@@ -323,11 +334,26 @@ class PeerReviews(RestView):
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
+    @staticmethod
+    @login_required
+    def POST(request, publication_id):
+        """Creates a new peer review."""
+        if request.user.has_perm('core_web_service.add_peerreview'):
+            inserter = insert.get_inserter(RestView.get_content_type(request))
+            data = request.raw_post_data
+            inserter.modify_peerreview(data)
+        else:
+            response = HttpResponse("Invalid priviledges: user not allowed to add peer review.")
+            response.status_code = RestView.FORBIDDEN_STATUS
+            return response
+
+
 class PeerReviewDetail(RestView):
     """Handle REST request for a specific peer review."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def GET(request, peer_review_id):
         """Return details for a specific peer review."""
         try:
@@ -340,22 +366,13 @@ class PeerReviewDetail(RestView):
         return response
 
     @staticmethod
-    @login_required
-    def POST(request, values):
-        """Creates a new peer review."""
-        if request.user.has_perm('core_web_service.add_peerreview'):
-            pass
-        else:
-            response = HttpResponse("Invalid priviledges.")
-            response.status_code = RestView.FORBIDDEN_STATUS
-            return response
-
-    @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT(request, values):
         """docstring for PUT"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DETELE(request, peer_review_id):
         """docstring for DETELE"""
         pass
@@ -363,7 +380,7 @@ class PeerReviewDetail(RestView):
 
 class PeerReviewTemplates(RestView):
     """Handle REST request for lists of templates."""
-    allowed_methods = ("GET")
+    allowed_methods = ("GET", "POST")
 
     @staticmethod
     def GET(request):
@@ -373,10 +390,16 @@ class PeerReviewTemplates(RestView):
         response = RestView.render_response(request, 'peerreviewtemplates', values)
         return response
 
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    def POST(request, values):
+        """"""
+        pass
+
 
 class PeerReviewTemplateDetail(RestView):
     """Handle REST requests for a specific template."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
     def GET(request, template_id):
@@ -391,16 +414,13 @@ class PeerReviewTemplateDetail(RestView):
         return response
 
     @staticmethod
-    def POST(request, values):
-        """"""
-        pass
-
-    @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT():
         """docstring for PUT"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE():
         """docstring for DELETE"""
         pass
@@ -434,6 +454,7 @@ class Publications(RestView):
 
     @staticmethod
     @csrf_exempt
+    #@login_required(login_url='/user/login/')
     def POST(request):
         """Inserts publications via POST request."""
         content_type = RestView.get_content_type(request)
@@ -446,17 +467,31 @@ class Publications(RestView):
             inserted_publications = insert.insert_bibtex_publication(data, owner)
         else:
             inserter = insert.get_inserter(content_type)
-            inserter.insert_publication(data)
+            inserted_publications = inserter.insert_publication(data)
         values = {'publication_list': inserted_publications}
         response = RestView.render_response(request, 'publications', values)
         response.status_code = RestView.CREATED_STATUS
+        if type(inserted_publications) == type(Publication):
+            response['Location'] = "%s/publication/%s" % (service_url, inserted_publications.id)
         return response
 
 
 @csrf_exempt
 class PublicationDetail(RestView):
     """Object to handle rendering of the publication detail view."""
-    allowed_methods = ('GET', 'PUT', 'POST', 'DELETE')
+    allowed_methods = ('GET', 'PUT', 'DELETE')
+
+    @staticmethod
+    def _insert_publication(request):
+        content_type = RestView.get_content_type(request)
+        data = request.raw_post_data
+        owner = request.user
+        if 'application/x-bibtex' in content_type:
+            inserted_publication = insert.insert_bibtex_publication(data, owner)
+        else:
+            inserter = insert.get_inserter(content_type)
+            inserted_publication = inserter.insert_publication(data)
+        return inserted_publication
 
     @staticmethod
     def GET(request, publication_id):
@@ -472,6 +507,7 @@ class PublicationDetail(RestView):
 
     @staticmethod
     @csrf_exempt
+    @login_required(login_url='/user/login')
     def PUT(request):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
@@ -482,30 +518,7 @@ class PublicationDetail(RestView):
         return response
 
     @staticmethod
-    def _insert_publication(request):
-        content_type = RestView.get_content_type(request)
-        data = request.raw_post_data
-        owner = request.user
-        if 'application/x-bibtex' in content_type:
-            inserted_publication = insert.insert_bibtex_publication(data, owner)
-        else:
-            inserter = insert.get_inserter(content_type)
-            inserted_publication = inserter.insert_publication(data)
-        return inserted_publication
-
-    @staticmethod
-    def POST(request):
-        """Creates a new resource of the publication type.
-
-        On successful creation the response Location header will contain the location the resource can be addressed at."""
-        inserted_publication = PublicationDetail._insert_publication(request)
-        publication = {'publication': inserted_publication}
-        response = RestView.render_response(request, 'publication', publication)
-        response.status_code = RestView.CREATED_STATUS 
-        response['Location'] = "%s/publication/%s" % (service_url, inserted_publication.id)
-        return response
-
-    @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE(request, publication_id):
         """Deletes the referred publication from the database."""
         publication = Publication.objects.get(id=publication_id)
@@ -529,16 +542,19 @@ class RatingDetail(RestView):
         return response
     
     @staticmethod
+    @login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT(request):
         """docstring for PUT"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE(request):
         """docstring for DELETE"""
         pass
@@ -558,16 +574,19 @@ class ReferenceMaterialDetail(RestView):
         return response
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
         pass
         
     @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT(request):
         """docstring for PUT"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE(request):
         """docstring for DELETE"""
         pass
@@ -575,17 +594,23 @@ class ReferenceMaterialDetail(RestView):
 
 class Tags(RestView):
     """Handle REST requests for tags."""
-    allowed_methods = ("GET")
+    allowed_methods = ("GET", "POST")
 
     @staticmethod
     def GET():
         """docstring for GET"""
+        pass
+
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    def POST():
+        """docstring for POST"""
         pass
 
 
 class TagDetail(RestView):
     """Handle REST requests for a specific tag."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
     def GET():
@@ -593,16 +618,13 @@ class TagDetail(RestView):
         pass
 
     @staticmethod
-    def POST():
-        """docstring for POST"""
-        pass
-
-    @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT():
         """docstring for PUT"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE():
         """docstring for DELETE"""
         pass
@@ -632,6 +654,7 @@ class PaperGroups(RestView):
         return response
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def POST(request):
         """Create a new papergroup from the specified data."""
         pass
@@ -639,7 +662,7 @@ class PaperGroups(RestView):
 
 class PaperGroupDetail(RestView):
     """Display information about a specific papergroup."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
     def GET(request, papergroup_id):
@@ -650,16 +673,13 @@ class PaperGroupDetail(RestView):
         return response
 
     @staticmethod
-    def POST(request):
-        """"""
-        pass
-
-    @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT(request):
         """"""
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE(request):
         """docstring for DELETE"""
         pass
@@ -676,7 +696,7 @@ class Users(RestView):
             data = request.raw_post_data
             if data:
                 inserter = insert.get_inserter(RestView.get_content_type(request))
-                user = inserter.insert_user(data)
+                user = inserter.modify_user(data)
                 values = {'users': user}
                 response = RestView.render_response(request, 'user', values)
                 response.status_code = RestView.CREATED_STATUS
@@ -699,15 +719,16 @@ class UserDetail(RestView):
         pass
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def PUT(request, user_id):
         """Change an existing user."""
         if RestView.validate_sent_format(request):
             data = request.raw_post_data
             if data:
                 inserter = insert.get_inserter(RestView.get_content_type(request))
-                user = inserter.change_user(user_id, data)
-                values = {'users': user}
-                response = RestView.render_response(request, 'users', values)
+                user = inserter.modify_user(data, user_id)
+                values = {'user': user}
+                response = RestView.render_response(request, 'user', values)
             else:
                 response = HttpResponse("No data provided")
                 response.status_code = RestView.BAD_REQUEST_STATUS
@@ -716,6 +737,7 @@ class UserDetail(RestView):
             return RestView.unsupported_format_sent(RestView.get_content_type(request))
 
     @staticmethod
+    @login_required(login_url='/user/login/')
     def DELETE(self):
         """Delete an existing user."""
         pass

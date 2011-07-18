@@ -96,7 +96,22 @@ class PaperGroup(models.Model):
     tags = models.ManyToManyField(Tag)
 
 
-class FurtherFields(models.Model):
+class UserProfile(models.Model):
+    """Stores additional information about a user not in the system."""
+    user = models.ForeignKey(User, unique=True)
+    degree = models.CharField(max_length=255, blank=True, null=True)
+    authenticated_professional = models.BooleanField()
+    institution = models.CharField(max_length=255, blank=True, null=True)
+
+
+class ProfileField(models.Model):
+    """A key-value storage for further fields of the user profile."""
+    key = models.CharField(max_length=255)
+    value = models.TextField()
+    user_profile = models.ForeignKey(UserProfile)
+
+
+class FurtherField(models.Model):
     """A key-value storage that will store values that are not part of the publication table."""
     key = models.CharField(max_length=255)
     value = models.TextField()
@@ -138,11 +153,4 @@ class ReferenceMaterial(models.Model):
     url = models.URLField()
     notes = models.TextField()
 
-
-class UserProfile(models.Model):
-    """Stores additional information about a user not in the system."""
-    user = models.ForeignKey(User, unique=True)
-    degree = models.CharField(max_length=255, blank=True, null=True)
-    authenticated_professional = models.BooleanField()
-    institution = models.CharField(max_length=255, blank=True, null=True)
-    further_fields = models.ForeignKey(FurtherFields)
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

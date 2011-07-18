@@ -115,7 +115,6 @@ class ViewTests(unittest.TestCase):
         
     </institution>
     <fields>
-        
     </fields>
 </user>"""
         result = self.client.post(reverse('core_web_service.views.users'), xml, content_type='application/xml', HTTP_ACCEPT='application/xml')

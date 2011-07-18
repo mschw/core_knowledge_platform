@@ -1,8 +1,11 @@
+from core_web_service.models import Vote
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
-from core_web_service.models import Author, Publication, FurtherFields, Keyword, User
+from core_web_service.models import Author, Publication, ProfileField, FurtherField, Keyword, User
 from abc import ABCMeta, abstractmethod
-from xml.etree.ElementTree import XML, Element
+from xml.etree.ElementTree import XML
 import pdb
+from core_web_service.models import Comment
+from core_web_service.models import Vote
 
 
 class MissingValueException(Exception):
@@ -23,8 +26,58 @@ class Inserter(object):
         super(Inserter, self).__init__()
 
     @abstractmethod
-    def insert_user(self, data):
-        """Creates a new user from the provided values."""
+    def modify_author(self, data, author_id=None):
+        """Create or modify an author object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_comment(self, data, comment_id=None):
+        """Create or modify a comment object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_esteem(self, data, esteem_id=None):
+        """Create or modify an esteem object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_papergroup(self, data, papergroup_id=None):
+        """Create or modify a papergroup object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_peerreview_template(self, data, template_id=None):
+        """Create or modify a template object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_peerreview(self, data, peer_review_id=None):
+        """Create or modify a peer review object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_publication(self, data, publication_id=None):
+        """Create or modify a publication object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_rating(self, data, rating_id=None):
+        """Create or modify a rating object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_reference_material(self, data, material_id=None):
+        """Create or modify a reference material object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_tag(self, data, tag_id=None):
+        """Create or modify a tag object according to the specified value."""
+        pass
+
+    @abstractmethod
+    def modify_user(self, data, user_id=None):
+        """Create or modify a user from the provided values."""
         pass
 
 
@@ -32,6 +85,11 @@ class XmlInserter(Inserter):
     """Used to insert objects based on xml representations."""
     def __init__(self):
         super(XmlInserter, self).__init__()
+
+    def _get_id_from_atom_link(self, link):
+        """Return the id of an objects from an atom link."""
+        link_text = link[0].attrib['href']
+        return link_text.split('/')[-1]
 
     def _parse_xml_to_dict(self, data):
         """Parses a xml document and returns a dictionary of values.
@@ -44,7 +102,6 @@ class XmlInserter(Inserter):
         """
         parsed_dict = dict()
         node_tree = XML(data)
-        node = Element()
         namespace = self._get_namespace(node_tree)
         namespace = "{%s}" % (namespace)
         for node in node_tree:
@@ -57,18 +114,86 @@ class XmlInserter(Inserter):
                 parsed_dict[tag] = node.text.strip()
         return parsed_dict
 
-    def insert_user(self, data):
+    def modify_author(self, data, author_id=None):
+        """Create or modify an author object according to the specified value."""
         parsed_data = self._parse_xml_to_dict(data)
-        user = User.objects.create_user(parsed_data['username'], parsed_data['email'],
-                parsed_data['password'])
-        return user
+        if author_id:
+            author = Author.objects.get(id=author_id)
+        else:
+            author = Author()
+        author.name = parsed_data['name']
+        author.address = parsed_data['address']
+        author.affiliation = parsed_data['affiliation']
+        author.email = parsed_data['email']
+        author.save()
+        return author
 
-    def change_user(self, user_id, data):
-        user = User.objects.get(id=user_id)
-        values = self._parse_xml_to_dict(data)
-        user.username = values['username']
-        user.email = values['email']
+    def modify_comment(self, data, comment_id=None):
+        """Create or modify a comment object according to the specified value."""
+        parsed_data = self._parse_xml_to_dict(data)
+        if comment_id:
+            comment = Comment.objects.get(id=comment_id)
+        else:
+            comment = Comment()
+        comment.title = parsed_data['title']
+        comment.text = parsed_data['text']
+        for field in parsed_data['votes']:
+            vote_id = self._get_id_from_atom_link(field)
+            vote = Vote.objects(id=vote_id)
+            comment.vote.add(vote)
+        comment.save()
+        return comment
+
+    def modify_esteem(self, data, esteem_id=None):
+        """Create or modify an esteem object according to the specified value."""
+        pass
+
+    def modify_papergroup(self, data, papergroup_id=None):
+        """Create or modify a papergroup object according to the specified value."""
+        pass
+
+    def modify_peerreview_template(self, data, template_id=None):
+        """Create or modify a template object according to the specified value."""
+        pass
+
+    def modify_peerreview(self, data, peer_review_id=None):
+        """Create or modify a peer review object according to the specified value."""
+        pass
+
+    def modify_publication(self, data, publication_id=None):
+        """Create or modify a publication object according to the specified value."""
+        pass
+
+    def modify_rating(self, data, rating_id=None):
+        """Create or modify a rating object according to the specified value."""
+        pass
+
+    def modify_reference_material(self, data, material_id=None):
+        """Create or modify a reference material object according to the specified value."""
+        pass
+
+    def modify_tag(self, data, tag_id=None):
+        """Create or modify a tag object according to the specified value."""
+        pass
+
+    def modify_user(self, data, user_id=None):
+        parsed_data = self._parse_xml_to_dict(data)
+        if user_id:
+            user = User.objects.get(id=user_id)
+        else:
+            user = User.objects.create_user(parsed_data['username'], parsed_data['email'],
+                parsed_data['password'])
+        user_profile = user.profile
+        user_profile.degree = parsed_data['degree']
+        user_profile.institution = parsed_data['institution']
+        fields = parsed_data['fields']
+        user_profile.save()
+        for item in fields:
+            field, created = ProfileField.objects.get_or_create(value=item, user_profile=user_profile)
+            field.userprofile = user_profile
+            field.save()
         user.save()
+        user_profile.save()
         return user
 
     def _get_namespace(self, element):
@@ -153,7 +278,7 @@ def insert_bibtex_publication(bibtex, owner):
                     getattr(publication, key)
                     setattr(publication, key, value)
                 except AttributeError:
-                    further_field = FurtherFields()
+                    further_field = FurtherField()
                     further_field.key = key
                     further_field.value = value
                     further_fields.append(further_field)

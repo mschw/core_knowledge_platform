@@ -10,7 +10,7 @@
     <votes>
         {% for vote in comment.votes.all %}
         <vote>
-            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"
+            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"/>{{ comment.vote.id }}
         </vote>
         {% endfor %}
     </votes>
