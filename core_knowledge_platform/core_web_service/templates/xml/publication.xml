@@ -47,7 +47,7 @@
         {{ publication.series }}
     </series>
     <publicationtype>
-        {{ publication.publicationtype }}
+        {{ publication.publication_type }}
     </publicationtype>
     <volume>
         {{ publication.volume }}

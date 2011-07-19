@@ -1,3 +1,8 @@
+from core_web_service.models import Rating
+from core_web_service.models import PeerReview
+from core_web_service.models import PeerReview
+from core_web_service.models import PeerReviewTemplate
+from core_web_service.models import Tag
 from core_web_service.models import Esteem
 from core_web_service.models import Vote
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
@@ -7,6 +12,8 @@ from xml.etree.ElementTree import XML
 import pdb
 from core_web_service.models import Comment
 from core_web_service.models import Vote
+from core_web_service.models import PaperGroup
+from core_web_service.models import ReferenceMaterial
 
 
 class MissingValueException(Exception):
@@ -89,8 +96,12 @@ class XmlInserter(Inserter):
 
     def _get_id_from_atom_link(self, link):
         """Return the id of an objects from an atom link."""
-        link_text = link[0].attrib['href']
-        return link_text.split('/')[-1]
+        if (link) and ("link" in link[0].tag):
+            link_text = link[0].attrib['href']
+            return link_text.split('/')[-1]
+        else:
+            # TODO: Decide if exception should be raised.
+            return None
 
     def _parse_xml_to_dict(self, data):
         """Parses a xml document and returns a dictionary of values.
@@ -102,7 +113,7 @@ class XmlInserter(Inserter):
             </a>
         """
         parsed_dict = dict()
-        node_tree = XML(data)
+        node_tree = XML(data.strip())
         namespace = self._get_namespace(node_tree)
         namespace = "{%s}" % (namespace)
         for node in node_tree:
@@ -162,31 +173,159 @@ class XmlInserter(Inserter):
 
     def modify_papergroup(self, data, papergroup_id=None):
         """Create or modify a papergroup object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if papergroup_id:
+            papergroup = PaperGroup.objects.get(id=papergroup_id)
+        else:
+            papergroup = PaperGroup()
+        papergroup.title = parsed_data['title']
+        papergroup.description = parsed_data['description']
+        papergroup.blind_review = parsed_data['blind_review']
+        for e in parsed_data['editors']:
+            editor_id = self._get_id_from_atom_link(e)
+            editor = User.objects.get(id=editor_id)
+            papergroup.editors.add(editor)
+        for r in parsed_data['referees']:
+            referee_id = self._get_id_from_atom_link(r)
+            referee = User.objects.get(id=referee_id)
+            papergroup.referees.add(referee)
+        for p in parsed_data['publications']:
+            publication_id = self._get_id_from_atom_link(p)
+            publication = Publication.objects.get(id=publication_id)
+            papergroup.publications.add(publication)
+        for t in parsed_data['tag']:
+            tag_id = self._get_id_from_atom_link(t)
+            tag = Tag.objects.get(id=tag_id)
+            papergroup.tags.add(tag)
+        papergroup.save()
+        return papergroup
 
     def modify_peerreview_template(self, data, template_id=None):
         """Create or modify a template object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if template_id:
+            template = PeerReviewTemplate.objects.get(id=template_id)
+        else:
+            template = PeerReviewTemplate()
+        template.template_text = parsed_data['templatetext']
+        template.template_binary_path = parsed_data['binarypath']
+        template.save()
+        return template
 
     def modify_peerreview(self, data, peer_review_id=None):
         """Create or modify a peer review object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if peer_review_id:
+            peerreview = PeerReview.objects.get(id=peer_review_id)
+        else:
+            peerreview = PeerReview()
+        peerreviewer_id = self._get_id_from_atom_link(parsed_data['peerreviewer'])
+        peerreview.peer_reviewer = User.objects.get(id=peerreviewer_id)
+        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        peerreview.publication = Publication.objects.get(id=publication_id)
+        template_id = self._get_id_from_atom_link(parsed_data['template'])
+        peerreview.template = PeerReviewTemplate.objects.get(id=template_id)
+        peerreview.title = parsed_data['title']
+        peerreview.review = parsed_data['review']
+        peerreview.save()
+        return peerreview
 
     def modify_publication(self, data, publication_id=None):
         """Create or modify a publication object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if publication_id:
+            publication = Publication.objects.get(id=publication_id)
+        else:
+            publication = Publication()
+        publication.address = parsed_data['address']
+        publication.booktitle = parsed_data['booktitle']
+        publication.chapter = parsed_data['chapter']
+        publication.edition = parsed_data['edition']
+        publication.editor = parsed_data['editor']
+        publication.how_published = parsed_data['howpublished']
+        publication.institution = parsed_data['institution']
+        publication.isbn = parsed_data['isbn']
+        publication.journal = parsed_data['journal']
+        publication.number = parsed_data['number']
+        publication.organization = parsed_data['organization']
+        publication.pages = parsed_data['pages']
+        publication.publisher = parsed_data['publisher']
+        publication.review_status = parsed_data['review_status']
+        publication.series = parsed_data['series']
+        publication.publication_type = parsed_data['publicationtype']
+        publication.volume = parsed_data['volume']
+        publication.title = parsed_data['title']
+        publication.month = parsed_data['month']
+        publication.note = parsed_data['note']
+        publication.year = parsed_data['year']
+        owner_id = self._get_id_from_atom_link(parsed_data['owner'])
+        publication.owner = User.objects.get(id=owner_id)
+        publication.save()
+        for a in parsed_data['authors']:
+            author_id = self._get_id_from_atom_link(a)
+            if author_id:
+                author = Author.objects.get(id=author_id)
+                publication.authors.add(author)
+        for c in parsed_data['comments']:
+            comment_id = self._get_id_from_atom_link(c)
+            if comment_id:
+                comment = Comment.objects.get(id=comment_id)
+                publication.comments.add(comment)
+        for t in parsed_data['tags']:
+            tag_id = self._get_id_from_atom_link(t)
+            if tag_id:
+                tag = Tag.objects.get(id=tag_id)
+                publication.tags.add(tag)
+        for r in parsed_data['referencematerials']:
+            material_id = self._get_id_from_atom_link(r)
+            if material_id:
+                material = ReferenceMaterial.objects.get(id=material_id)
+                publication.reference_material_set.add(material)
+        for f in parsed_data['fields']:
+            key = f.tag
+            furtherfield, created = FurtherField.objects.get_or_create(key=key, publication=publication)
+        publication.save()
+        return publication
 
     def modify_rating(self, data, rating_id=None):
         """Create or modify a rating object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if rating_id:
+            rating = Rating.objects.get(id=rating_id)
+        else:
+            rating = Rating()
+        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        rating.publication = Publication.objects.get(id=publication_id)
+        rating.rating = parsed_data['rating']
+        rating.save()
+        return rating
 
     def modify_reference_material(self, data, material_id=None):
         """Create or modify a reference material object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if material_id:
+            material = ReferenceMaterial.objects.get(id=material_id)
+        else:
+            material = ReferenceMaterial()
+        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        material.publication = Publication.objects.get(id=publication_id)
+        material.name = parsed_data['name']
+        material.url = parsed_data['url']
+        material.notes = parsed_data['notes']
+        material.save()
+        return material
 
     def modify_tag(self, data, tag_id=None):
         """Create or modify a tag object according to the specified value."""
-        pass
+        parsed_data = self._parse_xml_to_dict(data)
+        if tag_id:
+            tag = Tag.objects.get(id=tag_id)
+        else:
+            tag = Tag()
+        tag.name = parsed_data['name']
+        tag.description = parsed_data['description']
+        tag.save()
+        return tag
 
     def modify_user(self, data, user_id=None):
         parsed_data = self._parse_xml_to_dict(data)
