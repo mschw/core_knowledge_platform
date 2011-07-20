@@ -1,3 +1,4 @@
+from core_web_service.business_logic.insert import InvalidDataException
 import re
 import pdb
 
@@ -133,7 +134,6 @@ class RestView(object):
         dictionary['url'] = service_url
         Context(dictionary)
         for response in response_type:
-            # XXX: the first that is encountered will be used to render a response.
             if 'xml' in response.lower():
                 suffix = 'xml'
                 break
@@ -163,10 +163,32 @@ class RestView(object):
         content_type = request.META['CONTENT_TYPE']
         return content_type
 
+    @staticmethod
+    def insert_object(request, name, id=None):
+        """docstring for POST"""
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_object = None
+            inserter = insert.get_inserter(content_type)
+            function = getattr(inserter, 'modify_%s' % (name))
+            inserted_object = function(data, id)
+            values = {name: inserted_object}
+            response = RestView.render_response(request, name, values)
+            if id:
+                response.status_code = RestView.OK_STATUS
+            else:
+                response.status_code = RestView.CREATED_STATUS
+            response.location = '%s/%s/%s' % (service_url, name, inserted_object.id)
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
+
 
 class Authors(RestView):
     """Object to handle requests directed to the Authors resource."""
-    allowed_methods = ('GET')
+    allowed_methods = ('GET', 'POST')
 
     @staticmethod
     def GET(request):
@@ -182,10 +204,17 @@ class Authors(RestView):
         response = RestView.render_response(request, 'authors', values)
         return response
 
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    @csrf_exempt
+    def POST(request):
+        """Creates a new author and returns the resource-url."""
+        return RestView.insert_object(request, 'author')
+
 
 class AuthorDetail(RestView):
     """Object to handle requests directet to a particular author resource."""
-    allowed_methods = ('GET', 'POST', 'PUT', 'DELETE')
+    allowed_methods = ('GET', 'PUT', 'DELETE')
 
     @staticmethod
     def GET(request, author_id):
@@ -201,26 +230,20 @@ class AuthorDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST():
-        """Creates a new author and returns the resource-url."""
-        pass
-
-    @staticmethod
-    @login_required(login_url='/user/login/')
-    def PUT():
+    def PUT(request, author_id):
         """Modifies an existing author resource."""
-        pass
+        return RestView.insert_object(request, 'author', author_id)
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE():
+    def DELETE(author_id):
         """Deletes an existing author resource."""
         pass
 
 
 class Comments(RestView):
     """Handles request for lists of comments."""
-    allowed_methods = ("GET")
+    allowed_methods = ("GET", "POST")
 
     @staticmethod
     def GET(request, publication_id):
@@ -235,10 +258,14 @@ class Comments(RestView):
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
+    def POST(request, publication_id):
+        """docstring for POST"""
+        return RestView.insert_object(request, 'comment')
+
 
 class CommentDetail(RestView):
     """Handles requests for a specific comment."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
     def GET(request, comment_id):
@@ -254,15 +281,9 @@ class CommentDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST():
-        """docstring for POST"""
-        pass
-
-    @staticmethod
-    @login_required(login_url='/user/login/')
-    def PUT():
-        """docstring for PUT"""
-        pass
+    def PUT(request, comment_id):
+        """Modify an existing comment."""
+        return RestView.insert_object(request, 'comment', comment_id)
     
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -273,6 +294,7 @@ class CommentDetail(RestView):
 
 class EsteemDetail(RestView):
     """Handles requests for esteem values of a user."""
+    # FIXME: Fix the whole esteem thing
     allowed_methods = ("GET", "POST", "PUT")
     
     @staticmethod
@@ -306,7 +328,7 @@ class EsteemDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST():
+    def POST(request):
         """docstring for POST"""
         pass
 
@@ -339,9 +361,7 @@ class PeerReviews(RestView):
     def POST(request, publication_id):
         """Creates a new peer review."""
         if request.user.has_perm('core_web_service.add_peerreview'):
-            inserter = insert.get_inserter(RestView.get_content_type(request))
-            data = request.raw_post_data
-            inserter.modify_peerreview(data)
+            return RestView.insert_object(request, 'peerreview')
         else:
             response = HttpResponse("Invalid priviledges: user not allowed to add peer review.")
             response.status_code = RestView.FORBIDDEN_STATUS
@@ -367,9 +387,25 @@ class PeerReviewDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def PUT(request, values):
+    def PUT(request, review_id):
         """docstring for PUT"""
-        pass
+        if request.user.has_perm('core_web_service.add_peerreview'):
+            try:
+                content_type = RestView.get_content_type(request)
+                data = request.raw_post_data
+                inserter = insert.get_inserter(content_type)
+                inserted_review = inserter.modify_peerreview(data, review_id)
+                values = {'peerreview': inserted_review}
+                response = RestView.render_response(request, 'peerreview', values)
+                response.status_code = RestView.OK_STATUS
+            except InvalidDataException, e:
+                response = HttpResponse(e.message)
+                response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
+        else:
+            response = HttpResponse("Invalid priviledges: user not allowed to add peer review.")
+            response.status_code = RestView.FORBIDDEN_STATUS
+            return response
 
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -393,8 +429,20 @@ class PeerReviewTemplates(RestView):
     @staticmethod
     @login_required(login_url='/user/login/')
     def POST(request, values):
-        """"""
-        pass
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_template = None
+            inserter = insert.get_inserter(content_type)
+            inserted_template = inserter.modify_peerreview_template(data)
+            values = {'template': inserted_template}
+            response = RestView.render_response(request, 'peerreviewtemplate', values)
+            response.status_code = RestView.CREATED_STATUS
+            response['Location'] = "%s/peerreviewtemplate/%s" % (service_url, inserted_template.id)
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
 
 class PeerReviewTemplateDetail(RestView):
@@ -415,9 +463,20 @@ class PeerReviewTemplateDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def PUT():
-        """docstring for PUT"""
-        pass
+    def PUT(request, template_id):
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_template = None
+            inserter = insert.get_inserter(content_type)
+            inserted_template = inserter.modify_peerreview_template(data, template_id)
+            values = {'template': inserted_template}
+            response = RestView.render_response(request, 'peerreviewtemplate', values)
+            response.status_code = RestView.CREATED_STATUS
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -457,22 +516,26 @@ class Publications(RestView):
     #@login_required(login_url='/user/login/')
     def POST(request):
         """Inserts publications via POST request."""
-        content_type = RestView.get_content_type(request)
-        data = request.raw_post_data
-        owner = request.user
-        inserted_publications = None
-        if not owner:
-            owner = User.get_or_create(name='Anonymous')
-        if 'application/x-bibtex' in content_type:
-            inserted_publications = insert.insert_bibtex_publication(data, owner)
-        else:
-            inserter = insert.get_inserter(content_type)
-            inserted_publications = inserter.insert_publication(data)
-        values = {'publication_list': inserted_publications}
-        response = RestView.render_response(request, 'publications', values)
-        response.status_code = RestView.CREATED_STATUS
-        if type(inserted_publications) == type(Publication):
-            response['Location'] = "%s/publication/%s" % (service_url, inserted_publications.id)
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            owner = request.user
+            inserted_publications = None
+            if not owner:
+                owner = User.get_or_create(name='Anonymous')
+            if 'application/x-bibtex' in content_type:
+                inserted_publications = insert.insert_bibtex_publication(data, owner)
+            else:
+                inserter = insert.get_inserter(content_type)
+                inserted_publications = inserter.modify_publication(data)
+            values = {'publication_list': inserted_publications}
+            response = RestView.render_response(request, 'publications', values)
+            response.status_code = RestView.CREATED_STATUS
+            if type(inserted_publications) == type(Publication):
+                response['Location'] = "%s/publication/%s" % (service_url, inserted_publications.id)
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
         return response
 
 
@@ -511,10 +574,14 @@ class PublicationDetail(RestView):
     def PUT(request):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
-        inserted_publication = PublicationDetail._insert_publication(request)
-        values = {'publication': inserted_publication}
-        response = RestView.render_response(request, 'publication', values)
-        response.status_code = RestView.CREATED_STATUS
+        try:
+            inserted_publication = PublicationDetail._insert_publication(request)
+            values = {'publication': inserted_publication}
+            response = RestView.render_response(request, 'publication', values)
+            response.status_code = RestView.CREATED_STATUS
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
         return response
 
     @staticmethod
@@ -577,13 +644,37 @@ class ReferenceMaterialDetail(RestView):
     @login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
-        pass
-        
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_material = None
+            inserter = insert.get_inserter(content_type)
+            inserted_material = inserter.modify_reference_material(data)
+            values = {'referencematerial': inserted_material}
+            response = RestView.render_response(request, 'referencematerial', values)
+            response.status_code = RestView.CREATED_STATUS
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
+
     @staticmethod
     @login_required(login_url='/user/login/')
-    def PUT(request):
+    def PUT(request, material_id):
         """docstring for PUT"""
-        pass
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_material = None
+            inserter = insert.get_inserter(content_type)
+            inserted_material = inserter.modify_reference_material(data, material_id)
+            values = {'referencematerial': inserted_material}
+            response = RestView.render_response(request, 'referencematerial', values)
+            response.status_code = RestView.CREATED_STATUS
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -603,9 +694,22 @@ class Tags(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST():
+    def POST(request):
         """docstring for POST"""
-        pass
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_tag = None
+            inserter = insert.get_inserter(content_type)
+            inserted_tag = inserter.modify_tag(data)
+            values = {'tag': inserted_tag}
+            response = RestView.render_response(request, 'tag', values)
+            response.status_code = RestView.CREATED_STATUS
+            response['Location'] = '%s/tag/%s' % (service_url, inserted_tag.id)
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
 
 class TagDetail(RestView):
@@ -619,9 +723,23 @@ class TagDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def PUT():
+    def PUT(request, tag_id):
         """docstring for PUT"""
-        pass
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_tag = None
+            inserter = insert.get_inserter(content_type)
+            inserted_tag = inserter.modify_tag(data, tag_id)
+            values = {'tag': inserted_tag}
+            response = RestView.render_response(request, 'tag', values)
+            response.status_code = RestView.CREATED_STATUS
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
+
+
 
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -657,7 +775,20 @@ class PaperGroups(RestView):
     @login_required(login_url='/user/login/')
     def POST(request):
         """Create a new papergroup from the specified data."""
-        pass
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_papergroup = None
+            inserter = insert.get_inserter(content_type)
+            inserted_papergroup = inserter.modify_papergroup(data)
+            values = {'papergroup': inserted_papergroup}
+            response = RestView.render_response(request, 'papergroup', values)
+            response.status_code = RestView.CREATED_STATUS
+            response['Location'] = '%s/papergroup/%s' % (service_url, inserted_papergroup.id)
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
 
 class PaperGroupDetail(RestView):
@@ -676,7 +807,19 @@ class PaperGroupDetail(RestView):
     @login_required(login_url='/user/login/')
     def PUT(request):
         """"""
-        pass
+        try:
+            content_type = RestView.get_content_type(request)
+            data = request.raw_post_data
+            inserted_papergroup = None
+            inserter = insert.get_inserter(content_type)
+            inserted_papergroup = inserter.modify_papergroup(data)
+            values = {'papergroup': inserted_papergroup}
+            response = RestView.render_response(request, 'papergroup', values)
+            response.status_code = RestView.CREATED_STATUS
+        except InvalidDataException, e:
+            response = HttpResponse(e.message)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+        return response
 
     @staticmethod
     @login_required(login_url='/user/login/')

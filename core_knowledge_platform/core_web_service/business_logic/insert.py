@@ -1,19 +1,9 @@
-from core_web_service.models import Rating
-from core_web_service.models import PeerReview
-from core_web_service.models import PeerReview
-from core_web_service.models import PeerReviewTemplate
-from core_web_service.models import Tag
-from core_web_service.models import Esteem
-from core_web_service.models import Vote
-from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
-from core_web_service.models import Author, Publication, ProfileField, FurtherField, Keyword, User
 from abc import ABCMeta, abstractmethod
-from xml.etree.ElementTree import XML
 import pdb
-from core_web_service.models import Comment
-from core_web_service.models import Vote
-from core_web_service.models import PaperGroup
-from core_web_service.models import ReferenceMaterial
+from xml.etree.ElementTree import XML, ParseError
+
+from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
+from core_web_service.models import Rating, PeerReview, PeerReviewTemplate, Tag, Esteem, Vote, Author, Publication, ProfileField, FurtherField, Keyword, User, Comment, PaperGroup, ReferenceMaterial
 
 
 class MissingValueException(Exception):
@@ -22,6 +12,16 @@ class MissingValueException(Exception):
         super(MissingValueException, self).__init__()
         self.message = message
     
+    def __str__(self):
+        return repr(self.message)
+
+
+class InvalidDataException(Exception):
+    """Raise when an insert is attempted that has no data."""
+    def __init__(self, message):
+        super(InvalidDataException, self).__init__()
+        self.message = message
+
     def __str__(self):
         return repr(self.message)
 
@@ -113,18 +113,21 @@ class XmlInserter(Inserter):
             </a>
         """
         parsed_dict = dict()
-        node_tree = XML(data.strip())
-        namespace = self._get_namespace(node_tree)
-        namespace = "{%s}" % (namespace)
-        for node in node_tree:
-            tag = node.tag.replace(namespace, "")
-            if len(node) > 0:
-                parsed_dict[tag] = []
-                for subnode in node:
-                    parsed_dict[tag].append(subnode)
-            else:
-                parsed_dict[tag] = node.text.strip()
-        return parsed_dict
+        try:
+            node_tree = XML(data.strip())
+            namespace = self._get_namespace(node_tree)
+            namespace = "{%s}" % (namespace)
+            for node in node_tree:
+                tag = node.tag.replace(namespace, "")
+                if len(node) > 0:
+                    parsed_dict[tag] = []
+                    for subnode in node:
+                        parsed_dict[tag].append(subnode)
+                else:
+                    parsed_dict[tag] = node.text.strip()
+            return parsed_dict
+        except ParseError, e:
+            raise InvalidDataException("No data was provided that could be inserted")
 
     def modify_author(self, data, author_id=None):
         """Create or modify an author object according to the specified value."""
