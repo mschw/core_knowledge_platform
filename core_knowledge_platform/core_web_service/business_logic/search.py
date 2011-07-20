@@ -1,5 +1,6 @@
 from django.db.models import Q
 from core_web_service.models import Author, Publication, Keyword
+import pdb
 import operator
 
 def build_query(search_query):
@@ -18,7 +19,12 @@ def build_query(search_query):
     query = [] 
     for key, value in search_query.items():
         if value:
-            q = Q(**{"%s__icontains" % (key): value})
+            # FIXME: should this be always this way?
+            # If an id is provided an exact match is required.
+            if key == 'id':
+                q = Q(**{"%s__iexact" % (key): value})
+            else:
+                q = Q(**{"%s__icontains" % (key): value})
             query.append(q)
         else:
             raise AttributeError("Invalid value for keyword %s: %s" % (key, value))
@@ -54,8 +60,11 @@ def search_publications(publication_terms, author_terms, keyword_terms):
         publications = Publication.objects.all()
     if author_terms:
         authors = search_authors(author_terms)
-        publications = publications.filter(authors=authors)
+        author_id = [author.id for author in authors]
+        publications = publications.filter(authors__id__in=author_id)
     if keyword_terms:
         keywords = search_keywords(keyword_terms)
-        publications = publications.filter(keywords=keywords)
-    return publications
+        keyword_id = [keyword.id for keyword in keywords]
+        publications = publications.filter(keywords__id__in=keyword_id)
+    else:
+        return publications
