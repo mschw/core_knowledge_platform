@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Core Knowledge 2.0 Platform documentation build configuration file, created by
-# sphinx-quickstart on Thu Jun 16 23:20:06 2011.
+# Core Knowledge Platform 2.0 documentation build configuration file, created by
+# sphinx-quickstart on Wed Jul 20 15:34:30 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -10,15 +10,16 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
+
+import sys, os
 import settings
 from django.core.management import setup_environ
 setup_environ(settings)
-import sys, os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../core_knowledge_platform/'))
+sys.path.insert(0, os.path.abspath('../../core_knowledge_platform/'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -27,7 +28,7 @@ sys.path.insert(0, os.path.abspath('../core_knowledge_platform/'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx', 'sphinx.ext.todo']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -42,7 +43,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Core Knowledge 2.0 Platform'
+project = u'Core Knowledge Platform 2.0'
 copyright = u'2011, Florian Bergmann'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -166,7 +167,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'CoreKnowledge20Platformdoc'
+htmlhelp_basename = 'CoreKnowledgePlatform20doc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -180,7 +181,7 @@ htmlhelp_basename = 'CoreKnowledge20Platformdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'CoreKnowledge20Platform.tex', u'Core Knowledge 2.0 Platform Documentation',
+  ('index', 'CoreKnowledgePlatform20.tex', u'Core Knowledge Platform 2.0 Documentation',
    u'Florian Bergmann', 'manual'),
 ]
 
@@ -213,6 +214,10 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'coreknowledge20platform', u'Core Knowledge 2.0 Platform Documentation',
+    ('index', 'coreknowledgeplatform20', u'Core Knowledge Platform 2.0 Documentation',
      [u'Florian Bergmann'], 1)
 ]
+
+
+# Example configuration for intersphinx: refer to the Python standard library.
+intersphinx_mapping = {'http://docs.python.org/': None}

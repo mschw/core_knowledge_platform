@@ -6,3 +6,4 @@ syntax: glob
 
 # Ignore compiled documentation:
 core_knowledge_platform/doc/doc
+core_knowledge_platform/doc/_build/

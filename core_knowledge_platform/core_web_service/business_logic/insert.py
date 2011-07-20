@@ -1,3 +1,5 @@
+from core_web_service.business_logic.access import check_priviledges_for_referee
+from core_web_service.business_logic.access import check_priviledges_for_editor
 from abc import ABCMeta, abstractmethod
 import pdb
 from xml.etree.ElementTree import XML, ParseError
@@ -179,6 +181,8 @@ class XmlInserter(Inserter):
         parsed_data = self._parse_xml_to_dict(data)
         if papergroup_id:
             papergroup = PaperGroup.objects.get(id=papergroup_id)
+            editors = papergroup.editors.all()
+            referees = papergroup.editors.all()
         else:
             papergroup = PaperGroup()
         papergroup.title = parsed_data['title']
@@ -201,6 +205,12 @@ class XmlInserter(Inserter):
             tag = Tag.objects.get(id=tag_id)
             papergroup.tags.add(tag)
         papergroup.save()
+        if editors:
+            for editor in editors:
+                check_priviledges_for_editor(editor)
+        if referees:
+            for referee in referees:
+                check_priviledges_for_referee(referee)
         return papergroup
 
     def modify_peerreviewtemplate(self, data, template_id=None):

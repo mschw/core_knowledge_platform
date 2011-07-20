@@ -1,10 +1,11 @@
-=========
-Overview:
-=========
+*********
+Overview
+*********
 
 Every interaction with the web service should be conducted through HTTP.
 To allow the web service to respond with the appropriate data format HTTP-headers are used:
 all queries to the web service *must* set the following headers:
+
 ACCEPT:
     tells the web service which format to return.
 CONTENT-TYPE:
@@ -15,7 +16,7 @@ Currently *most* resources of the web service allow only one format: ``applicati
 .. _data_retrieval:
 
 ===============
-Data retrieval:
+Data retrieval
 ===============
 
 To obtain data from the service issue a GET request to one of the following addresses:
@@ -41,11 +42,12 @@ To obtain data from the service issue a GET request to one of the following addr
 
 These resources can be accessed without being logged in.
 The following resources require a user to be logged in:
+
 ``peerreview/{id}``
     Retrieve a concrete peer review.
 
 ---------------
-Login & Logout:
+Login & Logout
 ---------------
 
 If a resource requires a login the client can login via a ``POST`` request to
@@ -56,13 +58,13 @@ To logout from the system a simple ``GET`` request to ``/user/logout/`` is
 enough.
 
 ----------
-Searching:
+Searching
 ----------
 
 Searching authors and publications is possible:
 
 ^^^^^^^^^^^^^
-Publications:
+Publications
 ^^^^^^^^^^^^^
 
 Just append key-value-pairs to the url according to the following schema:
@@ -76,7 +78,7 @@ The results of the sub-searches will be concatenated using the AND operator:
 all publications where AND where the authors is AND where the keyword is
 
 ^^^^^^^^
-Authors:
+Authors
 ^^^^^^^^
 
 Do not forget that in this case the search uses a query string.
@@ -84,14 +86,14 @@ Do not forget that in this case the search uses a query string.
 ``/authors/?{name=value}``
 
 ===============
-Data Insertion:
+Data Insertion
 ===============
 
 When inserting data it is important to distinguish between an initial insertion
 of a modification of data:
 
 ---------------
-Initial insert:
+Initial insert
 ---------------
 
 The initial insertion is performed via ``POST`` requests to the root urls of
@@ -103,13 +105,13 @@ To insert a publication ``POST`` the appropriate data to:
 
 To insert an author ``POST`` the appropriate data to:
 
-``/author/``.
+``/author/``
 
 This will insert a new object into the database and return the location the
 object can be retrieved from.
 
 --------------
-Updating data:
+Updating data
 --------------
 
 To update data the ``PUT`` request is used - it will be send to the specific
@@ -117,4 +119,4 @@ resource url.
 
 To update an existing publication the ``PUT`` request needs to be sent to:
 
-``/publication/{id}``.
+``/publication/{id}``

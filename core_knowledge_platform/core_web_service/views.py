@@ -803,13 +803,19 @@ class Users(RestView):
     allowed_methods = ("GET", "POST")
 
     @staticmethod
-    def GET(request):
+    def GET(request, user_search=None):
         """Search for users."""
         # TODO: allow searching for users:
         # - with name
         # - with associated tag
         # - order by rating
-        pass
+        if user_search:
+            query = QueryDict(user_search)
+            users = search.search_user(query)
+        else:
+            users = User.objects.all()
+        values = {'users': users}
+        return RestView.render_response(request, 'users', values)
 
     @staticmethod
     def POST(request):
@@ -838,7 +844,9 @@ class UserDetail(RestView):
     @staticmethod
     def GET(request, user_id):
         """Return the information for a given user."""
-        pass
+        user = User.objects.get(id=user_id)
+        values = {'user': user}
+        return RestView.render_response(request, template_name='user', dictionary=values)
 
     @staticmethod
     @login_required(login_url='/user/login/')

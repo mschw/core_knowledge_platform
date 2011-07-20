@@ -2,6 +2,7 @@ from django.db.models import Q
 from core_web_service.models import Author, Publication, Keyword
 import pdb
 import operator
+from django.contrib.auth.models import User
 
 def build_query(search_query):
     """Build the query for a given dictionary.
@@ -68,3 +69,14 @@ def search_publications(publication_terms, author_terms, keyword_terms):
         publications = publications.filter(keywords__id__in=keyword_id)
     else:
         return publications
+
+def search_user(search_items):
+    """Return users that match the provided conditions."""
+    try:
+        search_items['password']
+        raise AttributeError('Can not search for password')
+    except KeyError:
+        pass
+    query = build_query(search_items)
+    result = User.objects.filter(reduce(operator.or_, query))
+    return result
