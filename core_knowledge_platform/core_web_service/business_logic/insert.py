@@ -54,7 +54,7 @@ class Inserter(object):
         pass
 
     @abstractmethod
-    def modify_peerreview_template(self, data, template_id=None):
+    def modify_peerreviewtemplate(self, data, template_id=None):
         """Create or modify a template object according to the specified value."""
         pass
 
@@ -203,7 +203,7 @@ class XmlInserter(Inserter):
         papergroup.save()
         return papergroup
 
-    def modify_peerreview_template(self, data, template_id=None):
+    def modify_peerreviewtemplate(self, data, template_id=None):
         """Create or modify a template object according to the specified value."""
         parsed_data = self._parse_xml_to_dict(data)
         if template_id:
@@ -233,7 +233,7 @@ class XmlInserter(Inserter):
         peerreview.save()
         return peerreview
 
-    def modify_publication(self, data, publication_id=None):
+    def modify_publication(self, data, publication_id=None, owner=None):
         """Create or modify a publication object according to the specified value."""
         parsed_data = self._parse_xml_to_dict(data)
         if publication_id:
@@ -262,7 +262,15 @@ class XmlInserter(Inserter):
         publication.note = parsed_data['note']
         publication.year = parsed_data['year']
         owner_id = self._get_id_from_atom_link(parsed_data['owner'])
-        publication.owner = User.objects.get(id=owner_id)
+        if owner_id:
+            if owner:
+                xml_owner = User.objects.get(id=owner_id)
+                if xml_owner == owner:
+                    publication.owner = owner
+                else:
+                    raise InvalidDataException("Can not change owner of a publication.")
+        else:
+            publication.owner = owner
         publication.save()
         for a in parsed_data['authors']:
             author_id = self._get_id_from_atom_link(a)

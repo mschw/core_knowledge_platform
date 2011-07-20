@@ -390,20 +390,9 @@ class PeerReviewDetail(RestView):
     def PUT(request, review_id):
         """docstring for PUT"""
         if request.user.has_perm('core_web_service.add_peerreview'):
-            try:
-                content_type = RestView.get_content_type(request)
-                data = request.raw_post_data
-                inserter = insert.get_inserter(content_type)
-                inserted_review = inserter.modify_peerreview(data, review_id)
-                values = {'peerreview': inserted_review}
-                response = RestView.render_response(request, 'peerreview', values)
-                response.status_code = RestView.OK_STATUS
-            except InvalidDataException, e:
-                response = HttpResponse(e.message)
-                response.status_code = RestView.BAD_REQUEST_STATUS
-            return response
+            return RestView.insert_object(request, 'peerreview', review_id)
         else:
-            response = HttpResponse("Invalid priviledges: user not allowed to add peer review.")
+            response = HttpResponse("Invalid priviledges: user not allowed to add a peer review.")
             response.status_code = RestView.FORBIDDEN_STATUS
             return response
 
@@ -429,20 +418,7 @@ class PeerReviewTemplates(RestView):
     @staticmethod
     @login_required(login_url='/user/login/')
     def POST(request, values):
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_template = None
-            inserter = insert.get_inserter(content_type)
-            inserted_template = inserter.modify_peerreview_template(data)
-            values = {'template': inserted_template}
-            response = RestView.render_response(request, 'peerreviewtemplate', values)
-            response.status_code = RestView.CREATED_STATUS
-            response['Location'] = "%s/peerreviewtemplate/%s" % (service_url, inserted_template.id)
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+        return RestView.insert_object(request, 'peerreviewtemplate')
 
 
 class PeerReviewTemplateDetail(RestView):
@@ -464,19 +440,7 @@ class PeerReviewTemplateDetail(RestView):
     @staticmethod
     @login_required(login_url='/user/login/')
     def PUT(request, template_id):
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_template = None
-            inserter = insert.get_inserter(content_type)
-            inserted_template = inserter.modify_peerreview_template(data, template_id)
-            values = {'template': inserted_template}
-            response = RestView.render_response(request, 'peerreviewtemplate', values)
-            response.status_code = RestView.CREATED_STATUS
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+        return RestView.insert_object(request, 'peerreviewtemplate', template_id)
 
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -522,12 +486,13 @@ class Publications(RestView):
             owner = request.user
             inserted_publications = None
             if not owner:
+                # FIXME: owner is person to issue request.
                 owner = User.get_or_create(name='Anonymous')
             if 'application/x-bibtex' in content_type:
                 inserted_publications = insert.insert_bibtex_publication(data, owner)
             else:
                 inserter = insert.get_inserter(content_type)
-                inserted_publications = inserter.modify_publication(data)
+                inserted_publications = inserter.modify_publication(data, owner=owner)
             values = {'publication_list': inserted_publications}
             response = RestView.render_response(request, 'publications', values)
             response.status_code = RestView.CREATED_STATUS
@@ -545,7 +510,7 @@ class PublicationDetail(RestView):
     allowed_methods = ('GET', 'PUT', 'DELETE')
 
     @staticmethod
-    def _insert_publication(request):
+    def _insert_publication(request, publication_id):
         content_type = RestView.get_content_type(request)
         data = request.raw_post_data
         owner = request.user
@@ -553,7 +518,7 @@ class PublicationDetail(RestView):
             inserted_publication = insert.insert_bibtex_publication(data, owner)
         else:
             inserter = insert.get_inserter(content_type)
-            inserted_publication = inserter.insert_publication(data)
+            inserted_publication = inserter.insert_publication(data, publication_id, owner)
         return inserted_publication
 
     @staticmethod
@@ -571,11 +536,11 @@ class PublicationDetail(RestView):
     @staticmethod
     @csrf_exempt
     @login_required(login_url='/user/login')
-    def PUT(request):
+    def PUT(request, publication_id):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
         try:
-            inserted_publication = PublicationDetail._insert_publication(request)
+            inserted_publication = PublicationDetail._insert_publication(request, publication_id)
             values = {'publication': inserted_publication}
             response = RestView.render_response(request, 'publication', values)
             response.status_code = RestView.CREATED_STATUS
@@ -587,12 +552,17 @@ class PublicationDetail(RestView):
     @staticmethod
     @login_required(login_url='/user/login/')
     def DELETE(request, publication_id):
+        user = request.user
         """Deletes the referred publication from the database."""
         publication = Publication.objects.get(id=publication_id)
         # TODO: do not allow delete when peer review or comments exist.
-        publication.delete()
-        response = HttpResponse("Publication with ID = %s successfully deleted." % (publication_id))
-        response.status_code = RestView.OK_STATUS 
+        if publication.owner == user:
+            publication.delete()
+            response = HttpResponse("Publication with ID = %s successfully deleted." % (publication_id))
+            response.status_code = RestView.OK_STATUS 
+        else:
+            response = HttpResponse("Can not delete publication.")
+            response.status_code = RestView.FORBIDDEN_STATUS
         return response
 
 
@@ -830,7 +800,16 @@ class PaperGroupDetail(RestView):
 
 class Users(RestView):
     """Used to create user accounts."""
-    allowed_methods = ("POST")
+    allowed_methods = ("GET", "POST")
+
+    @staticmethod
+    def GET(request):
+        """Search for users."""
+        # TODO: allow searching for users:
+        # - with name
+        # - with associated tag
+        # - order by rating
+        pass
 
     @staticmethod
     def POST(request):
@@ -866,24 +845,25 @@ class UserDetail(RestView):
     def PUT(request, user_id):
         """Change an existing user."""
         if RestView.validate_sent_format(request):
-            data = request.raw_post_data
-            if data:
-                inserter = insert.get_inserter(RestView.get_content_type(request))
-                user = inserter.modify_user(data, user_id)
-                values = {'user': user}
-                response = RestView.render_response(request, 'user', values)
-            else:
-                response = HttpResponse("No data provided")
-                response.status_code = RestView.BAD_REQUEST_STATUS
-            return response
+            return RestView.insert_object(request, 'user', user_id)
         else:
             return RestView.unsupported_format_sent(RestView.get_content_type(request))
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE(self):
+    def DELETE(request, user_id):
         """Delete an existing user."""
-        pass
+        request_user = request.user
+        user = User.objects.get(id=user_id)
+        if request_user == user:
+            logout(user)
+            user.delete()
+            response = HttpResponse('User account deleted.')
+            response.status_code = RestView.OK_STATUS
+        else:
+            response = HttpResponse('Can only delete own user account.')
+            response.status_code = RestView.FORBIDDEN_STATUS
+        return response
 
 def login(request):
     """Log a user in."""
