@@ -11,6 +11,8 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
 from core_web_service.business_logic import search, insert
+from core_web_service.models import Keyword
+from core_web_service.models import ResearchArea
 
 # Create your views here.
 
@@ -164,15 +166,15 @@ class RestView(object):
         return content_type
 
     @staticmethod
-    def insert_object(request, name, id=None):
-        """docstring for POST"""
+    def insert_object(request, name, id=None, **kwargs):
+        """Insert or update an object of type name into the database."""
         try:
             content_type = RestView.get_content_type(request)
             data = request.raw_post_data
             inserted_object = None
             inserter = insert.get_inserter(content_type)
             function = getattr(inserter, 'modify_%s' % (name))
-            inserted_object = function(data, id)
+            inserted_object = function(data, id, **kwargs)
             values = {name: inserted_object}
             response = RestView.render_response(request, name, values)
             if id:
@@ -298,31 +300,28 @@ class EsteemDetail(RestView):
     allowed_methods = ("GET", "POST", "PUT")
     
     @staticmethod
-    def GET(request, user_id, tag_id=None):
+    def GET(request, esteem_id=None, user_id=None):
         """Return esteem for a certain user and a certain tag.
         
         Attributes:
+            esteem_id: the id of a specific esteem instance.
             user_id: the id of the user.
             tag_id: the id of the tag.
         """
         try:
-            if not tag_id:
-                user = User.objects.get(id=user_id)
-                esteem = user.esteem_set
+            if esteem_id:
+                esteem = Esteem.objects.get(id=esteem_id)
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
-            else:
-                esteem = Esteem.objects.filter(user__id=user_id, tag__id=tag_id)
+            if user_id:
+                esteem = Esteem.objects.filter(user__id__in=user_id)
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
         except User.DoesNotExist:
             response = "The user with ID %s does not exist" % (user_id)
             response.status_code = RestView.NOT_FOUND_STATUS
-        except Tag.DoesNotExist:
-            response = "The tag with ID %s does not exist" % (tag_id)
-            response.status_code = RestView.NOT_FOUND_STATUS
         except Esteem.DoesNotExist:
-            response = "No esteem found for user with ID %s and tag with ID %s" % (user_id, tag_id)
+            response = "No esteem found for user with ID %s and tag with ID %s" % (user_id)
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -337,6 +336,41 @@ class EsteemDetail(RestView):
     def PUT():
         """docstring for PUT"""
         pass
+
+
+class Keywords(RestView):
+    """Return a list of keywords."""
+    allowed_methods = ("GET", "POST")
+
+    @staticmethod
+    def GET(request, keyword_id=None):
+        """Return a list of all keywords in the system."""
+        if keyword_id:
+            keywords = Keyword.objects.get(id=keyword_id)
+        else:
+            keywords = Keyword.objects.all()
+        values = {'keywords': keywords}
+        response = RestView.render_response(request, 'keyword', values)
+        return response
+
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    def POST(request):
+        """Insert a new keyword and return its location."""
+        return RestView.insert_object(request, 'keyword')
+
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    def PUT(request, keyword_id):
+        """Modify an existing keyword."""
+        return RestView.insert_object(request, 'keyword', keyword_id)
+
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    def DELETE(request, keyword_id):
+        """Delete an existing keyword."""
+        keyword = Keyword.objects.get(id=keyword_id)
+        keyword.delete()
 
 
 class PeerReviews(RestView):
@@ -580,22 +614,21 @@ class RatingDetail(RestView):
     
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST(request):
-        """docstring for POST"""
-        pass
+    def POST(request, publication_id):
+        """Add a new rating to a publication."""
+        return RestView.insert_object(request, 'rating', publication_id=publication_id)
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def PUT(request):
-        """docstring for PUT"""
-        pass
+    def PUT(request, publication_id, rating_id):
+        """Add a new value to an existing rating."""
+        return RestView.insert_object(request, 'rating', publication_id=publication_id, rating_id=rating_id)
 
     @staticmethod
     @login_required(login_url='/user/login/')
     def DELETE(request):
         """docstring for DELETE"""
         pass
-        
 
 
 class ReferenceMaterialDetail(RestView):
@@ -651,6 +684,40 @@ class ReferenceMaterialDetail(RestView):
     def DELETE(request):
         """docstring for DELETE"""
         pass
+
+
+class ResearchAreas(RestView):
+    """Rest interface for research areas."""
+    allowed_methods = ("GET", "POST", "PUT", "DELETE") 
+
+    @staticmethod
+    def GET(request, researcharea_id=None):
+        """Return list of details for a research area."""
+        if researcharea_id:
+            ra = ResearchArea.objects.get(id=researcharea_id)
+        else:
+            ra = ResearchArea.objects.all()
+        values = {'researchareas': ra}
+        return RestView.render_response(request, 'researchareas', values)
+
+    @staticmethod
+    @login_required(login_url="/user/login")
+    def POST(request):
+        """Create a new research area."""
+        return RestView.insert_object(request, 'researcharea') 
+
+    @staticmethod
+    @login_required(login_url="/user/login")
+    def PUT(request, researcharea_id):
+        """Modify an existing research area."""
+        return RestView.insert_object(request, 'researcharea', researcharea_id) 
+
+    @staticmethod
+    @login_required(login_url="/user/login")
+    def DELETE(request, researcharea_id):
+        """Delete an existing research area."""
+        ra = ResearchArea.objects.get(id=researcharea_id)
+        ra.delete()
 
 
 class Tags(RestView):
@@ -896,6 +963,7 @@ author_detail = AuthorDetail()
 comments = Comments()
 comment_detail = CommentDetail()
 esteem_detail = EsteemDetail()
+keywords = Keywords()
 overview = Overview()
 papergroups = PaperGroups()
 papergroup_detail = PaperGroupDetail()

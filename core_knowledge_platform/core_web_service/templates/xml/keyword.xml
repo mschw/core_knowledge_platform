@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<keywords xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for key in keywords %}
+    <keyword>
+        <title>
+            {{ key.keyword }}
+        </title>
+        <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}/"/>
+    </keyword>
+    {% endfor %}
+</keywords>

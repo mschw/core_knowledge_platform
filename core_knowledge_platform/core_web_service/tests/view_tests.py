@@ -3,7 +3,7 @@ from django.utils import unittest
 from django.test.client import Client
 from django.core.urlresolvers import reverse
 from core_web_service.views import RestView
-from core_web_service.tests.xml_strings import author_xml, user_xml
+from core_web_service.tests.xml_strings import author_xml, user_xml, publication_xml
 from core_web_service.models import User
 
 class ViewTests(unittest.TestCase):
@@ -51,7 +51,7 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(result.status_code, RestView.UNSUPPORTED_MEDIA_TYPE_STATUS)
 
     def test_insert_user_from_view_returns_200(self):
-        result = self.client.post(reverse('core_web_service.views.users'), user_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
+        result = self.client.post('/user/', user_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, RestView.CREATED_STATUS)
 
     def test_login_valid_credential(self):
@@ -74,5 +74,5 @@ class ViewTests(unittest.TestCase):
 
     def test_restricted_method_without_login(self):
         self.client.logout()
-        result = self.client.put('/publication/1', content_type='application/xml', HTTP_ACCEPT='application/xml')
+        result = self.client.put('/publication/1', publication_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, 302)

@@ -33,16 +33,20 @@ class Comment(models.Model):
 
 
 class Esteem(models.Model):
-    """Represents the esteem a User can obtain.
-    Esteem is tied to a User and a specific tag."""
+    """Represents the esteem a User can obtain."""
     user = models.ForeignKey(User)
-    tag = models.ForeignKey(Tag)
     value = models.IntegerField()
 
 
 class Keyword(models.Model):
     """Stores keywords for a publication that were specified by the author."""
     keyword = models.CharField(max_length=255, blank = True, null = True)
+
+
+class Rating(models.Model):
+    """Represents a vote cast by a User for a publication of comment."""
+    rating = models.DecimalField(max_digits=4, decimal_places=2)
+    votes = models.IntegerField()
 
 
 class Publication(models.Model):
@@ -83,6 +87,7 @@ class Publication(models.Model):
     comments = models.ManyToManyField(Comment)
     tags = models.ManyToManyField(Tag)
     keywords = models.ManyToManyField(Keyword)
+    rating = models.OneToOneField(Rating)
 
 
 class PaperGroup(models.Model):
@@ -96,12 +101,19 @@ class PaperGroup(models.Model):
     tags = models.ManyToManyField(Tag)
 
 
+class ResearchArea(models.Model):
+    """Store research areas for users."""
+    title = models.CharField(max_length=255, null=False, blank=False)
+    description = models.TextField(null=True, blank=True)
+
+
 class UserProfile(models.Model):
     """Stores additional information about a user not in the system."""
     user = models.ForeignKey(User, unique=True)
     degree = models.CharField(max_length=255, blank=True, null=True)
     authenticated_professional = models.BooleanField()
     institution = models.CharField(max_length=255, blank=True, null=True)
+    research_areas = models.ManyToManyField(ResearchArea)
 
 
 class ProfileField(models.Model):
@@ -137,12 +149,6 @@ class PeerReview(models.Model):
         permissions = (
                 ("can_view", "Can see the available peer reviews."),
                 )
-
-
-class Rating(models.Model):
-    """Represents a vote cast by a User for a publication of comment."""
-    publication = models.ForeignKey(Publication)
-    rating = models.DecimalField(max_digits=4, decimal_places=2)
 
 
 class ReferenceMaterial(models.Model):

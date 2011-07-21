@@ -8,4 +8,7 @@
     <rating>
         {{ rating.rating }}
     </rating>
+    <votes>
+        {{ rating.votes }}
+    </votes>
 </rating>

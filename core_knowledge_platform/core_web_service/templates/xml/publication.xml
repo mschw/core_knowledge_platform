@@ -67,10 +67,13 @@
     <owner>
         <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
     </owner>
+    {# Publication is under review #}
     {% if publication.review_status == 3 %}
         {% for pg in publication.paper_groups.all %}
+            {# The current group is not blind reviewd #}
             {% if not pg.blind_review %}
-                {% if request.user in pg.referees %}
+                {# The user is a referee or an editor and may see the authors #}
+                {% if request.user in pg.referees or perms.core_web_service.can_view %}
                     <authors>    
                         {% for author in publication.authors.all %}
                         <author>

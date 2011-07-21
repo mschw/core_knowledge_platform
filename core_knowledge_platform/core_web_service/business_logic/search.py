@@ -51,7 +51,6 @@ def search_keywords(search_items):
 
 def search_publications(publication_terms, author_terms, keyword_terms):
     """Return publications that match the provided conditions."""
-    print "Searching publications with pub = %s, auth = %s, key = %s" % (publication_terms, author_terms, keyword_terms)
     publications = None
     authors = None
     keywords = None

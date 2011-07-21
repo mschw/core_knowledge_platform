@@ -6,4 +6,9 @@ syntax: glob
 
 # Ignore compiled documentation:
 core_knowledge_platform/doc/doc
-core_knowledge_platform/doc/_build/
+core_knowledge_platform/.project
+core_knowledge_platform/.pydevproject
+core_knowledge_platform/.ropeproject/
+core_knowledge_platform/tags
+core_knowledge_platform/stat-an.bib
+core_knowledge_platform/entries.bib

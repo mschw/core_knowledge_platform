@@ -71,7 +71,7 @@ class Inserter(object):
         pass
 
     @abstractmethod
-    def modify_rating(self, data, rating_id=None):
+    def modify_rating(self, data, rating_id=None, publication_id=None):
         """Create or modify a rating object according to the specified value."""
         pass
 
@@ -273,12 +273,14 @@ class XmlInserter(Inserter):
         publication.year = parsed_data['year']
         owner_id = self._get_id_from_atom_link(parsed_data['owner'])
         if owner_id:
+            xml_owner = User.objects.get(id=owner_id)
             if owner:
-                xml_owner = User.objects.get(id=owner_id)
                 if xml_owner == owner:
                     publication.owner = owner
                 else:
                     raise InvalidDataException("Can not change owner of a publication.")
+            else:
+                publication.owner = xml_owner
         else:
             publication.owner = owner
         publication.save()
@@ -308,16 +310,31 @@ class XmlInserter(Inserter):
         publication.save()
         return publication
 
-    def modify_rating(self, data, rating_id=None):
+    def modify_rating(self, data, rating_id=None, publication_id=None):
         """Create or modify a rating object according to the specified value."""
+        # TODO: Test
         parsed_data = self._parse_xml_to_dict(data)
+        xml_publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        publication_id = xml_publication_id if xml_publication_id else publication_id
         if rating_id:
             rating = Rating.objects.get(id=rating_id)
-        else:
-            rating = Rating()
-        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        elif publication_id:
+            publication = Publication.objects.get(id=publication_id)
+            if publication.rating:
+                rating = publication.rating
+            else:
+                rating = Rating()
         rating.publication = Publication.objects.get(id=publication_id)
-        rating.rating = parsed_data['rating']
+        new_rating = parsed_data['rating']
+        new_vote = parsed_data['votes']
+        if new_rating > rating.rating:
+            rating.rating = new_rating
+        else:
+            raise InvalidDataException("New rating can not be lower than old rating.")
+        if new_vote == rating.votes:
+            rating.votes = new_vote
+        else:
+            raise InvalidDataException("Votes occured during submission, please resubmit with valid data")
         rating.save()
         return rating
 

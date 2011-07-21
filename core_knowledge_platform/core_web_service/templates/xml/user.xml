@@ -19,11 +19,18 @@
     <institution>
         {{ user.get_profile.institution }}
     </institution>
+    <research_areas>
+        {% for area in user.get_profile.research_areas %}
+        <research_area>
+            <atom:link rel='research_area' type="application/xml" href="http://{{ url }}/researcharea/{{ area.id }}"/>
+        </research_area>
+        {% endfor %}
+    </research_areas>
     <fields>    
         {% for field in user.get_profile.profile_field.all %}
         <{{ field.key }}>
             {{ field.value }}
-        </{{field.key}}>
+        </{{ field.key }}>
         {% endfor %}
     </fields>
 </user>
