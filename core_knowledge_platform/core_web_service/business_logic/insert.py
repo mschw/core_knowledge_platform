@@ -271,6 +271,16 @@ class XmlInserter(Inserter):
         publication.month = parsed_data['month']
         publication.note = parsed_data['note']
         publication.year = parsed_data['year']
+        rating_id = self._get_id_from_atom_link(parsed_data['rating'])
+        if not rating_id:
+            try:
+                rating = publication.rating
+            except Rating.DoesNotExist:
+                rating = Rating()
+                rating.save()
+                publication.rating = rating
+        else:
+            publication.rating = Rating.objects.get(id=rating_id)
         owner_id = self._get_id_from_atom_link(parsed_data['owner'])
         if owner_id:
             xml_owner = User.objects.get(id=owner_id)
@@ -472,6 +482,9 @@ def insert_bibtex_publication(bibtex, owner):
                     further_field.value = value
                     further_fields.append(further_field)
         try:
+            rating = Rating()
+            rating.save()
+            publication.rating = rating
             validate_required_fields(publication)
             publication.save()
             for field in further_fields:

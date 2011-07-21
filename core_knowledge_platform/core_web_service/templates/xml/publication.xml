@@ -64,6 +64,9 @@
     <year>
         {{ publication.year }}
     </year>
+    <rating>
+        <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ publication.rating.id }}"/>
+    </rating>
     <owner>
         <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
     </owner>

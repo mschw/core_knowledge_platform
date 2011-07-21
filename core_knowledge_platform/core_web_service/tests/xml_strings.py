@@ -75,6 +75,8 @@ publication_xml="""
     <chapter>
         A chapter
     </chapter>
+    <rating>
+    </rating>
     <edition>
         1
     </edition>

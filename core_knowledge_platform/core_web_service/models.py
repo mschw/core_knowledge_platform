@@ -45,8 +45,8 @@ class Keyword(models.Model):
 
 class Rating(models.Model):
     """Represents a vote cast by a User for a publication of comment."""
-    rating = models.DecimalField(max_digits=4, decimal_places=2)
-    votes = models.IntegerField()
+    rating = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    votes = models.IntegerField(default=0)
 
 
 class Publication(models.Model):
