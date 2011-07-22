@@ -12,7 +12,6 @@ class ViewTests(unittest.TestCase):
     def setUp(self):
         self.client = Client()
         User.objects.create_user(username='unittest', password='unit', email='unit@test.test')
-        pdb.set_trace()
         self.author = Author.objects.create(name="test", address="test", email="test@test.test")
         self.client.login(username="unittest", password="unit")
 

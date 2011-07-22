@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from core_web_service.business_logic.signals import *
 
 # Publication related classes
 
