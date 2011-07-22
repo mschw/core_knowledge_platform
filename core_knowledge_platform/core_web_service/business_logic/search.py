@@ -66,8 +66,7 @@ def search_publications(publication_terms, author_terms, keyword_terms):
         keywords = search_keywords(keyword_terms)
         keyword_id = [keyword.id for keyword in keywords]
         publications = publications.filter(keywords__id__in=keyword_id)
-    else:
-        return publications
+    return publications
 
 def search_user(search_items):
     """Return users that match the provided conditions."""
@@ -79,3 +78,17 @@ def search_user(search_items):
     query = build_query(search_items)
     result = User.objects.filter(reduce(operator.or_, query))
     return result
+
+def get_related_tags(tag):
+    """Return tags that were used when the provided tag was used."""
+    publication_with_tag = Publication.objects.filter(tag_id__in=tag.id)
+    relevance_tags = dict()
+    for tag in publication_with_tag.tags.all():
+        key = tag
+        if relevance_tags[key]:
+            relevance_tags[key] = relevance_tags[key] + 1
+        else:
+            relevance_tags[key] = 1
+    sorted_dict = sorted(relevance_tags, key=lambda tag: tag)
+    sorted_list = [item for item in sorted_dict.keys()]
+    return sorted_list

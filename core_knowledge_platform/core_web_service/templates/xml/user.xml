@@ -19,6 +19,9 @@
     <institution>
         {{ user.get_profile.institution }}
     </institution>
+    <esteem>
+        <atom:link rel="esteem" type="application/xml" href="http://{{ url }}/esteem/{{ user.get_profile.esteem }}"/>
+    </esteem>
     <research_areas>
         {% for area in user.get_profile.research_areas %}
         <research_area>

@@ -240,7 +240,11 @@ class AuthorDetail(RestView):
     @login_required(login_url='/user/login/')
     def DELETE(author_id):
         """Deletes an existing author resource."""
-        pass
+        author = Author.objects.get(id=author_id)
+        author.delete()
+        response = HttpResponse("Delete %s with id %s" % ('author', author_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 class Comments(RestView):
@@ -289,24 +293,27 @@ class CommentDetail(RestView):
     
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE():
+    def DELETE(request, comment_id):
         """docstring for DELETE"""
-        pass
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        response = HttpResponse("Delete %s with id %s" % ('comment', comment_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 class EsteemDetail(RestView):
     """Handles requests for esteem values of a user."""
     # FIXME: Fix the whole esteem thing
-    allowed_methods = ("GET", "POST", "PUT")
+    allowed_methods = ("GET", "PUT")
     
     @staticmethod
     def GET(request, esteem_id=None, user_id=None):
-        """Return esteem for a certain user and a certain tag.
+        """Return esteem for a certain user.
         
         Attributes:
             esteem_id: the id of a specific esteem instance.
             user_id: the id of the user.
-            tag_id: the id of the tag.
         """
         try:
             if esteem_id:
@@ -314,7 +321,7 @@ class EsteemDetail(RestView):
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
             if user_id:
-                esteem = Esteem.objects.filter(user__id__in=user_id)
+                esteem = Esteem.objects.filter(user__id=user_id)
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
         except User.DoesNotExist:
@@ -327,15 +334,9 @@ class EsteemDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST(request):
-        """docstring for POST"""
-        pass
-
-    @staticmethod
-    @login_required(login_url='/user/login/')
-    def PUT():
-        """docstring for PUT"""
-        pass
+    def PUT(request, esteem_id=None):
+        """Change an existing esteem value."""
+        return RestView.insert_object(request, 'esteem', esteem_id)
 
 
 class Keywords(RestView):
@@ -371,6 +372,9 @@ class Keywords(RestView):
         """Delete an existing keyword."""
         keyword = Keyword.objects.get(id=keyword_id)
         keyword.delete()
+        response = HttpResponse("Delete %s with id %s" % ('keyword', keyword_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 class PeerReviews(RestView):
@@ -432,9 +436,13 @@ class PeerReviewDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DETELE(request, peer_review_id):
+    def DETELE(request, peerreview_id):
         """docstring for DETELE"""
-        pass
+        peerreview = PeerReview.objects.get(id=peerreview_id)
+        peerreview.delete()
+        response = HttpResponse("Delete %s with id %s" % ('peerreview', peerreview_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 class PeerReviewTemplates(RestView):
@@ -478,9 +486,13 @@ class PeerReviewTemplateDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE():
+    def DELETE(request, peerreviewtemplate_id):
         """docstring for DELETE"""
-        pass
+        peerreviewtemplate = PeerReviewTemplate.objects.get(id=peerreviewtemplate_id)
+        peerreviewtemplate.delete()
+        response = HttpResponse("Delete %s with id %s" % ('peerreviewtemplate', peerreviewtemplate_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 @csrf_exempt
@@ -602,33 +614,24 @@ class PublicationDetail(RestView):
 
 class RatingDetail(RestView):
     """Handle REST requests for ratings."""
-    allowed_methods = ("GET", "POST", "PUT", "DELETE")
+    allowed_methods = ("GET", "PUT")
 
     @staticmethod
-    def GET(request, rating_id):
-        """docstring for GET"""
-        rating = Rating.objects.get(id=rating_id)
+    def GET(request, rating_id=None, publication_id=None):
+        """Return a rating for a given id or publication."""
+        if rating_id:
+            rating = Rating.objects.get(id=rating_id)
+        elif publication_id:
+            rating = Publication.objects.get(id=publication_id).rating
         values = {'rating': rating}
         response = RestView.render_response(request, 'rating', values)
         return response
     
     @staticmethod
     @login_required(login_url='/user/login/')
-    def POST(request, publication_id):
-        """Add a new rating to a publication."""
-        return RestView.insert_object(request, 'rating', publication_id=publication_id)
-
-    @staticmethod
-    @login_required(login_url='/user/login/')
-    def PUT(request, publication_id, rating_id):
+    def PUT(request, rating_id):
         """Add a new value to an existing rating."""
-        return RestView.insert_object(request, 'rating', publication_id=publication_id, rating_id=rating_id)
-
-    @staticmethod
-    @login_required(login_url='/user/login/')
-    def DELETE(request):
-        """docstring for DELETE"""
-        pass
+        return RestView.insert_object(request, 'rating', rating_id=rating_id)
 
 
 class ReferenceMaterialDetail(RestView):
@@ -647,43 +650,23 @@ class ReferenceMaterialDetail(RestView):
     @login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_material = None
-            inserter = insert.get_inserter(content_type)
-            inserted_material = inserter.modify_reference_material(data)
-            values = {'referencematerial': inserted_material}
-            response = RestView.render_response(request, 'referencematerial', values)
-            response.status_code = RestView.CREATED_STATUS
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+        return RestView.insert_object(request, 'referencematerial')
 
     @staticmethod
     @login_required(login_url='/user/login/')
     def PUT(request, material_id):
         """docstring for PUT"""
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_material = None
-            inserter = insert.get_inserter(content_type)
-            inserted_material = inserter.modify_reference_material(data, material_id)
-            values = {'referencematerial': inserted_material}
-            response = RestView.render_response(request, 'referencematerial', values)
-            response.status_code = RestView.CREATED_STATUS
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+        return RestView.insert_object(request, 'referencematerial', material_id)
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE(request):
+    def DELETE(request, material_id):
         """docstring for DELETE"""
-        pass
+        material = ReferenceMaterial.objects.get(id=material_id)
+        material.delete()
+        response = HttpResponse("Delete %s with id %s" % ('referencematerial', material_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 class ResearchAreas(RestView):
@@ -725,28 +708,18 @@ class Tags(RestView):
     allowed_methods = ("GET", "POST")
 
     @staticmethod
-    def GET():
-        """docstring for GET"""
-        pass
+    def GET(request):
+        """Return a list of all tags."""
+        tags = Tag.objects.all()
+        values = {'tags': tags}
+        response = RestView.render_response(request, 'tags', values)
+        return response
 
     @staticmethod
     @login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_tag = None
-            inserter = insert.get_inserter(content_type)
-            inserted_tag = inserter.modify_tag(data)
-            values = {'tag': inserted_tag}
-            response = RestView.render_response(request, 'tag', values)
-            response.status_code = RestView.CREATED_STATUS
-            response['Location'] = '%s/tag/%s' % (service_url, inserted_tag.id)
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+        return RestView.insert_object(request, 'tag')
 
 
 class TagDetail(RestView):
@@ -754,36 +727,28 @@ class TagDetail(RestView):
     allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
-    def GET():
-        """docstring for GET"""
-        pass
+    def GET(request, tag_id):
+        """Return information for one tag."""
+        tag = Tag.objects.get(id=tag_id)
+        values = {'tag': tag}
+        RestView.render_response(request, 'tag', values)
 
     @staticmethod
     @login_required(login_url='/user/login/')
     def PUT(request, tag_id):
-        """docstring for PUT"""
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_tag = None
-            inserter = insert.get_inserter(content_type)
-            inserted_tag = inserter.modify_tag(data, tag_id)
-            values = {'tag': inserted_tag}
-            response = RestView.render_response(request, 'tag', values)
-            response.status_code = RestView.CREATED_STATUS
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
-
-
+        """Insert a tag."""
+        return RestView.insert_object(request, 'tag', tag_id)
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE():
-        """docstring for DELETE"""
-        pass
-        
+    def DELETE(request, tag_id):
+        """Delete a tag."""
+        tag = Tag.objects.get(id=tag_id)
+        tag.delete()
+        response = HttpResponse("Delete %s with id %s" % ('tag', tag_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
+
 
 class Overview(RestView):
     """Displays an overview over the webservice."""
@@ -812,20 +777,7 @@ class PaperGroups(RestView):
     @login_required(login_url='/user/login/')
     def POST(request):
         """Create a new papergroup from the specified data."""
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_papergroup = None
-            inserter = insert.get_inserter(content_type)
-            inserted_papergroup = inserter.modify_papergroup(data)
-            values = {'papergroup': inserted_papergroup}
-            response = RestView.render_response(request, 'papergroup', values)
-            response.status_code = RestView.CREATED_STATUS
-            response['Location'] = '%s/papergroup/%s' % (service_url, inserted_papergroup.id)
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+        return RestView.insert_object(request, 'papergroup')
 
 
 class PaperGroupDetail(RestView):
@@ -842,27 +794,25 @@ class PaperGroupDetail(RestView):
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def PUT(request):
-        """"""
-        try:
-            content_type = RestView.get_content_type(request)
-            data = request.raw_post_data
-            inserted_papergroup = None
-            inserter = insert.get_inserter(content_type)
-            inserted_papergroup = inserter.modify_papergroup(data)
-            values = {'papergroup': inserted_papergroup}
-            response = RestView.render_response(request, 'papergroup', values)
-            response.status_code = RestView.CREATED_STATUS
-        except InvalidDataException, e:
-            response = HttpResponse(e.message)
-            response.status_code = RestView.BAD_REQUEST_STATUS
-        return response
+    def PUT(request, papergroup_id):
+        """Modify an existing papergroup."""
+        RestView.insert_object(request, 'papergroup', papergroup_id)
+
 
     @staticmethod
     @login_required(login_url='/user/login/')
-    def DELETE(request):
-        """docstring for DELETE"""
-        pass
+    def DELETE(request, papergroup_id):
+        """Delete an existing papergroup."""
+        # TODO: Make sure only an editor can delete the group.
+        papergroup = PaperGroup.objects.get(id=papergroup_id)
+        if request.user in papergroup.editors.all():
+            papergroup.delete()
+            response = HttpResponse("Delete %s with id %s" % ('papergroup', papergroup_id))
+            response.status_code = RestView.NO_CONTENT_STATUS
+        else:
+            response = HttpResponse("Only an editor can delete a papergroup.")
+            response.status_code = RestView.FORBIDDEN_STATUS
+        return response
 
 
 class Users(RestView):
@@ -888,18 +838,7 @@ class Users(RestView):
     def POST(request):
         """Create a new user."""
         if RestView.validate_sent_format(request):
-            data = request.raw_post_data
-            if data:
-                inserter = insert.get_inserter(RestView.get_content_type(request))
-                user = inserter.modify_user(data)
-                values = {'users': user}
-                response = RestView.render_response(request, 'user', values)
-                response.status_code = RestView.CREATED_STATUS
-                response['Location'] = "%s/user/%s" % (service_url, user.id)
-            else:
-                response = HttpResponse("No data provided")
-                response.status_code = RestView.BAD_REQUEST_STATUS
-            return response
+            return RestView.insert_object(request, 'user')
         else:
             return RestView.unsupported_format_sent(RestView.get_content_type(request))
 

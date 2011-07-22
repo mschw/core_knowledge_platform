@@ -71,7 +71,7 @@ class Inserter(object):
         pass
 
     @abstractmethod
-    def modify_rating(self, data, rating_id=None, publication_id=None):
+    def modify_rating(self, data, rating_id):
         """Create or modify a rating object according to the specified value."""
         pass
 
@@ -320,21 +320,11 @@ class XmlInserter(Inserter):
         publication.save()
         return publication
 
-    def modify_rating(self, data, rating_id=None, publication_id=None):
+    def modify_rating(self, data, rating_id):
         """Create or modify a rating object according to the specified value."""
         # TODO: Test
         parsed_data = self._parse_xml_to_dict(data)
-        xml_publication_id = self._get_id_from_atom_link(parsed_data['publication'])
-        publication_id = xml_publication_id if xml_publication_id else publication_id
-        if rating_id:
-            rating = Rating.objects.get(id=rating_id)
-        elif publication_id:
-            publication = Publication.objects.get(id=publication_id)
-            if publication.rating:
-                rating = publication.rating
-            else:
-                rating = Rating()
-        rating.publication = Publication.objects.get(id=publication_id)
+        rating = Rating.objects.get(id=rating_id)
         new_rating = parsed_data['rating']
         new_vote = parsed_data['votes']
         if new_rating > rating.rating:
@@ -380,15 +370,22 @@ class XmlInserter(Inserter):
         if user_id:
             user = User.objects.get(id=user_id)
         else:
-            user = User.objects.create_user(parsed_data['username'], parsed_data['email'],
-                parsed_data['password'])
+            user = User.objects.create_user(parsed_data['username'],
+                    parsed_data['email'], parsed_data['password'])
         user_profile = user.profile
+        try:
+            esteem = user_profile.esteem
+        except Esteem.DoesNotExist:
+            esteem = Esteem()
+            esteem.save()
+            user_profile.esteem = esteem
         user_profile.degree = parsed_data['degree']
         user_profile.institution = parsed_data['institution']
         fields = parsed_data['fields']
         user_profile.save()
         for item in fields:
-            field, created = ProfileField.objects.get_or_create(value=item, user_profile=user_profile)
+            field, created = ProfileField.objects.get_or_create(value=item,
+                    user_profile=user_profile)
             field.userprofile = user_profile
             field.save()
         user.save()

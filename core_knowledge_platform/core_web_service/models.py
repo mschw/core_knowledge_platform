@@ -34,8 +34,7 @@ class Comment(models.Model):
 
 class Esteem(models.Model):
     """Represents the esteem a User can obtain."""
-    user = models.ForeignKey(User)
-    value = models.IntegerField()
+    value = models.IntegerField(default=0)
 
 
 class Keyword(models.Model):
@@ -110,6 +109,7 @@ class ResearchArea(models.Model):
 class UserProfile(models.Model):
     """Stores additional information about a user not in the system."""
     user = models.ForeignKey(User, unique=True)
+    esteem = models.OneToOneField(Esteem)
     degree = models.CharField(max_length=255, blank=True, null=True)
     authenticated_professional = models.BooleanField()
     institution = models.CharField(max_length=255, blank=True, null=True)
