@@ -7,11 +7,13 @@
     <text>
         {{ comment.text }}
     </text>
-    <votes>
-        {% for vote in comment.votes.all %}
-        <vote>
-            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"/>{{ comment.vote.id }}
-        </vote>
-        {% endfor %}
-    </votes>
+    <date>
+        {{ comment.date }}
+    </date>
+    <user>
+            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ comment.user.id }}"/>
+    </user>
+    <vote>
+            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"/>
+    </vote>
 </comment>

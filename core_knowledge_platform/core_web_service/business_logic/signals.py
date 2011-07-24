@@ -2,7 +2,8 @@ import pdb
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from core_web_service.models import Esteem, Rating, Publication, PaperGroup, UserProfile
+from core_web_service.models import Comment, Esteem, Rating, Publication, PaperGroup, UserProfile
+from core_web_service.models import Vote
 
 
 """Module to act upon receiving signals from the django framework."""
@@ -41,3 +42,14 @@ def automatically_create_rating_for_new_publication(sender, **kwargs):
         rating = Rating()
         rating.save()
         publication.rating = rating
+
+@receiver(pre_save, sender=Comment)
+def automatically_create_votes_for_new_comment(sender, **kwargs):
+    """docstring for automatically_create_votes_for_new_comment"""
+    comment = kwargs['instance']
+    try:
+        vote = comment.vote
+    except Vote.DoesNotExist:
+        vote = Vote()
+        vote.save()
+        comment.vote = vote

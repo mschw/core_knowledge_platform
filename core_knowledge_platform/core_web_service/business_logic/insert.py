@@ -1,3 +1,4 @@
+from core_web_service.models import Vote
 from core_web_service.business_logic.access import check_priviledges_for_referee
 from core_web_service.business_logic.access import check_priviledges_for_editor
 from abc import ABCMeta, abstractmethod
@@ -41,7 +42,7 @@ class Inserter(object):
         pass
 
     @abstractmethod
-    def modify_comment(self, data, comment_id=None):
+    def modify_comment(self, data, comment_id=None, user_id=None):
         """Create or modify a comment object according to the specified value."""
         pass
 
@@ -90,6 +91,10 @@ class Inserter(object):
         """Create or modify a user from the provided values."""
         pass
 
+    @abstractmethod
+    def modify_vote(self, data, vote_id=None):
+        """docstring for modify_vote"""
+        pass
 
 class XmlInserter(Inserter):
     """Used to insert objects based on xml representations."""
@@ -145,19 +150,19 @@ class XmlInserter(Inserter):
         author.save()
         return author
 
-    def modify_comment(self, data, comment_id=None):
+    def modify_comment(self, data, comment_id=None, user_id=None):
         """Create or modify a comment object according to the specified value."""
         parsed_data = self._parse_xml_to_dict(data)
         if comment_id:
             comment = Comment.objects.get(id=comment_id)
         else:
             comment = Comment()
+        if not user_id:
+            user_id = self._get_id_from_atom_link(parsed_data['user'])
+        user = User.objects.get(id=user_id)
+        comment.user = user
         comment.title = parsed_data['title']
         comment.text = parsed_data['text']
-        for field in parsed_data['votes']:
-            vote_id = self._get_id_from_atom_link(field)
-            vote = Vote.objects.get(id=vote_id)
-            comment.vote = vote
         comment.save()
         return comment
 
@@ -375,6 +380,14 @@ class XmlInserter(Inserter):
         user.save()
         user_profile.save()
         return user
+
+    def modify_vote(self, data, vote_id=None):
+        parsed_data = self._parse_xml_to_dict(data)
+        if vote_id:
+            vote = Vote.objects.get(id=vote_id)
+        vote.upvotes = parsed_data['upvotes']
+        vote.downvotes = parsed_data['downvotes']
+        return vote
 
     def _get_namespace(self, element):
         """Return the main namespace for a given ElementTree.element."""

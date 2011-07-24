@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vote xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <upvotes>
+        {{ vote.upvotes }}
+    </upvotes>
+    <downvotes>
+        {{ vote.downvotes }}
+    </downvotes>
+</vote>

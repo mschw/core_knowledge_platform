@@ -16,7 +16,9 @@ class Author(models.Model):
 
 class Vote(models.Model):
     """Represents a vote (either an up or downvote) for a comment."""
-    vote = models.CharField(max_length=4)
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
+    #vote = models.CharField(max_length=4)
 
 
 class Tag(models.Model):
@@ -27,10 +29,11 @@ class Tag(models.Model):
 
 class Comment(models.Model):
     """Represents a comment. Comments can be added to publications and other comments."""
-    # FIXME: only one vote per comment?
     title = models.CharField(max_length=75)
     text = models.TextField()
-    vote = models.ForeignKey(Vote)
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, blank=True, null=True)
+    vote = models.OneToOneField(Vote)
 
 
 class Esteem(models.Model):

@@ -1,3 +1,5 @@
+from core_web_service.models import ResearchArea
+from core_web_service.models import UserProfile
 from django.db.models import Q
 from core_web_service.models import Author, Publication, Keyword
 import pdb
@@ -93,3 +95,28 @@ def get_related_tags(tag):
                     relevance_tags[key] = 1
     sorted_list = sorted(relevance_tags, key=lambda p_tag: p_tag)
     return sorted_list
+
+def get_related_users_for_keyword(keyword):
+    """Return a list of users that research in the given area."""
+    users = User.objects.all()
+    related_users = []
+    for user in users:
+        try:
+            research_areas = user.profile.research_areas.all()
+            for ra in research_areas:
+                if (keyword.keyword in ra.title) or (keyword.keyword in ra.description):
+                    related_users.append(user)
+        except UserProfile.DoesNotExist:
+            pass
+        except ResearchArea.DoesNotExist:
+            pass
+    return related_users
+
+def get_related_users_for_publication(publication):
+    """Return a list of users that might be intersted in the paper."""
+    interested_users = []
+    for keyword in publication.keywords.all():
+        users = get_related_users_for_keyword(keyword)
+        interested_users.extend(users)
+    return interested_users
+

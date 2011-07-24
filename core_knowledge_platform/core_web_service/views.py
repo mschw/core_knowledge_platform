@@ -1,18 +1,16 @@
-from core_web_service.business_logic.insert import InvalidDataException
 import re
-import pdb
 
-from django.template.loader import get_template
-from django.template import Context
-from django.http import HttpResponse
-from django.http import QueryDict
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User
+from django.http import HttpResponse, QueryDict
+from django.template import Context
+from django.template.loader import get_template
+from django.views.decorators.csrf import csrf_exempt
+
 from core_web_service.business_logic import search, insert
-from core_web_service.models import Keyword
-from core_web_service.models import ResearchArea
+from core_web_service.business_logic.insert import InvalidDataException
+from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User, Keyword, ResearchArea, Vote
+
 
 # Create your views here.
 
@@ -264,9 +262,12 @@ class Comments(RestView):
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
+    @staticmethod
+    @login_required(login_url='/user/login')
     def POST(request, publication_id):
         """docstring for POST"""
-        return RestView.insert_object(request, 'comment')
+        user = request.user
+        return RestView.insert_object(request, 'comment', user_id=user.id)
 
 
 class CommentDetail(RestView):
@@ -289,7 +290,8 @@ class CommentDetail(RestView):
     @login_required(login_url='/user/login/')
     def PUT(request, comment_id):
         """Modify an existing comment."""
-        return RestView.insert_object(request, 'comment', comment_id)
+        user = request.user
+        return RestView.insert_object(request, 'comment', comment_id, user_id=user.id)
     
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -634,6 +636,17 @@ class RatingDetail(RestView):
         return RestView.insert_object(request, 'rating', rating_id=rating_id)
 
 
+class ReferenceMaterials(RestView):
+    """Handle Rest requests for reference materials."""
+    allowed_methods = ("POST")
+
+    @staticmethod
+    @login_required(login_url='/user/login/')
+    def POST(request):
+        """docstring for POST"""
+        return RestView.insert_object(request, 'referencematerial')
+
+
 class ReferenceMaterialDetail(RestView):
     """Handle REST requests for reference material."""
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
@@ -645,12 +658,6 @@ class ReferenceMaterialDetail(RestView):
         values = {'referencematerial': reference_material}
         response = RestView.render_response(request, 'referencematerial', values)
         return response
-
-    @staticmethod
-    @login_required(login_url='/user/login/')
-    def POST(request):
-        """docstring for POST"""
-        return RestView.insert_object(request, 'referencematerial')
 
     @staticmethod
     @login_required(login_url='/user/login/')
@@ -879,6 +886,22 @@ class UserDetail(RestView):
             response.status_code = RestView.FORBIDDEN_STATUS
         return response
 
+
+class VoteDetail(RestView):
+    """Handle REST requests for votes."""
+    allowed_methods = ('GET', 'PUT')
+    
+    def GET(request, vote_id):
+        """Return a specific vote."""
+        vote = Vote.objects.get(id=vote_id)
+        values = {'vote': vote}
+        return RestView.render_response(request, 'vote', values)
+
+    def PUT(request, vote_id):
+        """Modify a specific vote."""
+        return RestView.insert_object(request, 'vote', vote_id)
+        
+
 def login(request):
     """Log a user in."""
     username = request.POST['username']
@@ -913,9 +936,11 @@ peerreview_template_detail = PeerReviewTemplateDetail()
 publications = Publications()
 publication_detail = PublicationDetail()
 rating_detail = RatingDetail()
+reference_materials = ReferenceMaterials()
 reference_material_detail = ReferenceMaterialDetail()
 researchareas = ResearchAreas()
 tags = Tags()
 tag_detail = TagDetail()
 users = Users()
 user_detail = UserDetail()
+vote_detail = VoteDetail()

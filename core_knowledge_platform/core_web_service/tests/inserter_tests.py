@@ -16,10 +16,10 @@ class InserterTests(unittest.TestCase):
     def setUpClass(self):
         """docstring for SetUpClass"""
         self.xml_inserter = XmlInserter()
-        self.vote = Vote.objects.create(vote="up")
-        self.vote.save()
         self.author = Author.objects.create(name="Test", address="123-Stree", affiliation="Heriot-Watt", email="Test@test.test")
         self.author.save()
+        self.vote = Vote()
+        self.vote.save()
         self.comment = Comment.objects.create(title="Comment", text="Commento", vote=self.vote)
         self.comment.save()
         self.tag = Tag.objects.create(name="AI", description="Artificial Intelligence")
@@ -49,8 +49,8 @@ class InserterTests(unittest.TestCase):
 
     def test_insert_comment(self):
         xml = comment_xml % (self.vote.id)
-        comment = self.xml_inserter.modify_comment(xml)
-        self.assertEqual(comment.vote, self.vote)
+        comment = self.xml_inserter.modify_comment(xml, user_id=self.user.id)
+        self.assertNotEqual(comment.vote, None)
 
     def test_insert_publication_from_xml(self):
         xml = publication_xml % (self.user.id, self.author.id, self.comment.id, self.tag.id)
