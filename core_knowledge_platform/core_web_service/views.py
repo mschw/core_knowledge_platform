@@ -327,10 +327,10 @@ class EsteemDetail(RestView):
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
         except User.DoesNotExist:
-            response = HttpResponse("The user with ID %s does not exist" % (user_id))
+            response = HttpResponse("The user with ID %s does not exist." % (user_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         except Esteem.DoesNotExist:
-            response = HttpResponse("No esteem found for user with ID %s and tag with ID %s" % (user_id))
+            response = HttpResponse("No esteem found for user with ID %s." % (user_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
