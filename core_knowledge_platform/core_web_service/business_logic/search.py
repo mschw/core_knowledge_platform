@@ -80,15 +80,16 @@ def search_user(search_items):
     return result
 
 def get_related_tags(tag):
-    """Return tags that were used when the provided tag was used."""
-    publication_with_tag = Publication.objects.filter(tag_id__in=tag.id)
+    """Return tags that were used when the provided p_tag was used."""
+    publication_with_tag = Publication.objects.filter(tags__id__in=[tag.id])
     relevance_tags = dict()
-    for tag in publication_with_tag.tags.all():
-        key = tag
-        if relevance_tags[key]:
-            relevance_tags[key] = relevance_tags[key] + 1
-        else:
-            relevance_tags[key] = 1
-    sorted_dict = sorted(relevance_tags, key=lambda tag: tag)
-    sorted_list = [item for item in sorted_dict.keys()]
+    for publication in publication_with_tag:
+        for p_tag in publication.tags.all().exclude(id=tag.id):
+            if p_tag.name is not tag.name:
+                key = p_tag
+                if key in relevance_tags:
+                    relevance_tags[key] = relevance_tags[key] + 1
+                else:
+                    relevance_tags[key] = 1
+    sorted_list = sorted(relevance_tags, key=lambda p_tag: p_tag)
     return sorted_list

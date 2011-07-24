@@ -10,9 +10,20 @@ class SearchLogicTests(unittest.TestCase):
         owner =  User.objects.create_user(username='User', password='unit', email='unit@test.test')
         author = Author(name='An author', email="author@author.author")
         self.tag1 = Tag(name = 'AI', description = "Artificial Intelligence")
+        self.tag1.save()
         self.tag2 = Tag(name = 'Parallel Programming', description = "Parallel Programming")
-        self.pub1 = Publication(title='Pub1', tag=self.tag1, author=author, owner=owner)
-        self.pub2 = Publication(title='Pub2', tag=[self.tag1, self.tag2], author=author, owner=owner)
+        self.tag2.save()
+        self.pub1 = Publication(title='Pub1')
+        self.pub1.author = author
+        self.pub1.owner = owner
+        self.pub1.save()
+        self.pub1.tags.add(self.tag1)
+        self.pub2 = Publication(title='Pub2')
+        self.pub2.author = author
+        self.pub2.owner = owner
+        self.pub2.save()
+        self.pub2.tags.add(self.tag1)
+        self.pub2.tags.add(self.tag2)
 
     def tearDown(self):
         """docstring for tearDown"""

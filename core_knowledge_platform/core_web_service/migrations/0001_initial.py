@@ -45,8 +45,7 @@ class Migration(SchemaMigration):
         # Adding model 'Esteem'
         db.create_table('core_web_service_esteem', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('value', self.gf('django.db.models.fields.IntegerField')()),
+            ('value', self.gf('django.db.models.fields.IntegerField')(default=0)),
         ))
         db.send_create_signal('core_web_service', ['Esteem'])
 
@@ -60,8 +59,8 @@ class Migration(SchemaMigration):
         # Adding model 'Rating'
         db.create_table('core_web_service_rating', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('rating', self.gf('django.db.models.fields.DecimalField')(max_digits=4, decimal_places=2)),
-            ('votes', self.gf('django.db.models.fields.IntegerField')()),
+            ('rating', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=4, decimal_places=2)),
+            ('votes', self.gf('django.db.models.fields.IntegerField')(default=0)),
         ))
         db.send_create_signal('core_web_service', ['Rating'])
 
@@ -180,6 +179,7 @@ class Migration(SchemaMigration):
         db.create_table('core_web_service_userprofile', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
+            ('esteem', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core_web_service.Esteem'], unique=True)),
             ('degree', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('authenticated_professional', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('institution', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
@@ -375,8 +375,7 @@ class Migration(SchemaMigration):
         'core_web_service.esteem': {
             'Meta': {'object_name': 'Esteem'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
-            'value': ('django.db.models.fields.IntegerField', [], {})
+            'value': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
         'core_web_service.furtherfield': {
             'Meta': {'object_name': 'FurtherField'},
@@ -458,8 +457,8 @@ class Migration(SchemaMigration):
         'core_web_service.rating': {
             'Meta': {'object_name': 'Rating'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'rating': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
-            'votes': ('django.db.models.fields.IntegerField', [], {})
+            'rating': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '4', 'decimal_places': '2'}),
+            'votes': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
         'core_web_service.referencematerial': {
             'Meta': {'object_name': 'ReferenceMaterial'},
@@ -485,6 +484,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'UserProfile'},
             'authenticated_professional': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'degree': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'esteem': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['core_web_service.Esteem']", 'unique': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'institution': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'research_areas': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core_web_service.ResearchArea']", 'symmetrical': 'False'}),
