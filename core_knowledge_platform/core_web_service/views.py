@@ -224,7 +224,7 @@ class AuthorDetail(RestView):
             values = {'author': author}
             response = RestView.render_response(request, 'author', values)
         except Author.DoesNotExist:
-            response = "The author with ID: %s does not exist." % (author_id)
+            response = HttpResponse("The author with ID: %s does not exist." % (author_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -258,7 +258,7 @@ class Comments(RestView):
             values = {'comment': comment}
             response = RestView.render_response(request, 'comments', values)
         except Publication.DoesNotExist:
-            response = "The publication with ID %s does not exist" % (publication_id)
+            response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -282,7 +282,7 @@ class CommentDetail(RestView):
             values = {'comment': comment}
             response = RestView.renders_response(request, 'comment', values)
         except Comment.DoesNotExist:
-            response = "The comment with id %s does not exist" % (comment_id)
+            response = HttpResponse("The comment with id %s does not exist" % (comment_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -327,10 +327,10 @@ class EsteemDetail(RestView):
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
         except User.DoesNotExist:
-            response = "The user with ID %s does not exist" % (user_id)
+            response = HttpResponse("The user with ID %s does not exist" % (user_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         except Esteem.DoesNotExist:
-            response = "No esteem found for user with ID %s and tag with ID %s" % (user_id)
+            response = HttpResponse("No esteem found for user with ID %s and tag with ID %s" % (user_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -392,7 +392,7 @@ class PeerReviews(RestView):
             values = {'peerreviews': peer_reviews}
             response = RestView.render_response(request, 'peerreviews', values)
         except PeerReview.DoesNotExist:
-            response = "No peer reviews exist for publicaiton with id %s" % (publication_id)
+            response = HttpResponse("No peer reviews exist for publicaiton with id %s" % (publication_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -421,7 +421,7 @@ class PeerReviewDetail(RestView):
             values = {'peerreview': peer_review}
             response = RestView.render_response(request, 'peerreview', values)
         except PeerReview.DoesNotExist:
-            response = "Peer review with id %s does not exist" % (peer_review_id)
+            response = HttpResponse("Peer review with id %s does not exist" % (peer_review_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -477,7 +477,7 @@ class PeerReviewTemplateDetail(RestView):
             values = {'template': template}
             response = RestView.render_response(request, 'peerreviewtemplate', values)
         except PeerReviewTemplate.DoesNotExist:
-            response = "Template with ID %s does not exist" % (template_id)
+            response = HttpResponse("Template with ID %s does not exist" % (template_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -577,7 +577,7 @@ class PublicationDetail(RestView):
             values = {'publication': publication}
             response = RestView.render_response(request, 'publication', values)
         except Publication.DoesNotExist:
-            response = "The publication with ID %s does not exist" % (publication_id)
+            response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
