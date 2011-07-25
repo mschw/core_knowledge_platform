@@ -1,8 +1,9 @@
 import pdb
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from django.contrib.auth.models import User
 
-from core_web_service.models import Comment, Esteem, Rating, Publication, PaperGroup, UserProfile
+from core_web_service.models import Comment, Esteem, PaperGroup, UserProfile
 from core_web_service.models import Vote
 
 
@@ -45,3 +46,24 @@ def automatically_create_votes_for_new_comment(sender, **kwargs):
 
 # TODO: calculate esteem based on comments.
 # FIXME: When a user that uploaded the document upvoted it you gain +20 esteem points.
+@receiver(post_save, sender=Comment)
+def recalculate_esteem_for_user(sender, **kwargs):
+    """Use the information from a vote to recalculate the esteem of a user."""
+    new_esteem = 0
+    comment = kwargs['instance']
+    user = comment.user
+    user_esteem = user.profile.esteem
+    publication = comment.publication
+    publication_owner = publication.owner
+    votes = comment.votes
+    for vote in votes:
+        if vote.votetype == 'upvote':
+            m = 1
+        else:
+            m = -1
+        caster = vote.user
+        if caster == publication_owner:
+            new_esteem += 20 * m
+        else:
+            new_esteem += 20 * m
+    user.esteem = new_esteem

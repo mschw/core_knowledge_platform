@@ -6,7 +6,7 @@
         <title>
             {{ key.keyword }}
         </title>
-        <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}/"/>
+        <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ key.id }}/"/>
     </keyword>
     {% endfor %}
 </keywords>
