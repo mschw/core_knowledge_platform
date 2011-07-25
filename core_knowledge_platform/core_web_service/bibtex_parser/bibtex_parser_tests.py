@@ -105,6 +105,15 @@ class BibTeXParserTests(unittest.TestCase):
         print parsed
         self.assertEqual(self.book_dict, parsed)
 
+    def text_parse_double_braced_title(self):
+        """docstring for text_parse_double_braced_title"""
+        bibtex = """@book{key,
+                    title = {{test}},
+                    }"""
+        value = self.parser.parse_to_bibtex(bibtex)
+        result_dict = {'key': ['book', {'title': 'test'}]}
+        self.assertEqual(result_dict, value)
+
 
     #def test_parsing_multiple_entries(self):
     #    bibtex = """@book{key,

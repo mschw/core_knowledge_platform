@@ -350,9 +350,10 @@ class Keywords(RestView):
         """Return a list of all keywords in the system."""
         if keyword_id:
             keywords = Keyword.objects.get(id=keyword_id)
+            values = {'keyword': keywords}
         else:
             keywords = Keyword.objects.all()
-        values = {'keywords': keywords}
+            values = {'keywords': keywords}
         response = RestView.render_response(request, 'keyword', values)
         return response
 

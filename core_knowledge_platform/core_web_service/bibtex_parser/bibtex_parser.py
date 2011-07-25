@@ -1,9 +1,19 @@
+import pdb
 import re
 from collections import defaultdict
 from pyparsing import Word, alphanums, nums, Optional, Suppress, ZeroOrMore, Group, nestedExpr, QuotedString, originalTextFor 
 
+def remove_parentheses(orig_string, loc, tokens):
+    """docstring for remove_parentheses"""
+    text = tokens[0]
+    text = text.strip()[1:-1]
+    if text[0] == '{' and text[1] == '}':
+        text = text.strip()[1:-1]
+    return text
+
 class BibtexParser(object):
     """Class used to parse BibTeX entries to Python objects."""
+
     at = Suppress('@')
     left_brace = Suppress('{')
     right_brace = Suppress('}')
@@ -12,7 +22,7 @@ class BibtexParser(object):
     equal = Suppress('=')
 
     braced_value = originalTextFor(nestedExpr('{', '}'))
-    braced_value.addParseAction(lambda text: text[0].strip()[1:-1])
+    braced_value.addParseAction(remove_parentheses)
 
     quoted_value = QuotedString(quoteChar='"', escChar='\\') 
 

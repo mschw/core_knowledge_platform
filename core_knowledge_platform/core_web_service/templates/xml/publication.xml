@@ -10,6 +10,9 @@
     <chapter>
         {{ publication.chapter }}
     </chapter>
+    <doi>
+        {{ publication.doi }}
+    </doi>
     <edition>
         {{ publication.edition }}
     </edition>
