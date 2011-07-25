@@ -738,7 +738,8 @@ class TagDetail(RestView):
         """Return information for one tag."""
         tag = Tag.objects.get(id=tag_id)
         values = {'tag': tag}
-        RestView.render_response(request, 'tag', values)
+        response = RestView.render_response(request, 'tag', values)
+        return response
 
     @staticmethod
     @login_required(login_url='/user/login/')

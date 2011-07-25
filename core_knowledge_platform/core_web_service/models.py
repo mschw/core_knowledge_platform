@@ -13,6 +13,9 @@ class Author(models.Model):
     affiliation = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.name)
+
 
 class Vote(models.Model):
     """Represents a vote (either an up or downvote) for a comment."""
@@ -20,11 +23,18 @@ class Vote(models.Model):
     downvotes = models.IntegerField(default=0)
     #vote = models.CharField(max_length=4)
 
+    def __unicode__(self):
+        votevalue = self.upvotes - self.downvotes
+        return u'%s - %s' % (self.id, votevalue)
+
 
 class Tag(models.Model):
     """Represents a tag that can be added to a publication"""
     name = models.SlugField(max_length=75)
     description = models.CharField(max_length=511)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.name)
 
 
 class Comment(models.Model):
@@ -35,21 +45,33 @@ class Comment(models.Model):
     user = models.ForeignKey(User, blank=True, null=True)
     vote = models.OneToOneField(Vote)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.title)
+
 
 class Esteem(models.Model):
     """Represents the esteem a User can obtain."""
     value = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.value)
 
 
 class Keyword(models.Model):
     """Stores keywords for a publication that were specified by the author."""
     keyword = models.CharField(max_length=255, blank = True, null = True)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.keyword)
+
 
 class Rating(models.Model):
     """Represents a vote cast by a User for a publication of comment."""
     rating = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     votes = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.rating)
 
 
 class Publication(models.Model):
@@ -92,6 +114,9 @@ class Publication(models.Model):
     keywords = models.ManyToManyField(Keyword)
     rating = models.OneToOneField(Rating)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.title)
+
 
 class PaperGroup(models.Model):
     """Store an editor for a certain group."""
@@ -103,11 +128,17 @@ class PaperGroup(models.Model):
     publications = models.ManyToManyField(Publication)
     tags = models.ManyToManyField(Tag)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.title)
+
 
 class ResearchArea(models.Model):
     """Store research areas for users."""
     title = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.title)
 
 
 class UserProfile(models.Model):
@@ -126,12 +157,18 @@ class ProfileField(models.Model):
     value = models.TextField()
     user_profile = models.ForeignKey(UserProfile)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.key)
+
 
 class FurtherField(models.Model):
     """A key-value storage that will store values that are not part of the publication table."""
     key = models.CharField(max_length=255)
     value = models.TextField()
     publication = models.ForeignKey(Publication)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.key)
 
 
 class PeerReviewTemplate(models.Model):
@@ -140,6 +177,9 @@ class PeerReviewTemplate(models.Model):
     # Storing the path to the binary file containing a template.
     # 4096 - Maximum path length on a UNIX file system: /usr/src/linux-2.4.20-8/include/linux/limits.h.
     template_binary_path = models.CharField(max_length=4096)
+    
+    def __unicode__(self):
+        return u'%s' % (self.id)
 
 
 class PeerReview(models.Model):
@@ -149,10 +189,14 @@ class PeerReview(models.Model):
     template = models.ForeignKey(PeerReviewTemplate)
     title = models.CharField(max_length=255)
     review = models.TextField()
+
     class Meta:
         permissions = (
                 ("can_view", "Can see the available peer reviews."),
                 )
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.title)
 
 
 class ReferenceMaterial(models.Model):
@@ -162,5 +206,8 @@ class ReferenceMaterial(models.Model):
     name = models.CharField(max_length=75)
     url = models.URLField()
     notes = models.TextField()
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.name)
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
