@@ -193,6 +193,7 @@ class XmlInserter(Inserter):
         papergroup.title = parsed_data['title']
         papergroup.description = parsed_data['description']
         papergroup.blind_review = parsed_data['blind_review']
+        papergroup.save()
         for e in parsed_data['editors']:
             editor_id = self._get_id_from_atom_link(e)
             editor = User.objects.get(id=editor_id)
@@ -205,11 +206,10 @@ class XmlInserter(Inserter):
             publication_id = self._get_id_from_atom_link(p)
             publication = Publication.objects.get(id=publication_id)
             papergroup.publications.add(publication)
-        for t in parsed_data['tag']:
+        for t in parsed_data['tags']:
             tag_id = self._get_id_from_atom_link(t)
             tag = Tag.objects.get(id=tag_id)
             papergroup.tags.add(tag)
-        papergroup.save()
         if editors:
             for editor in editors:
                 check_priviledges_for_editor(editor)
@@ -315,21 +315,18 @@ class XmlInserter(Inserter):
         publication.save()
         return publication
 
-    def modify_rating(self, data, rating_id):
+    def modify_rating(self, data, rating_id=None):
         """Create or modify a rating object according to the specified value."""
-        # TODO: Test
+        if rating_id:
+            rating = Rating.objects.get(id=rating_id)
+        else:
+            rating = Rating()
         parsed_data = self._parse_xml_to_dict(data)
-        rating = Rating.objects.get(id=rating_id)
         new_rating = parsed_data['rating']
-        new_vote = parsed_data['votes']
-        if new_rating > rating.rating:
-            rating.rating = new_rating
-        else:
-            raise InvalidDataException("New rating can not be lower than old rating.")
-        if new_vote == rating.votes:
-            rating.votes = new_vote
-        else:
-            raise InvalidDataException("Votes occured during submission, please resubmit with valid data")
+        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        publication = Publication.objects.get(id=publication_id)
+        rating.rating = new_rating
+        rating.publication = publication
         rating.save()
         return rating
 

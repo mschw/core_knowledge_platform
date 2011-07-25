@@ -173,114 +173,133 @@ esteem_xml = """<?xml version="1.0" encoding="utf-8"?>
     xmlns:atom="http://www.w3.org/2005/atom">
     <esteem>
         <user>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ esteem.user.id }}"/>
+            <atom:link rel="user" type="application/xml" href="http://test/user/%s"/>
         </user>
         <tag>
-            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/user/{{ esteem.tag.id }}"/>
+            <atom:link rel="tag" type="application/xml" href="http://test/user/%s"/>
         </tag>
         <value>
-            {{ esteem.value }}
+            512
         </value>
     </esteem>
-    {% endfor %}
 </esteems>"""
 
 material_xml = """<?xml version="1.0" encoding="utf-8"?>
-<referencematerial xmlns="http://{{ url }}"
+<referencematerial xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">
     <publication>
-        <atom:link rel="publication" type="application/xml" href="http://{{ url
-            }}/publication/{{ referencematerial.publication.id }}"/>
+        <atom:link rel="publication" type="application/xml" href="http://test/publication/%s"/>
     </publication>
     <name>
-        {{ referencematerial.name }}
+        Statistic Files
     </name>
     <url>
-        {{ referencematerial.url }}
+        http://www.google.com/
     </url>
     <notes>
-        {{ referencematerial.notes }}
+        Statistic Files for the documentation.
     </notes>
 </referencematerial>"""
 
 keyword_xml = """<?xml version="1.0" encoding="utf-8"?>
-<keywords xmlns="http://{{ url }}"
+<keywords xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">
-    {% for key in keywords %}
     <keyword>
         <title>
-            {{ key.keyword }}
+            Some keyword.
         </title>
-        <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}/"/>
+        <atom:link rel="keyword" type="application/xml" href="http://test/keyword/%s/"/>
     </keyword>
-    {% endfor %}
 </keywords>"""
 
 tag_xml = """<?xml version="1.0" encoding="utf-8"?>
-<tag xmlns="http://{{ url }}"
+<tag xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">
     <name>
-        {{ tag.name }}
+        AI
     </name>
     <description>
-        {{ tag.description }}
+        Artificial Intelligence.
     </description>
 </tag>"""
 
 rating_xml = """<?xml version="1.0" encoding="utf-8"?>
-<rating xmlns="http://{{ url }}"
+<rating xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">
     <publication>
-        <atom:link rel="publication" type="application/xml" href="http://{{ url
-            }}/publication/{{ rating.publication.id }}"/>
+        <atom:link rel="publication" type="application/xml" href="http://test/publication/%s"/>
     </publication>
     <rating>
-        {{ rating.rating }}
+        5
     </rating>
-    <votes>
-        {{ rating.votes }}
-    </votes>
 </rating>"""
 
 
 papergroup_xml = """<?xml version="1.0" encoding="utf-8"?>
-<papergroup xmlns="http://{{ url }}"
+<papergroup xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">
     <title>
-        {{ papergroup.title }}
+        Nature papergroup.
     </title>
     <description>
-        {{ papergroup.description }}
+        Papergroup of nature.
     </description>
     <blind_review>
-        {{ papergroup.blind_review }}
+        1
     </blind_review>
     <editors>
-    {% for editor in papergroup.editors.all() %}
         <editor>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ editor.id }}" />
+            <atom:link rel="user" type="application/xml" href="http://test/user/%s" />
         </editor>
-    {% endfor %}
     </editors>
     <referees>
-    {% for referee in papergroup.referees.all() %}
         <referee>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ referee.id }}" />
+            <atom:link rel="user" type="application/xml" href="http://test/user/%s" />
         </referee>
-    {% endfor %}
     </referees>
     <tags>
-    {% for tag in papergroup.tags.all() %}
         <tag>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" />
+            <atom:link rel="user" type="application/xml" href="http://test/tag/%s" />
         </tag>
-    {% endfor %}
     </tags>
     <publications>
-    {% for publication in papergroup.publications.all() %}
         <publication>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/publication/{{ publication.id }}" />
+            <atom:link rel="user" type="application/xml" href="http://test/publication/%s" />
         </publication>
-    {% endfor %}
     </publications>
 </papergroup>"""
+
+template_xml = """<?xml version="1.0" encoding="utf-8"?>
+<peerreviewtemplate xmlns="http://test"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <templatetext>
+        A template.
+
+        With linebreaks.
+
+        An stuff like that.
+    </templatetext>
+    <binarypath>
+        Some fancy Path.
+    </binarypath>
+</peerreviewtemplate>"""
+
+peerreview_xml = """<?xml version="1.0" encoding="utf-8"?>
+<peerreview xmlns="http://test"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <peerreviewer>
+        <atom:link rel="user" type="application/xml" href="http://test/user/%s"/>
+    </peerreviewer>
+    <publication>
+        <atom:link rel="publicaiton" type="application/xml" href="http://test/publication/%s"/>
+    </publication>
+    <template>
+        <atom:link rel="template" type="application/xml" href="http://test/peerreviewtemplate/%s"/>
+    </template>
+    <title>
+        The reviewing of stuff.
+    </title>
+    <review>
+        This stuff is pretty awesome stuff and awesome in the extreme.
+    </review>
+</peerreview>"""

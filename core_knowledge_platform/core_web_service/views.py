@@ -205,7 +205,7 @@ class Authors(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     @csrf_exempt
     def POST(request):
         """Creates a new author and returns the resource-url."""
@@ -628,11 +628,16 @@ class RatingDetail(RestView):
         values = {'rating': rating}
         response = RestView.render_response(request, 'rating', values)
         return response
+
+    @staticmethod
+    def POST(request):
+        """Create a new rating object."""
+        return RestView.insert_object(request, 'rating')
     
     @staticmethod
     @login_required(login_url='/user/login/')
     def PUT(request, rating_id):
-        """Add a new value to an existing rating."""
+        """Change the value of an existing rating."""
         return RestView.insert_object(request, 'rating', rating_id=rating_id)
 
 

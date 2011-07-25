@@ -64,9 +64,11 @@
     <year>
         {{ publication.year }}
     </year>
-    <rating>
-        <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ publication.rating.id }}"/>
-    </rating>
+    <ratings>
+    {% for rating in publication.rating_set.all %}
+        <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
+    {% endfor %}
+    </ratings>
     <owner>
         <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
     </owner>
@@ -111,7 +113,7 @@
         {% endfor %}
     </tags>
     <referencematerials>
-        {% for rm in publication.referencematerials.all %}
+        {% for rm in publication.referencematerial_set.all %}
         <referencematerial>
             <atom:link rel="referencematerial" type="application/xml" href="http://{{ url }}/referencematerial/{{ rm.id }}"/>
         </referencematerial>

@@ -65,15 +65,6 @@ class Keyword(models.Model):
         return u'%s - %s' % (self.id, self.keyword)
 
 
-class Rating(models.Model):
-    """Represents a vote cast by a User for a publication of comment."""
-    rating = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    votes = models.IntegerField(default=0)
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.id, self.rating)
-
-
 class Publication(models.Model):
     """Class to store publication metadata in the system."""
     PUBLIC_STATUS = 1
@@ -88,6 +79,8 @@ class Publication(models.Model):
     address = models.CharField(max_length = 255, blank = True, null = True)
     booktitle = models.CharField(max_length = 255, blank = True, null = True)
     chapter = models.CharField(max_length = 255, blank = True, null = True)
+    # TODO: Validate a DOI to be valid.
+    doi = models.CharField(max_length = 255, blank = True, null = True)
     edition = models.CharField(max_length = 255, blank = True, null = True)
     editor = models.CharField(max_length = 255, blank = True, null = True)
     how_published = models.CharField(max_length = 255, blank = True, null = True)
@@ -109,13 +102,22 @@ class Publication(models.Model):
     # TODO: check how to reference integrated User subsystem
     owner = models.ForeignKey(User)
     authors = models.ManyToManyField(Author)
-    comments = models.ManyToManyField(Comment)
-    tags = models.ManyToManyField(Tag)
-    keywords = models.ManyToManyField(Keyword)
-    rating = models.OneToOneField(Rating)
+    comments = models.ManyToManyField(Comment, blank=True, null=True)
+    tags = models.ManyToManyField(Tag, blank=True, null=True)
+    keywords = models.ManyToManyField(Keyword, blank=True, null=True)
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.title)
+
+
+class Rating(models.Model):
+    """Represents a vote cast by a User for a publication of comment."""
+    CHOICES = [(i, i) for i in range(6)]
+    rating = models.IntegerField(max_length=1, choices=CHOICES)
+    publication = models.ForeignKey(Publication)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.rating)
 
 
 class PaperGroup(models.Model):
@@ -124,7 +126,7 @@ class PaperGroup(models.Model):
     description = models.TextField(null=True, blank=True)
     blind_review = models.BooleanField()
     editors = models.ManyToManyField(User, related_name='papergroup_editors')
-    referees = models.ManyToManyField(User, related_name='papergroup_referees')
+    referees = models.ManyToManyField(User, related_name='papergroup_referees', null=True, blank=True)
     publications = models.ManyToManyField(Publication)
     tags = models.ManyToManyField(Tag)
 
@@ -148,7 +150,7 @@ class UserProfile(models.Model):
     degree = models.CharField(max_length=255, blank=True, null=True)
     authenticated_professional = models.BooleanField()
     institution = models.CharField(max_length=255, blank=True, null=True)
-    research_areas = models.ManyToManyField(ResearchArea)
+    research_areas = models.ManyToManyField(ResearchArea, blank=True, null=True)
 
 
 class ProfileField(models.Model):

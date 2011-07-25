@@ -120,3 +120,10 @@ def get_related_users_for_publication(publication):
         interested_users.extend(users)
     return interested_users
 
+def get_related_publications(publication):
+    # TODO
+    # FIXME: rank papers higher from the same author.
+    # Chack for related papers based on keywords and tags - rate keywords higher than tags.
+    # Value keywords higher than tags.
+    """docstring for get_related_publications"""
+    pass

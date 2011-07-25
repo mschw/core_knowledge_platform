@@ -13,11 +13,11 @@ def handle_assignment_to_papergroup_groups(sender, **kwargs):
     """Assign all editors in a papergroup to the editor group, all referees to the referee group."""
     papergroup = kwargs['instance']
     editors = papergroup.editors
-    for editor in editors:
+    for editor in editors.all():
         editor.groups.add('editor')
         editor.save()
     referees = papergroup.referees
-    for referee in referees:
+    for referee in referees.all():
         referee.groups.add('referee')
         referee.save()
 
@@ -32,17 +32,6 @@ def automatically_create_esteem_for_new_user(sender, **kwargs):
         esteem.save()
         user_profile.esteem = esteem
 
-@receiver(pre_save, sender=Publication)
-def automatically_create_rating_for_new_publication(sender, **kwargs):
-    """docstring for automatically_create_rating_for_new_publication("""
-    publication = kwargs['instance']
-    try:
-        rating = publication.rating
-    except Rating.DoesNotExist:
-        rating = Rating()
-        rating.save()
-        publication.rating = rating
-
 @receiver(pre_save, sender=Comment)
 def automatically_create_votes_for_new_comment(sender, **kwargs):
     """docstring for automatically_create_votes_for_new_comment"""
@@ -53,3 +42,6 @@ def automatically_create_votes_for_new_comment(sender, **kwargs):
         vote = Vote()
         vote.save()
         comment.vote = vote
+
+# TODO: calculate esteem based on comments.
+# FIXME: When a user that uploaded the document upvoted it you gain +20 esteem points.

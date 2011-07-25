@@ -12,7 +12,8 @@ class SearchLogicTests(unittest.TestCase):
         research_area = ResearchArea(title='AI', description='Artificial Intelligence')
         research_area.save()
         self.owner.profile.research_areas.add(research_area)
-        author = Author(name='An author', email="author@author.author")
+        self.author = Author(name='An author', email="author@author.author")
+        self.author.save()
         self.tag1 = Tag(name = 'AI', description = "Artificial Intelligence")
         self.tag1.save()
         self.tag2 = Tag(name = 'Parallel Programming', description = "Parallel Programming")
@@ -20,15 +21,15 @@ class SearchLogicTests(unittest.TestCase):
         self.keyword = Keyword(keyword="AI")
         self.keyword.save()
         self.pub1 = Publication(title='Pub1')
-        self.pub1.author = author
         self.pub1.owner = self.owner
         self.pub1.save()
+        self.pub1.authors.add(self.author)
         self.pub1.keywords.add(self.keyword)
         self.pub1.tags.add(self.tag1)
         self.pub2 = Publication(title='Pub2')
-        self.pub2.author = author
         self.pub2.owner = self.owner
         self.pub2.save()
+        self.pub2.authors.add(self.author)
         self.pub2.tags.add(self.tag1)
         self.pub2.tags.add(self.tag2)
 

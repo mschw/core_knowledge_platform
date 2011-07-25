@@ -2,13 +2,9 @@
 <rating xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
     <publication>
-        <atom:link rel="publication" type="application/xml" href="http://{{ url
-            }}/publication/{{ rating.publication.id }}"/>
+        <atom:link rel="publication" type="application/xml" href="http://{{ url }}/publication/{{ rating.publication.id }}"/>
     </publication>
     <rating>
         {{ rating.rating }}
     </rating>
-    <votes>
-        {{ rating.votes }}
-    </votes>
 </rating>
