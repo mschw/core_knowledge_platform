@@ -1,4 +1,5 @@
 import re
+import pdb
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -14,6 +15,10 @@ from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerRev
 import logging
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+logger.addHandler(ch)
 
 
 # Create your views here.
@@ -95,6 +100,7 @@ class RestView(object):
     @staticmethod
     def method_not_allowed(method):
         """Returns a response indicating that the called method is not allowed."""
+        logger.error("Unsupported method requested: %s" % (method))
         response = HttpResponse('The called method is not allowed on this resouce: %s' % (method))
         response.status_code = RestView.METHOD_NOT_ALLOWED_STATUS
         return response
@@ -102,7 +108,8 @@ class RestView(object):
     @staticmethod
     def unsupported_format_requested(formats):
         """Return a message stating that none of the accepted formats can be returned by the service."""
-        response = HttpResponse('The allow response types are not supported by the service: %s' % (formats))
+        logger.error("Unsupported format requested: %s" % (formats))
+        response = HttpResponse('The allowed response type is not supported by the service: %s' % (formats))
         response.status_code = RestView.UNSUPPORTED_MEDIA_TYPE_STATUS
         return response
 
@@ -110,9 +117,10 @@ class RestView(object):
     def unsupported_format_sent(sent_format):
         """Return a message stating that the sent format can not be interpreted by the web service.
         
-        Arugments:
+        Arguments:
             sent_format: the format sent by a request.
         """
+        logger.error("Unsupported format sent: %s" % (sent_format))
         response = HttpResponse('The sent format %s can not be understood by the service - please sent one of the following: %s' % (sent_format, RestView.allowed_formats))
         response.status_code = RestView.BAD_REQUEST_STATUS
         return response
@@ -244,7 +252,7 @@ class AuthorDetail(RestView):
 
     @staticmethod
     #@login_required(login_url='/user/login/')
-    def DELETE(author_id):
+    def DELETE(request, author_id):
         """Deletes an existing author resource."""
         author = Author.objects.get(id=author_id)
         author.delete()
@@ -574,7 +582,6 @@ class PublicationDetail(RestView):
     """Object to handle rendering of the publication detail view."""
     allowed_methods = ('GET', 'PUT', 'DELETE')
 
-    @staticmethod
     def _insert_publication(request, publication_id):
         content_type = RestView.get_content_type(request)
         data = request.raw_post_data
@@ -583,7 +590,7 @@ class PublicationDetail(RestView):
             inserted_publication = insert.insert_bibtex_publication(data, owner)
         else:
             inserter = insert.get_inserter(content_type)
-            inserted_publication = inserter.insert_publication(data, publication_id, owner)
+            inserted_publication = inserter.modify_publication(data, publication_id, owner)
         return inserted_publication
 
     @staticmethod
@@ -605,6 +612,7 @@ class PublicationDetail(RestView):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
         try:
+            pdb.set_trace()
             inserted_publication = PublicationDetail._insert_publication(request, publication_id)
             values = {'publication': inserted_publication}
             response = RestView.render_response(request, 'publication', values)

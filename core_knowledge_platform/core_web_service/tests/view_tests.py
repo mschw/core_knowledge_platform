@@ -78,6 +78,7 @@ class ViewTests(unittest.TestCase):
         result = self.client.put(url, author_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, RestView.OK_STATUS)
 
+    @unittest.skip("No useful without login required")
     def test_restricted_method_without_login(self):
         self.client.logout()
         result = self.client.put('/publication/1', publication_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
