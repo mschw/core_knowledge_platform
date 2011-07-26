@@ -67,6 +67,11 @@ class ViewTests(unittest.TestCase):
         result = self.client.post(reverse('core_web_service.views.authors'), author_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, RestView.CREATED_STATUS)
 
+    def test_post_author_not_logged_in_returns_200(self):
+        self.client.logout()
+        result = self.client.post(reverse('core_web_service.views.authors'), author_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
+        self.assertEqual(result.status_code, RestView.CREATED_STATUS)
+
     def test_put_author_to_change_returns_200(self):
         id = self.author.id
         url = '/author/%s' % (id)

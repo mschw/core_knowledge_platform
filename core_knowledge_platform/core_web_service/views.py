@@ -211,8 +211,8 @@ class Authors(RestView):
         return response
 
     @staticmethod
-    #@login_required(login_url='/user/login/')
     @csrf_exempt
+    #@login_required(login_url='/user/login/')
     def POST(request):
         """Creates a new author and returns the resource-url."""
         return RestView.insert_object(request, 'author')
