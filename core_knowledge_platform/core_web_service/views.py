@@ -213,7 +213,7 @@ class Authors(RestView):
 
     @staticmethod
     @csrf_exempt
-    #@login_required(login_url='/user/login/')
+    ##@login_required(login_url='/user/login/')
     def POST(request):
         """Creates a new author and returns the resource-url."""
         return RestView.insert_object(request, 'author')
@@ -237,13 +237,13 @@ class AuthorDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    ##@login_required(login_url='/user/login/')
     def PUT(request, author_id):
         """Modifies an existing author resource."""
         return RestView.insert_object(request, 'author', author_id)
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(author_id):
         """Deletes an existing author resource."""
         author = Author.objects.get(id=author_id)
@@ -272,7 +272,7 @@ class Comments(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login')
+    #@login_required(login_url='/user/login')
     def POST(request, publication_id):
         """docstring for POST"""
         user = request.user
@@ -297,14 +297,14 @@ class CommentDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, comment_id):
         """Modify an existing comment."""
         user = request.user
         return RestView.insert_object(request, 'comment', comment_id, user_id=user.id)
     
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, comment_id):
         """docstring for DELETE"""
         comment = Comment.objects.get(id=comment_id)
@@ -346,7 +346,7 @@ class EsteemDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, esteem_id=None):
         """Change an existing esteem value."""
         return RestView.insert_object(request, 'esteem', esteem_id)
@@ -370,19 +370,19 @@ class Keywords(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def POST(request):
         """Insert a new keyword and return its location."""
         return RestView.insert_object(request, 'keyword')
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, keyword_id):
         """Modify an existing keyword."""
         return RestView.insert_object(request, 'keyword', keyword_id)
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, keyword_id):
         """Delete an existing keyword."""
         keyword = Keyword.objects.get(id=keyword_id)
@@ -398,7 +398,7 @@ class PeerReviews(RestView):
     allowed_methods = ("GET", "POST")
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def GET(request, publication_id):
         """Return a list of peer reviews for a certain publication."""
         try:
@@ -411,7 +411,7 @@ class PeerReviews(RestView):
         return response
 
     @staticmethod
-    @login_required
+    #@login_required
     def POST(request, publication_id):
         """Creates a new peer review."""
         if request.user.has_perm('core_web_service.add_peerreview'):
@@ -428,7 +428,7 @@ class PeerReviewDetail(RestView):
     allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def GET(request, peer_review_id):
         """Return details for a specific peer review."""
         try:
@@ -441,7 +441,7 @@ class PeerReviewDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, review_id):
         """docstring for PUT"""
         if request.user.has_perm('core_web_service.add_peerreview'):
@@ -452,7 +452,7 @@ class PeerReviewDetail(RestView):
             return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DETELE(request, peerreview_id):
         """docstring for DETELE"""
         peerreview = PeerReview.objects.get(id=peerreview_id)
@@ -476,7 +476,7 @@ class PeerReviewTemplates(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def POST(request, values):
         return RestView.insert_object(request, 'peerreviewtemplate')
 
@@ -499,12 +499,12 @@ class PeerReviewTemplateDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, template_id):
         return RestView.insert_object(request, 'peerreviewtemplate', template_id)
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, peerreviewtemplate_id):
         """docstring for DELETE"""
         peerreviewtemplate = PeerReviewTemplate.objects.get(id=peerreviewtemplate_id)
@@ -542,7 +542,7 @@ class Publications(RestView):
 
     @staticmethod
     @csrf_exempt
-    #@login_required(login_url='/user/login/')
+    ##@login_required(login_url='/user/login/')
     def POST(request):
         """Inserts publications via POST request."""
         try:
@@ -600,7 +600,7 @@ class PublicationDetail(RestView):
 
     @staticmethod
     @csrf_exempt
-    @login_required(login_url='/user/login')
+    #@login_required(login_url='/user/login')
     def PUT(request, publication_id):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
@@ -615,7 +615,7 @@ class PublicationDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, publication_id):
         user = request.user
         """Deletes the referred publication from the database."""
@@ -653,7 +653,7 @@ class RatingDetail(RestView):
         return RestView.insert_object(request, 'rating')
     
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, rating_id):
         """Change the value of an existing rating."""
         return RestView.insert_object(request, 'rating', rating_id=rating_id)
@@ -665,7 +665,7 @@ class ReferenceMaterials(RestView):
     allowed_methods = ("POST")
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
         return RestView.insert_object(request, 'referencematerial')
@@ -685,13 +685,13 @@ class ReferenceMaterialDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, material_id):
         """docstring for PUT"""
         return RestView.insert_object(request, 'referencematerial', material_id)
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, material_id):
         """docstring for DELETE"""
         material = ReferenceMaterial.objects.get(id=material_id)
@@ -717,19 +717,19 @@ class ResearchAreas(RestView):
         return RestView.render_response(request, 'researchareas', values)
 
     @staticmethod
-    @login_required(login_url="/user/login")
+    #@login_required(login_url="/user/login")
     def POST(request):
         """Create a new research area."""
         return RestView.insert_object(request, 'researcharea') 
 
     @staticmethod
-    @login_required(login_url="/user/login")
+    #@login_required(login_url="/user/login")
     def PUT(request, researcharea_id):
         """Modify an existing research area."""
         return RestView.insert_object(request, 'researcharea', researcharea_id) 
 
     @staticmethod
-    @login_required(login_url="/user/login")
+    #@login_required(login_url="/user/login")
     def DELETE(request, researcharea_id):
         """Delete an existing research area."""
         ra = ResearchArea.objects.get(id=researcharea_id)
@@ -750,7 +750,7 @@ class Tags(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def POST(request):
         """docstring for POST"""
         return RestView.insert_object(request, 'tag')
@@ -770,13 +770,13 @@ class TagDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, tag_id):
         """Insert a tag."""
         return RestView.insert_object(request, 'tag', tag_id)
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, tag_id):
         """Delete a tag."""
         tag = Tag.objects.get(id=tag_id)
@@ -811,7 +811,7 @@ class PaperGroups(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def POST(request):
         """Create a new papergroup from the specified data."""
         return RestView.insert_object(request, 'papergroup')
@@ -831,14 +831,14 @@ class PaperGroupDetail(RestView):
         return response
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, papergroup_id):
         """Modify an existing papergroup."""
         RestView.insert_object(request, 'papergroup', papergroup_id)
 
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, papergroup_id):
         """Delete an existing papergroup."""
         # TODO: Make sure only an editor can delete the group.
@@ -895,7 +895,7 @@ class UserDetail(RestView):
         return RestView.render_response(request, template_name='user', dictionary=values)
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def PUT(request, user_id):
         """Change an existing user."""
         if RestView.validate_sent_format(request):
@@ -904,7 +904,7 @@ class UserDetail(RestView):
             return RestView.unsupported_format_sent(RestView.get_content_type(request))
 
     @staticmethod
-    @login_required(login_url='/user/login/')
+    #@login_required(login_url='/user/login/')
     def DELETE(request, user_id):
         """Delete an existing user."""
         request_user = request.user
