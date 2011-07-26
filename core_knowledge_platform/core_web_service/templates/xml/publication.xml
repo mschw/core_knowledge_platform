@@ -102,7 +102,7 @@
         </authors>
     {% endif %}
     <comments>    
-        {% for comment in publication.comments.all %}
+        {% for comment in publication.comment_set.all %}
         <comment>
             <atom:link rel="comment" type="application/xml" href="http://{{ url }}/comment/{{ comment.id }}" />
         </comment>

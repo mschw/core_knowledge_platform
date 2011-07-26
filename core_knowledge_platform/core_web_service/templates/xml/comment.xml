@@ -10,10 +10,15 @@
     <date>
         {{ comment.date }}
     </date>
+    <publication>
+        <atom:link rel="publication" type="application/xml" href="http://{{ url }}/publication/{{ comment.publication.id }}"/>
+    </publication>
     <user>
             <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ comment.user.id }}"/>
     </user>
+    {% for vote in comment.vote_set %}
     <vote>
             <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"/>
     </vote>
+    {% endfor %}
 </comment>

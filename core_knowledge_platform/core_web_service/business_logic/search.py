@@ -63,11 +63,11 @@ def search_publications(publication_terms, author_terms, keyword_terms):
     if author_terms:
         authors = search_authors(author_terms)
         author_id = [author.id for author in authors]
-        publications = publications.filter(authors__id__in=author_id)
+        publications = publications.filter(authors__id__in=[author_id])
     if keyword_terms:
         keywords = search_keywords(keyword_terms)
         keyword_id = [keyword.id for keyword in keywords]
-        publications = publications.filter(keywords__id__in=keyword_id)
+        publications = publications.filter(keywords__id__in=[keyword_id])
     return publications
 
 def search_user(search_items):

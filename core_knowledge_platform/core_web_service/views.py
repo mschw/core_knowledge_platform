@@ -11,6 +11,10 @@ from core_web_service.business_logic import search, insert
 from core_web_service.business_logic.insert import InvalidDataException
 from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User, Keyword, ResearchArea, Vote
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 
@@ -169,6 +173,7 @@ class RestView(object):
         try:
             content_type = RestView.get_content_type(request)
             data = request.raw_post_data
+            logger.info("Attempt to insert %s in table: %s" % (data, name))
             inserted_object = None
             inserter = insert.get_inserter(content_type)
             function = getattr(inserter, 'modify_%s' % (name))
@@ -181,6 +186,7 @@ class RestView(object):
                 response.status_code = RestView.CREATED_STATUS
             response.location = '%s/%s/%s' % (service_url, name, inserted_object.id)
         except InvalidDataException, e:
+            logger.error(e)
             response = HttpResponse(e.message)
             response.status_code = RestView.BAD_REQUEST_STATUS
         return response

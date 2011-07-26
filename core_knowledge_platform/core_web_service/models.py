@@ -17,17 +17,6 @@ class Author(models.Model):
         return u'%s - %s' % (self.id, self.name)
 
 
-class Vote(models.Model):
-    """Represents a vote (either an up or downvote) for a comment."""
-    upvotes = models.IntegerField(default=0)
-    downvotes = models.IntegerField(default=0)
-    #vote = models.CharField(max_length=4)
-
-    def __unicode__(self):
-        votevalue = self.upvotes - self.downvotes
-        return u'%s - %s' % (self.id, votevalue)
-
-
 class Tag(models.Model):
     """Represents a tag that can be added to a publication"""
     name = models.SlugField(max_length=75)
@@ -35,18 +24,6 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.name)
-
-
-class Comment(models.Model):
-    """Represents a comment. Comments can be added to publications and other comments."""
-    title = models.CharField(max_length=75)
-    text = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, blank=True, null=True)
-    vote = models.OneToOneField(Vote)
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.id, self.title)
 
 
 class Esteem(models.Model):
@@ -102,12 +79,40 @@ class Publication(models.Model):
     # TODO: check how to reference integrated User subsystem
     owner = models.ForeignKey(User)
     authors = models.ManyToManyField(Author)
-    comments = models.ManyToManyField(Comment, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True, null=True)
     keywords = models.ManyToManyField(Keyword, blank=True, null=True)
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.title)
+
+
+class Comment(models.Model):
+    """Represents a comment. Comments can be added to publications and other comments."""
+    title = models.CharField(max_length=75)
+    text = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    publication = models.ForeignKey(Publication)
+    user = models.ForeignKey(User, blank=True, null=True)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.title)
+
+
+class Vote(models.Model):
+    """Represents a vote (either an up or downvote) for a comment."""
+    VOTE_CHOICES = (
+            (0, 'upvote'),
+            (1, 'downvote'),
+            )
+    votetype = models.CharField(max_length=255, choices=VOTE_CHOICES)
+    # A vote needs a user, but a user needs no votes
+    caster = models.ForeignKey(User, blank=True, null=True)
+    comment = models.ForeignKey(Comment)
+    #vote = models.CharField(max_length=4)
+
+    def __unicode__(self):
+        votevalue = self.upvotes - self.downvotes
+        return u'%s - %s' % (self.id, votevalue)
 
 
 class Rating(models.Model):

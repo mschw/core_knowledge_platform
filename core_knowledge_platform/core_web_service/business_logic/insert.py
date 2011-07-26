@@ -160,6 +160,8 @@ class XmlInserter(Inserter):
         if not user_id:
             user_id = self._get_id_from_atom_link(parsed_data['user'])
         user = User.objects.get(id=user_id)
+        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+        comment.publication = Publication.objects.get(id=publication_id)
         comment.user = user
         comment.title = parsed_data['title']
         comment.text = parsed_data['text']
@@ -183,6 +185,7 @@ class XmlInserter(Inserter):
 
     def modify_papergroup(self, data, papergroup_id=None):
         """Create or modify a papergroup object according to the specified value."""
+        # TODO: check if editors are added / removed.
         parsed_data = self._parse_xml_to_dict(data)
         if papergroup_id:
             papergroup = PaperGroup.objects.get(id=papergroup_id)
@@ -198,10 +201,12 @@ class XmlInserter(Inserter):
             editor_id = self._get_id_from_atom_link(e)
             editor = User.objects.get(id=editor_id)
             papergroup.editors.add(editor)
+        editors = papergroup.editors
         for r in parsed_data['referees']:
             referee_id = self._get_id_from_atom_link(r)
             referee = User.objects.get(id=referee_id)
             papergroup.referees.add(referee)
+        referees = papergroup.referees
         for p in parsed_data['publications']:
             publication_id = self._get_id_from_atom_link(p)
             publication = Publication.objects.get(id=publication_id)
@@ -211,10 +216,10 @@ class XmlInserter(Inserter):
             tag = Tag.objects.get(id=tag_id)
             papergroup.tags.add(tag)
         if editors:
-            for editor in editors:
+            for editor in editors.all():
                 check_priviledges_for_editor(editor)
         if referees:
-            for referee in referees:
+            for referee in referees.all():
                 check_priviledges_for_referee(referee)
         return papergroup
 
@@ -294,11 +299,6 @@ class XmlInserter(Inserter):
             if author_id:
                 author = Author.objects.get(id=author_id)
                 publication.authors.add(author)
-        for c in parsed_data['comments']:
-            comment_id = self._get_id_from_atom_link(c)
-            if comment_id:
-                comment = Comment.objects.get(id=comment_id)
-                publication.comments.add(comment)
         for t in parsed_data['tags']:
             tag_id = self._get_id_from_atom_link(t)
             if tag_id:

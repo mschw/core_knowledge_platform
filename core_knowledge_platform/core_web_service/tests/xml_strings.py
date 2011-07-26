@@ -52,6 +52,12 @@ comment_xml = """<?xml version="1.0" encoding="utf-8"?>
     <text>
         Text
     </text>
+    <publication>
+        <atom:link rel="publication" type="application/xml" href="http://test/publication/%s"/>
+    </publication>
+    <user>
+            <atom:link rel="user" type="application/xml" href="http://test/user/%s"/>
+    </user>
     <votes>
         <vote>
             <atom:link rel="vote" type="application/xml" href="http://url/vote/%s"/>
