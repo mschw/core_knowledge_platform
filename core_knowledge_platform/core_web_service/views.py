@@ -192,6 +192,7 @@ class RestView(object):
         return response
 
 
+@csrf_exempt
 class Authors(RestView):
     """Object to handle requests directed to the Authors resource."""
     allowed_methods = ('GET', 'POST')
@@ -218,6 +219,7 @@ class Authors(RestView):
         return RestView.insert_object(request, 'author')
 
 
+@csrf_exempt
 class AuthorDetail(RestView):
     """Object to handle requests directet to a particular author resource."""
     allowed_methods = ('GET', 'PUT', 'DELETE')
@@ -251,6 +253,7 @@ class AuthorDetail(RestView):
         return response
 
 
+@csrf_exempt
 class Comments(RestView):
     """Handles request for lists of comments."""
     allowed_methods = ("GET", "POST")
@@ -276,6 +279,7 @@ class Comments(RestView):
         return RestView.insert_object(request, 'comment', user_id=user.id)
 
 
+@csrf_exempt
 class CommentDetail(RestView):
     """Handles requests for a specific comment."""
     allowed_methods = ("GET", "PUT", "DELETE")
@@ -310,6 +314,7 @@ class CommentDetail(RestView):
         return response
 
 
+@csrf_exempt
 class EsteemDetail(RestView):
     """Handles requests for esteem values of a user."""
     # FIXME: Fix the whole esteem thing
@@ -347,6 +352,7 @@ class EsteemDetail(RestView):
         return RestView.insert_object(request, 'esteem', esteem_id)
 
 
+@csrf_exempt
 class Keywords(RestView):
     """Return a list of keywords."""
     allowed_methods = ("GET", "POST")
@@ -386,6 +392,7 @@ class Keywords(RestView):
         return response
 
 
+@csrf_exempt
 class PeerReviews(RestView):
     """Returns list of peer reviews."""
     allowed_methods = ("GET", "POST")
@@ -415,6 +422,7 @@ class PeerReviews(RestView):
             return response
 
 
+@csrf_exempt
 class PeerReviewDetail(RestView):
     """Handle REST request for a specific peer review."""
     allowed_methods = ("GET", "PUT", "DELETE")
@@ -454,6 +462,7 @@ class PeerReviewDetail(RestView):
         return response
 
 
+@csrf_exempt
 class PeerReviewTemplates(RestView):
     """Handle REST request for lists of templates."""
     allowed_methods = ("GET", "POST")
@@ -472,6 +481,7 @@ class PeerReviewTemplates(RestView):
         return RestView.insert_object(request, 'peerreviewtemplate')
 
 
+@csrf_exempt
 class PeerReviewTemplateDetail(RestView):
     """Handle REST requests for a specific template."""
     allowed_methods = ("GET", "PUT", "DELETE")
@@ -621,6 +631,7 @@ class PublicationDetail(RestView):
         return response
 
 
+@csrf_exempt
 class RatingDetail(RestView):
     """Handle REST requests for ratings."""
     allowed_methods = ("GET", "PUT")
@@ -648,6 +659,7 @@ class RatingDetail(RestView):
         return RestView.insert_object(request, 'rating', rating_id=rating_id)
 
 
+@csrf_exempt
 class ReferenceMaterials(RestView):
     """Handle Rest requests for reference materials."""
     allowed_methods = ("POST")
@@ -659,6 +671,7 @@ class ReferenceMaterials(RestView):
         return RestView.insert_object(request, 'referencematerial')
 
 
+@csrf_exempt
 class ReferenceMaterialDetail(RestView):
     """Handle REST requests for reference material."""
     allowed_methods = ("GET", "POST", "PUT", "DELETE")
@@ -688,6 +701,7 @@ class ReferenceMaterialDetail(RestView):
         return response
 
 
+@csrf_exempt
 class ResearchAreas(RestView):
     """Rest interface for research areas."""
     allowed_methods = ("GET", "POST", "PUT", "DELETE") 
@@ -722,6 +736,7 @@ class ResearchAreas(RestView):
         ra.delete()
 
 
+@csrf_exempt
 class Tags(RestView):
     """Handle REST requests for tags."""
     allowed_methods = ("GET", "POST")
@@ -741,6 +756,7 @@ class Tags(RestView):
         return RestView.insert_object(request, 'tag')
 
 
+@csrf_exempt
 class TagDetail(RestView):
     """Handle REST requests for a specific tag."""
     allowed_methods = ("GET", "PUT", "DELETE")
@@ -781,6 +797,7 @@ class Overview(RestView):
         return response
 
 
+@csrf_exempt
 class PaperGroups(RestView):
     """Display an overview over the available papergroups."""
     allowed_methods = ("GET", "POST")
@@ -800,6 +817,7 @@ class PaperGroups(RestView):
         return RestView.insert_object(request, 'papergroup')
 
 
+@csrf_exempt
 class PaperGroupDetail(RestView):
     """Display information about a specific papergroup."""
     allowed_methods = ("GET", "PUT", "DELETE")
@@ -835,6 +853,7 @@ class PaperGroupDetail(RestView):
         return response
 
 
+@csrf_exempt
 class Users(RestView):
     """Used to create user accounts."""
     allowed_methods = ("GET", "POST")
@@ -863,6 +882,7 @@ class Users(RestView):
             return RestView.unsupported_format_sent(RestView.get_content_type(request))
 
 
+@csrf_exempt
 class UserDetail(RestView):
     """Display user details."""
     allowed_methods = ("GET", "PUT", "DELETE")
@@ -900,6 +920,7 @@ class UserDetail(RestView):
         return response
 
 
+@csrf_exempt
 class VoteDetail(RestView):
     """Handle REST requests for votes."""
     allowed_methods = ('GET', 'PUT')
