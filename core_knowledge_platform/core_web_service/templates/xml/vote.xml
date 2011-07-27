@@ -8,6 +8,6 @@
         <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ vote.caster.id }}"/>
     </caster>
     <comment>
-        <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ vote.comment.id }}"/>
+        <atom:link rel="user" type="application/xml" href="http://{{ url }}/comment/{{ vote.comment.id }}"/>
     </comment>
 </vote>

@@ -382,6 +382,8 @@ class XmlInserter(Inserter):
         parsed_data = self._parse_xml_to_dict(data)
         if vote_id:
             vote = Vote.objects.get(id=vote_id)
+        else:
+            vote = Vote()
         vote.votetype = parsed_data['votetype'].lower()
         comment_id = self._get_id_from_atom_link(parsed_data['comment'])
         comment = Comment.objects.get(id=comment_id)

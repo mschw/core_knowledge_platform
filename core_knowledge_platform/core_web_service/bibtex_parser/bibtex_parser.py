@@ -7,7 +7,7 @@ def remove_parentheses(orig_string, loc, tokens):
     """docstring for remove_parentheses"""
     text = tokens[0]
     text = text.strip()[1:-1]
-    if text[0] == '{' and text[1] == '}':
+    if text[0] == '{' and text[-1] == '}':
         text = text.strip()[1:-1]
     return text
 

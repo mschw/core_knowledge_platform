@@ -13,11 +13,7 @@ from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerRev
 
 import logging
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-logger.addHandler(ch)
+logger = logging.getLogger('myproject.custom')
 
 # Create your views here.
 
@@ -646,9 +642,13 @@ class RatingDetail(RestView):
         """Return a rating for a given id or publication."""
         if rating_id:
             rating = Rating.objects.get(id=rating_id)
+            values = {'rating': rating}
         elif publication_id:
-            rating = Publication.objects.get(id=publication_id).rating
-        values = {'rating': rating}
+            rating = Publication.objects.get(id=publication_id).rating_set.all()
+            values = {'ratings': rating}
+        else:
+            rating = Rating.objects.all()
+            values = {'ratings': rating}
         response = RestView.render_response(request, 'rating', values)
         return response
 
@@ -928,7 +928,7 @@ class UserDetail(RestView):
 @csrf_exempt
 class VoteDetail(RestView):
     """Handle REST requests for votes."""
-    allowed_methods = ('GET', 'PUT')
+    allowed_methods = ('GET', 'POST', 'PUT', 'DELETE')
     
     @staticmethod
     def GET(request, vote_id=None):
@@ -939,12 +939,19 @@ class VoteDetail(RestView):
         return RestView.render_response(request, 'vote', values)
 
     def POST(request):
+        """Create a new vote."""
         return RestView.insert_object(request, 'vote')
 
     def PUT(request, vote_id):
         """Modify a specific vote."""
         return RestView.insert_object(request, 'vote', vote_id)
-        
+
+    def DELETE(request, vote_id):
+        """Delete a specific vote."""
+        vote = Vote.objects.get(id=vote_id)
+        vote.delete()
+        response = HttpResponse("Vote deleted.")
+        response.status_code = RestView.OK_STATUS
 
 def login(request):
     """Log a user in."""

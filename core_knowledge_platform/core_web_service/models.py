@@ -8,9 +8,9 @@ class Author(models.Model):
     """Represents an author in the model.
     Authors are not equal to Users."""
     name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    affiliation = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    affiliation = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.name)
@@ -103,15 +103,16 @@ class Vote(models.Model):
             (0, 'upvote'),
             (1, 'downvote'),
             )
-    votetype = models.IntegerField(max_length=255, choices=VOTE_CHOICES)
+    votetype = models.IntegerField(max_length=1, choices=VOTE_CHOICES)
     # A vote needs a user, but a user needs no votes
     caster = models.ForeignKey(User, blank=True, null=True)
     comment = models.ForeignKey(Comment)
-    #vote = models.CharField(max_length=4)
 
     def vote_type_string(self):
-        vote_type = self.VOTE_CHOICES[self.votetype][1]
-        return vote_type
+        if self.votetype == 0:
+            return self.VOTE_CHOICES[0][1]
+        else:
+            return self.VOTE_CHOICES[1][1]
 
     def __unicode__(self):
         vote = self.vote_type_string()

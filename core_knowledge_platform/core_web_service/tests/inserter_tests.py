@@ -1,3 +1,4 @@
+import pdb
 from django.contrib.auth.models import User
 from django.utils import unittest
 
@@ -8,6 +9,8 @@ from core_web_service.tests.xml_strings import peerreview_xml
 from core_web_service.tests.xml_strings import author_xml
 from core_web_service.tests.xml_strings import rating_xml
 from core_web_service.tests.xml_strings import papergroup_xml
+from core_web_service.tests.xml_strings import vote_xml
+from core_web_service.tests.xml_strings import downvote_xml
 
 
 class InserterTests(unittest.TestCase):
@@ -34,6 +37,8 @@ class InserterTests(unittest.TestCase):
         self.comment = Comment.objects.create(title="Comment", text="Commento", publication=self.publication)
         self.comment.save()
         self.vote = Vote(comment=self.comment)
+        self.vote.votetype = 0
+        self.vote.caster = self.user
         self.vote.save()
 
         self.template = PeerReviewTemplate()
@@ -103,3 +108,19 @@ class InserterTests(unittest.TestCase):
         self.assertEqual(papergroup.title, 'Nature papergroup.')
         self.assertEqual(papergroup.blind_review, '1')
         self.assertEqual(papergroup.publications.all()[0], self.publication)
+
+    def test_insert_upvote_for_comment(self):
+        xml = vote_xml % (self.user.id, self.comment.id)
+        vote = self.xml_inserter.modify_vote(xml)
+        self.assertEqual('upvote', vote.votetype)
+        self.assertEqual(vote.caster, self.user)
+        self.assertEqual(self.comment, vote.comment)
+
+    def test_insert_downvote_for_comment(self):
+        xml = downvote_xml % (self.user.id, self.comment.id)
+        vote = self.xml_inserter.modify_vote(xml)
+        pdb.set_trace()
+        self.assertEqual('downvote', vote.votetype)
+        self.assertEqual(vote.caster, self.user)
+        self.assertEqual(self.comment, vote.comment)
+

@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rating xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
-    <publication>
-        <atom:link rel="publication" type="application/xml" href="http://{{ url }}/publication/{{ rating.publication.id }}"/>
-    </publication>
-    <rating>
-        {{ rating.rating }}
-    </rating>
+    {% if ratings %}
+        {% for rating in ratings %}
+            <rating>
+            <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
+            </rating>
+        {% endfor %}
+    {% else %}
+        <publication>
+            <atom:link rel="publication" type="application/xml" href="http://{{ url }}/publication/{{ rating.publication.id }}"/>
+        </publication>
+        <rating>
+            {{ rating.rating }}
+        </rating>
+    {% endif %}
 </rating>

@@ -166,12 +166,29 @@ publication_xml="""
 vote_xml = """<?xml version="1.0" encoding="utf-8"?>
 <vote xmlns="http://test/"
     xmlns:atom="http://www.w3.org/2005/atom">
-    <upvotes>
-        10
-    </upvotes>
-    <downvotes>
-        5
-    </downvotes>
+    <votetype>
+        upvote
+    </votetype>
+    <caster>
+        <atom:link rel="user" type="application/xml" href="http://test/user/%s"/>
+    </caster>
+    <comment>
+        <atom:link rel="comment" type="application/xml" href="http://test/comment/%s"/>
+    </comment>
+</vote>"""
+
+downvote_xml = """<?xml version="1.0" encoding="utf-8"?>
+<vote xmlns="http://test/"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <votetype>
+        downvote
+    </votetype>
+    <caster>
+        <atom:link rel="user" type="application/xml" href="http://test/user/%s"/>
+    </caster>
+    <comment>
+        <atom:link rel="comment" type="application/xml" href="http://test/comment/%s"/>
+    </comment>
 </vote>"""
 
 esteem_xml = """<?xml version="1.0" encoding="utf-8"?>

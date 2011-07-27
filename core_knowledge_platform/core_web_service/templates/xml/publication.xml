@@ -129,4 +129,13 @@
             </{{ field.key }}>
         {% endfor %}
     </fields>
+    {% if publication.decorated %}
+    <decorated>
+        {% for key, value in publication.decorated.items %}
+        <{{ key }}>
+            {{ value }}
+        </{{ key }}>
+        {% endfor %}
+    </decorated>
+    {% endif %}
 </publication>
