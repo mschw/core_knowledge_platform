@@ -678,7 +678,7 @@ class RatingDetail(RestView):
     #@login_required(login_url='/user/login/')
     def PUT(request, rating_id):
         """Change the value of an existing rating."""
-        return RestView.insert_object(request, 'rating', rating_id=rating_id)
+        return RestView.insert_object(request, 'rating', rating_id)
 
     @staticmethod
     @csrf_exempt
