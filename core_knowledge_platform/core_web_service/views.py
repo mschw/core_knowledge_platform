@@ -186,7 +186,7 @@ class RestView(object):
                 response.status_code = RestView.OK_STATUS
             else:
                 response.status_code = RestView.CREATED_STATUS
-            response.location = '%s/%s/%s' % (service_url, name, inserted_object.id)
+            response.META['location'] = '%s/%s/%s' % (service_url, name, inserted_object.id)
         except InvalidDataException, e:
             logger.error(e)
             response = HttpResponse(e.message)
