@@ -103,7 +103,7 @@ class Vote(models.Model):
             (0, 'upvote'),
             (1, 'downvote'),
             )
-    votetype = models.IntegerField(max_length=1, choices=VOTE_CHOICES)
+    votetype = models.IntegerField(max_length=2, choices=VOTE_CHOICES)
     # A vote needs a user, but a user needs no votes
     caster = models.ForeignKey(User, blank=True, null=True)
     comment = models.ForeignKey(Comment)
