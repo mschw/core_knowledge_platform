@@ -635,7 +635,7 @@ class PublicationDetail(RestView):
 @csrf_exempt
 class RatingDetail(RestView):
     """Handle REST requests for ratings."""
-    allowed_methods = ("GET", "PUT")
+    allowed_methods = ("GET", "POST", "PUT", "DELETE")
 
     @staticmethod
     def GET(request, rating_id=None, publication_id=None):
@@ -662,6 +662,15 @@ class RatingDetail(RestView):
     def PUT(request, rating_id):
         """Change the value of an existing rating."""
         return RestView.insert_object(request, 'rating', rating_id=rating_id)
+
+    @staticmethod
+    def DELETE(request, rating_id):
+        """Delete an existing rating."""
+        rating = Rating.objects.get(id=rating_id)
+        rating.delete()
+        response = HttpResponse("Delete %s with id %s" % ('rating', rating_id))
+        response.status_code = RestView.NO_CONTENT_STATUS
+        return response
 
 
 @csrf_exempt
