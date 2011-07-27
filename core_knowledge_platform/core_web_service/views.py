@@ -1,5 +1,4 @@
 import re
-import pdb
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -19,7 +18,6 @@ logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 logger.addHandler(ch)
-
 
 # Create your views here.
 
@@ -298,7 +296,7 @@ class CommentDetail(RestView):
         try:
             comment = Comment.objects.get(id=comment_id)
             values = {'comment': comment}
-            response = RestView.renders_response(request, 'comment', values)
+            response = RestView.render_response(request, 'comment', values)
         except Comment.DoesNotExist:
             response = HttpResponse("The comment with id %s does not exist" % (comment_id))
             response.status_code = RestView.NOT_FOUND_STATUS
@@ -612,7 +610,6 @@ class PublicationDetail(RestView):
         """Creates a new resource from provided values.
         Accepts key, value encoded pairs or bibtex."""
         try:
-            pdb.set_trace()
             inserted_publication = PublicationDetail._insert_publication(request, publication_id)
             values = {'publication': inserted_publication}
             response = RestView.render_response(request, 'publication', values)
@@ -933,11 +930,16 @@ class VoteDetail(RestView):
     """Handle REST requests for votes."""
     allowed_methods = ('GET', 'PUT')
     
-    def GET(request, vote_id):
+    @staticmethod
+    def GET(request, vote_id=None):
         """Return a specific vote."""
-        vote = Vote.objects.get(id=vote_id)
+        if vote_id:
+            vote = Vote.objects.get(id=vote_id)
         values = {'vote': vote}
         return RestView.render_response(request, 'vote', values)
+
+    def POST(request):
+        return RestView.insert_object(request, 'vote')
 
     def PUT(request, vote_id):
         """Modify a specific vote."""

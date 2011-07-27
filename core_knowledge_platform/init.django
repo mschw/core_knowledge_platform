@@ -1,1 +1,2 @@
 export DJANGO_SETTINGS_MODULE=core_knowledge_platform.settings
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH

@@ -16,9 +16,9 @@
     <user>
             <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ comment.user.id }}"/>
     </user>
-    {% for vote in comment.vote_set %}
+    {% for vote in comment.vote_set.all %}
     <vote>
-            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ comment.vote.id }}"/>
+            <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ vote.id }}"/>
     </vote>
     {% endfor %}
 </comment>

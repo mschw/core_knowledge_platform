@@ -382,8 +382,13 @@ class XmlInserter(Inserter):
         parsed_data = self._parse_xml_to_dict(data)
         if vote_id:
             vote = Vote.objects.get(id=vote_id)
-        vote.upvotes = parsed_data['upvotes']
-        vote.downvotes = parsed_data['downvotes']
+        vote.votetype = parsed_data['votetype'].lower()
+        comment_id = self._get_id_from_atom_link(parsed_data['comment'])
+        comment = Comment.objects.get(id=comment_id)
+        vote.comment = comment
+        caster_id = self._get_id_from_atom_link(parsed_data['caster'])
+        caster = User.objects.get(id=caster_id)
+        vote.caster = caster
         return vote
 
     def _get_namespace(self, element):

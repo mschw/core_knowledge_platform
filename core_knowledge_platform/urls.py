@@ -39,7 +39,8 @@ urlpatterns = patterns('core_web_service.views',
         (r'^user/((?P<user_search>[\w=&]+))?$', 'users'),
         (r'^user/login/', 'login'),
         (r'^user/logout/', 'logout'),
-        (r'^vote/', 'vote_detail'),
+        (r'^vote/$', 'vote_detail'),
+        (r'^vote/(?P<vote_id>\d+)/$', 'vote_detail'),
     # Example:
     # (r'^core_knowledge_platform/', include('core_knowledge_platform.foo.urls')),
 

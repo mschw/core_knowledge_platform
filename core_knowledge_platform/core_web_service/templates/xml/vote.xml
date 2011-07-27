@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vote xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
-    <upvotes>
-        {{ vote.upvotes }}
-    </upvotes>
-    <downvotes>
-        {{ vote.downvotes }}
-    </downvotes>
+    <votetype>
+        {{ vote.vote_type_string }}
+    </votetype>
+    <caster>
+        <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ vote.caster.id }}"/>
+    </caster>
+    <comment>
+        <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ vote.comment.id }}"/>
+    </comment>
 </vote>

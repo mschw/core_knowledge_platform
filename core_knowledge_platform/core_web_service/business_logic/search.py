@@ -96,6 +96,21 @@ def get_related_tags(tag):
     sorted_list = sorted(relevance_tags, key=lambda p_tag: p_tag)
     return sorted_list
 
+def get_related_keywords(keyword):
+    """Return keywords that were used when the provided p_tag was used."""
+    publication_with_tag = Publication.objects.filter(keywords__id__in=[keyword.id])
+    relevance_keywords = dict()
+    for publication in publication_with_tag:
+        for p_keyword in publication.keywords.all().exclude(id=keyword.id):
+            if p_keyword.keyword is not keyword.keyword:
+                key = p_keyword
+                if key in relevance_keywords:
+                    relevance_keywords[key] = relevance_keywords[key] + 1
+                else:
+                    relevance_keywords[key] = 1
+    sorted_list = sorted(relevance_keywords, key=lambda p_keyword: p_keyword)
+    return sorted_list
+
 def get_related_users_for_keyword(keyword):
     """Return a list of users that research in the given area."""
     users = User.objects.all()

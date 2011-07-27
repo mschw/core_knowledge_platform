@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from core_web_service.business_logic.signals import *
 
 # Publication related classes
 
@@ -104,15 +103,19 @@ class Vote(models.Model):
             (0, 'upvote'),
             (1, 'downvote'),
             )
-    votetype = models.CharField(max_length=255, choices=VOTE_CHOICES)
+    votetype = models.IntegerField(max_length=255, choices=VOTE_CHOICES)
     # A vote needs a user, but a user needs no votes
     caster = models.ForeignKey(User, blank=True, null=True)
     comment = models.ForeignKey(Comment)
     #vote = models.CharField(max_length=4)
 
+    def vote_type_string(self):
+        vote_type = self.VOTE_CHOICES[self.votetype][1]
+        return vote_type
+
     def __unicode__(self):
-        votevalue = self.upvotes - self.downvotes
-        return u'%s - %s' % (self.id, votevalue)
+        vote = self.vote_type_string()
+        return u'%s - %s' % (self.id, vote)
 
 
 class Rating(models.Model):
@@ -218,3 +221,4 @@ class ReferenceMaterial(models.Model):
         return u'%s - %s' % (self.id, self.name)
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+from core_web_service.business_logic.signals import *
