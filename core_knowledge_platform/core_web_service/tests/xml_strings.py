@@ -192,9 +192,8 @@ downvote_xml = """<?xml version="1.0" encoding="utf-8"?>
 </vote>"""
 
 esteem_xml = """<?xml version="1.0" encoding="utf-8"?>
-<esteems xmlns="http://test/"
+<esteem xmlns="http://test/"
     xmlns:atom="http://www.w3.org/2005/atom">
-    <esteem>
         <user>
             <atom:link rel="user" type="application/xml" href="http://test/user/%s"/>
         </user>
@@ -204,8 +203,7 @@ esteem_xml = """<?xml version="1.0" encoding="utf-8"?>
         <value>
             512
         </value>
-    </esteem>
-</esteems>"""
+</esteem>"""
 
 material_xml = """<?xml version="1.0" encoding="utf-8"?>
 <referencematerial xmlns="http://test"

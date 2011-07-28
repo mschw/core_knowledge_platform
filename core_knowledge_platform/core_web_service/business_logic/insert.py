@@ -177,9 +177,7 @@ class XmlInserter(Inserter):
         else:
             esteem = Esteem()
         user = self._get_id_from_atom_link(parsed_data['user'])
-        tag = self._get_id_from_atom_link(parsed_data['tag'])
         esteem.user = user
-        esteem.tag = tag
         esteem.value = parsed_data['value']
         return esteem
 

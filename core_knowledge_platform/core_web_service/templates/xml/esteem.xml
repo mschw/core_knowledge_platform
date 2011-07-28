@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<esteems xmlns="http://{{ url }}"
+<esteem xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
-    <esteem>
-        <user>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ esteem.userprofile.user.id }}"/>
-        </user>
-        <value>
-            {{ esteem.value }}
-        </value>
-    </esteem>
-</esteems>
+    <user>
+        <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ esteem.userprofile.user.id }}"/>
+    </user>
+    <value>
+        {{ esteem.value }}
+    </value>
+</esteem>
