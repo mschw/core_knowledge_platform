@@ -5,6 +5,7 @@ from core_web_service.models import Author, Publication, Keyword
 import pdb
 import operator
 from django.contrib.auth.models import User
+from core_web_service.models import Tag
 
 def build_query(search_query):
     """Build the query for a given dictionary.
@@ -51,7 +52,14 @@ def search_keywords(search_items):
     result = Keyword.objects.filter(reduce(operator.or_, query))
     return result
 
-def search_publications(publication_terms, author_terms, keyword_terms):
+def search_tags(search_items):
+    """Search tags matching the provided arguments."""
+    query = build_query(search_items)
+    result = Tag.objects.filter(reduce(operator.or_, query))
+    return result
+
+def search_publications(publication_terms=None, author_terms=None,
+        keyword_terms=None, tag_terms=None):
     """Return publications that match the provided conditions."""
     publications = None
     authors = None
@@ -62,12 +70,16 @@ def search_publications(publication_terms, author_terms, keyword_terms):
         publications = Publication.objects.all()
     if author_terms:
         authors = search_authors(author_terms)
-        author_id = [author.id for author in authors]
-        publications = publications.filter(authors__id__in=[author_id])
+        author_ids = [author.id for author in authors]
+        publications = publications.filter(authors__id__in=author_ids)
     if keyword_terms:
         keywords = search_keywords(keyword_terms)
-        keyword_id = [keyword.id for keyword in keywords]
-        publications = publications.filter(keywords__id__in=[keyword_id])
+        keyword_ids = [keyword.id for keyword in keywords]
+        publications = publications.filter(keywords__id__in=keyword_ids)
+    if tag_terms:
+        tags = search_tags(tag_terms)
+        tag_ids = [tag.id for tag in tags]
+        publications = publications.filter(tags__id__in=tag_ids)
     return publications
 
 def search_user(search_items):
@@ -82,7 +94,7 @@ def search_user(search_items):
     return result
 
 def get_related_tags(tag):
-    """Return tags that were used when the provided p_tag was used."""
+    """Return tags that were used as well, when the provided tag was used."""
     publication_with_tag = Publication.objects.filter(tags__id__in=[tag.id])
     relevance_tags = dict()
     for publication in publication_with_tag:
@@ -97,7 +109,7 @@ def get_related_tags(tag):
     return sorted_list
 
 def get_related_keywords(keyword):
-    """Return keywords that were used when the provided p_tag was used."""
+    """Return keywords that were used as well, when the provided keyword was used."""
     publication_with_tag = Publication.objects.filter(keywords__id__in=[keyword.id])
     relevance_keywords = dict()
     for publication in publication_with_tag:
@@ -135,10 +147,70 @@ def get_related_users_for_publication(publication):
         interested_users.extend(users)
     return interested_users
 
+def get_publications_by_tag(tag):
+    """Return all publications with the associated tag."""
+    search_dict = {'id': tag.id}
+    publications = search_publications(tag_terms=search_dict)
+    return publications
+
+def get_publications_by_tags(tags):
+    """Return all publications that have one or more of the provided tags."""
+    all_publications = Publication.objects.none()
+    for tag in tags:
+        publications = get_publications_by_tag(tag)
+        all_publications = all_publications | publications
+    return all_publications
+
+def get_publications_by_keyword(keyword):
+    """Return all publications with the associated keyword."""
+    search_dict = {'id': keyword.id}
+    publications = search_publications(keyword_terms=search_dict)
+    return publications
+
+def get_publications_by_keywords(keywords):
+    """Return all publications that have one or more of the provided keywords."""
+    all_publications = Publication.objects.none()
+    for keyword in keywords:
+        publications = get_publications_by_keyword(keyword)
+        all_publications = all_publications | publications
+    return all_publications
+
+def get_publications_by_author(author):
+    """Return all publications that were written by the provided author."""
+    search_dict = {'id': author.id}
+    publications = search_publications(author_terms=search_dict)
+    return publications
+
+def get_publications_by_authors(authors):
+    """Return all publications that were written by one or more of the provided authors."""
+    all_publications = Publication.objects.none()
+    for author in authors:
+        publications = get_publications_by_author(author)
+        all_publications = all_publications | publications
+    return all_publications
+
 def get_related_publications(publication):
-    # TODO
+    # TODO: Implement some kind of rating.
     # FIXME: rank papers higher from the same author.
     # Chack for related papers based on keywords and tags - rate keywords higher than tags.
     # Value keywords higher than tags.
-    """docstring for get_related_publications"""
-    pass
+    """Return a set of publications that are related to the argument.
+    
+    Will search publications that use the same tags, keywords or are written by 
+    the same author.
+    
+    Arguments:
+        publication: A publication that is used as base for relations.
+
+    Returns:
+        Set: a set of publications that might be related to the current.
+    """
+    publications = Publication.objects.none()
+    tag_publications = get_publications_by_tags(publication.tags.all())
+    tag_publications = tag_publications.exclude(id=publication.id)
+    keyword_publications = get_publications_by_keywords(publication.keywords.all())
+    keyword_publications = keyword_publications.exclude(id=publication.id)
+    author_publications = get_publications_by_authors(publication.authors.all())
+    author_publications = author_publications.exclude(id=publication.id)
+    publications = tag_publications | keyword_publications | author_publications
+    return set(publications)

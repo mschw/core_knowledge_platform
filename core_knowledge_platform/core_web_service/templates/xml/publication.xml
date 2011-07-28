@@ -111,10 +111,15 @@
     <tags>
         {% for tag in publication.tags.all %}
         <tag>
-            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" >{{ tag.id }}</atom:link>
+            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" ></atom:link>
         </tag>
         {% endfor %}
     </tags>
+    <keywords>
+        {% for keyword in publication.keywords.all %}
+            <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}" ></atom:link>
+        {% endfor %}
+    </keywords>
     <referencematerials>
         {% for rm in publication.referencematerial_set.all %}
         <referencematerial>

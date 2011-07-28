@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
+import core_web_service.views as view
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 admin.autodiscover()
@@ -16,6 +17,8 @@ urlpatterns = patterns('core_web_service.views',
         (r'^esteem/user/(?P<user_id>\d+)$', 'esteem_detail'),
         (r'^keyword/$', 'keywords'),
         (r'^keyword/(?P<keyword_id>\d+)$', 'keywords'),
+        (r'^keyword/related/(?P<keyword_id>\d+)$', 
+            view.keywords.related_keywords),
         (r'^papergroup/$', 'papergroups'),
         (r'^papergroup/(\d+)$', 'papergroup_detail'),
         (r'^peerreview/(\d+)$', 'peerreview_detail'),
@@ -25,6 +28,8 @@ urlpatterns = patterns('core_web_service.views',
         (r'^peerreviewtemplate/peerreview/(\d+)$', 'peerreview_templates'),
         (r'^publication/$', 'publications'),
         (r'^publication/(\d+)$', 'publication_detail'),
+        (r'^publication/related/(?P<publication_id>\d+)$',
+            view.publications.related_publications),
         (r'^publication/((?P<pub_search>[\w=&]+))?(/keyword/(?P<key_search>[\w=&]+))?(/author/(?P<auth_search>[\w=&]+))?', 'publications'),
         (r'^rating/$', 'rating_detail'),
         (r'^rating/((?P<rating_id>\d+))?', 'rating_detail'),
@@ -34,10 +39,13 @@ urlpatterns = patterns('core_web_service.views',
         (r'^researcharea/$', 'researchareas'),
         (r'^researcharea/(?P<researcharea_id>\d+)$', 'researchareas'),
         (r'^tag/$', 'tags'),
+        (r'^tag/related/(?P<tag_id>\d+)$', view.tags.related_tags),
         (r'^tag/(\d+)$', 'tag_detail'),
         (r'^user/$', 'users'),
         (r'^user/(\d+)$', 'user_detail'),
         (r'^user/((?P<user_search>[\w=&]+))?$', 'users'),
+        (r'^user/related/publication/((?P<publication_id>\d+))?$', 
+            view.users.related_users_for_publication),
         (r'^user/login/', 'login'),
         (r'^user/logout/', 'logout'),
         (r'^vote/$', 'vote_detail'),

@@ -27,7 +27,7 @@ class Tag(models.Model):
 
 class Esteem(models.Model):
     """Represents the esteem a User can obtain."""
-    value = models.IntegerField(default=0)
+    value = models.IntegerField(max_length=10, default=0)
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.value)

@@ -7,12 +7,12 @@
             <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
             </rating>
         {% endfor %}
-    {% else %}
+        {% else %}{% if rating %}
         <publication>
             <atom:link rel="publication" type="application/xml" href="http://{{ url }}/publication/{{ rating.publication.id }}"/>
         </publication>
         <rating>
             {{ rating.rating }}
         </rating>
-    {% endif %}
+        {% endif %}{% endif %}
 </rating>

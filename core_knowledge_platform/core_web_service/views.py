@@ -375,6 +375,15 @@ class Keywords(RestView):
             values = {'keywords': keywords}
         response = RestView.render_response(request, 'keyword', values)
         return response
+    
+    @staticmethod
+    def related_keywords(request, keyword_id):
+        """Return keywords related to the provided one."""
+        keyword = Keyword.objects.get(id=keyword_id)
+        keywords = search.get_related_keywords(keyword)
+        values = {'keyword': keywords}
+        response = RestView.render_response(request, 'keyword', values)
+        return response
 
     @staticmethod
     @csrf_exempt
@@ -553,6 +562,15 @@ class Publications(RestView):
         publication_list = search.search_publications(pub_parameters, auth_parameters,
                 key_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
         values = {'publication_list': publication_list}
+        response = RestView.render_response(request, 'publications', values)
+        return response
+
+    @staticmethod
+    def related_publications(request, publication_id):
+        """docstring for related_publications"""
+        publication = Publication.objects.get(id=publication_id)
+        publications = search.get_related_publications(publication)
+        values = {'publications': publications}
         response = RestView.render_response(request, 'publications', values)
         return response
 
@@ -788,6 +806,15 @@ class Tags(RestView):
         return response
 
     @staticmethod
+    def related_tags(request, tag_id):
+        """docstring for related_tags"""
+        tag = Tag.objects.get(id=tag_id)
+        tags = search.get_related_tags(tag)
+        values = {'tags': tags}
+        response = RestView.render_response(request, 'tags', values)
+        return response
+
+    @staticmethod
     @csrf_exempt
     #@login_required(login_url='/user/login/')
     def POST(request):
@@ -914,6 +941,14 @@ class Users(RestView):
             users = search.search_user(query)
         else:
             users = User.objects.all()
+        values = {'users': users}
+        return RestView.render_response(request, 'users', values)
+
+    @staticmethod
+    def related_users_for_publication(request, publication_id):
+        """docstring for related_users"""
+        publication = Publication.objects.get(id=publication_id)
+        users = search.get_related_users_for_publication(publication)
         values = {'users': users}
         return RestView.render_response(request, 'users', values)
 

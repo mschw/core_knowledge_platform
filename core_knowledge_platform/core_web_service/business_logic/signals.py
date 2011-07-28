@@ -35,25 +35,28 @@ def automatically_create_esteem_for_new_user(sender, **kwargs):
 
 # TODO: calculate esteem based on comments.
 # FIXME: When a user that uploaded the document upvoted it you gain +20 esteem points.
-@receiver(post_save, sender=Comment)
+@receiver(post_save, sender=Vote)
 def recalculate_esteem_for_user(sender, **kwargs):
     """Use the information from a vote to recalculate the esteem of a user."""
     new_esteem = 0
-    comment = kwargs['instance']
+    vote = kwargs['instance']
+    comment = vote.comment
+    publication = comment.publication
     user = comment.user
-    votes = comment.vote_set.all()
-    if user and votes:
-        user_esteem = user.profile.esteem
+    old_esteem = user.profile.esteem.value
+    esteem = user.profile.esteem
+    if user:
         publication = comment.publication
         publication_owner = publication.owner
-        for vote in votes:
-            if vote.votetype == 'upvote':
-                m = 1
-            else:
-                m = -1
-            caster = vote.user
-            if caster == publication_owner:
-                new_esteem += 20 * m
-            else:
-                new_esteem += 20 * m
-        user.esteem = new_esteem
+        if vote.votetype == 0:
+            m = 1
+        else:
+            m = -1
+        caster = vote.caster
+        if caster == publication_owner:
+            new_esteem += 20 * m
+        else:
+            new_esteem += 5 * m
+    new_esteem = old_esteem + new_esteem
+    esteem.value = new_esteem
+    esteem.save()

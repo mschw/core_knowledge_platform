@@ -35,6 +35,7 @@ class InserterTests(unittest.TestCase):
         self.publication.authors.add(self.author)
 
         self.comment = Comment.objects.create(title="Comment", text="Commento", publication=self.publication)
+        self.comment.user = self.user2
         self.comment.save()
         self.vote = Vote(comment=self.comment)
         self.vote.votetype = 0
@@ -115,11 +116,11 @@ class InserterTests(unittest.TestCase):
         self.assertEqual('upvote', vote.votetype)
         self.assertEqual(vote.caster, self.user)
         self.assertEqual(self.comment, vote.comment)
+        self.assertEqual(self.user2.profile.esteem.value, 20)
 
     def test_insert_downvote_for_comment(self):
         xml = downvote_xml % (self.user.id, self.comment.id)
         vote = self.xml_inserter.modify_vote(xml)
-        pdb.set_trace()
         self.assertEqual('downvote', vote.votetype)
         self.assertEqual(vote.caster, self.user)
         self.assertEqual(self.comment, vote.comment)
