@@ -161,6 +161,9 @@ class UserProfile(models.Model):
     institution = models.CharField(max_length=255, blank=True, null=True)
     research_areas = models.ManyToManyField(ResearchArea, blank=True, null=True)
 
+    def __unicode__(self):
+        return u'%s - %s - %s' % (self.id, self.user.id, self.user.username)
+
 
 class ProfileField(models.Model):
     """A key-value storage for further fields of the user profile."""

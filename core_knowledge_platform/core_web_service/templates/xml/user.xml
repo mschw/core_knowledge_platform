@@ -33,7 +33,7 @@
         {% endfor %}
     </research_areas>
     <fields>    
-        {% for field in user.profile.profile_field.all %}
+        {% for field in user.profile.profilefield_set.all %}
         <{{ field.key }}>
             {{ field.value }}
         </{{ field.key }}>
