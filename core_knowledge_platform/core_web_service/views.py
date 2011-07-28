@@ -191,6 +191,7 @@ class RestView(object):
             logger.error(e)
             response = HttpResponse(e.message)
             response.status_code = RestView.BAD_REQUEST_STATUS
+        logger.info('Insertion successful.')
         return response
 
 
@@ -215,7 +216,7 @@ class Authors(RestView):
 
     @staticmethod
     @csrf_exempt
-    ##@login_required(login_url='/user/login/')
+    @login_required(login_url='/user/login/')
     def POST(request):
         """Creates a new author and returns the resource-url."""
         return RestView.insert_object(request, 'author')
@@ -686,6 +687,7 @@ class RatingDetail(RestView):
 
     @staticmethod
     @csrf_exempt
+    @login_required(login_url='/user/login/')
     def POST(request):
         """Create a new rating object."""
         return RestView.insert_object(request, 'rating')

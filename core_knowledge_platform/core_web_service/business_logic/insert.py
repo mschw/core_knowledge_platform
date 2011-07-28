@@ -432,7 +432,7 @@ def get_inserter(content_type):
     elif 'json' in content_type:
         return JsonInserter()
     else:
-        raise AttributeError("No inserter for specified value present.")
+        raise AttributeError("No inserter for specified value present: %s." % (content_type))
 
 def insert_bibtex_publication(bibtex, owner):
     """Will insert a publication from a bibtex string.
