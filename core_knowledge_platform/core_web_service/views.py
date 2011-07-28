@@ -1049,7 +1049,13 @@ def login(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
-        return HttpResponse("Logged In.")
+        response = HttpResponse("""<?xml version="1.0" encoding="utf-8"?>
+<login>
+    <username>%s</username>
+    <password>--</password>
+</login>""" % (username))
+        response['Content-Type'] = 'application/xml'
+        return response
     else:
         response = HttpResponse("Invalid credentials.")
         response.status_code = RestView.BAD_REQUEST_STATUS
