@@ -57,7 +57,7 @@ class RestView(object):
     def __call__(self, request, *args, **kwargs):
         """Calls the appropriate function corresponding to the HTTP-method."""
         logger.info("Request received: %s" % (request.path))
-        logger.ingo("User of request: %s" % (request.user.username))
+        logger.info("User of request: %s" % (request.user.username))
         method = nonalpha_re.sub('', request.method.upper())
         if not method in self.allowed_methods:
             return RestView.method_not_allowed(method)
