@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <esteems xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
-    {% for e in esteem %}
     <esteem>
         <user>
-            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ esteem.user.id }}"/>
+            <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ esteem.userprofile.user.id }}"/>
         </user>
-        <tag>
-            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/user/{{ esteem.tag.id }}"/>
-        </tag>
         <value>
             {{ esteem.value }}
         </value>
     </esteem>
-    {% endfor %}
 </esteems>

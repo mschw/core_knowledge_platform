@@ -324,7 +324,6 @@ class CommentDetail(RestView):
 @csrf_exempt
 class EsteemDetail(RestView):
     """Handles requests for esteem values of a user."""
-    # FIXME: Fix the whole esteem thing
     allowed_methods = ("GET", "PUT")
     
     @staticmethod
