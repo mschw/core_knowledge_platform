@@ -351,13 +351,13 @@ peerreview_xml = """<?xml version="1.0" encoding="utf-8"?>
 </peerreview>"""
 
 login_xml = """<?xml version="1.0" encoding="utf-8"?>
-<user>
+<login>
     <username>unittest</username>
     <password>unit</password>
-</user>"""
+</login>"""
 
 login_invalid_xml = """<?xml version="1.0" encoding="utf-8"?>
-<user>
+<login>
     <username>unittest</username>
     <password>invalid</password>
-</user>"""
+</login>"""

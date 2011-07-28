@@ -1038,6 +1038,7 @@ class VoteDetail(RestView):
         response = HttpResponse("Vote deleted.")
         response.status_code = RestView.OK_STATUS
 
+@csrf_exempt
 def login(request):
     """Log a user in."""
     xml = insert.XmlInserter()
@@ -1054,6 +1055,7 @@ def login(request):
         response.status_code = RestView.BAD_REQUEST_STATUS
         return response
 
+@csrf_exempt
 def logout(request):
     """Log a user out."""
     auth.logout(request)
