@@ -14,23 +14,26 @@
         {{ user.email }}
     </email>
     <degree>
-        {{ user.get_profile.degree }}
+        {{ user.profile.degree }}
     </degree>
     <institution>
-        {{ user.get_profile.institution }}
+        {{ user.profile.institution }}
     </institution>
+    <authenticated_professional>
+        {{ user.profile.authenticated_professional }}
+    </authenticated_professional>
     <esteem>
         <atom:link rel="esteem" type="application/xml" href="http://{{ url }}/esteem/{{ user.profile.esteem.id }}"/>
     </esteem>
     <research_areas>
-        {% for area in user.get_profile.research_areas.all %}
+        {% for area in user.profile.research_areas.all %}
         <research_area>
             <atom:link rel='research_area' type="application/xml" href="http://{{ url }}/researcharea/{{ area.id }}"/>
         </research_area>
         {% endfor %}
     </research_areas>
     <fields>    
-        {% for field in user.get_profile.profile_field.all %}
+        {% for field in user.profile.profile_field.all %}
         <{{ field.key }}>
             {{ field.value }}
         </{{ field.key }}>
