@@ -763,10 +763,13 @@ class ResearchAreas(RestView):
         """Return list of details for a research area."""
         if researcharea_id:
             ra = ResearchArea.objects.get(id=researcharea_id)
+            values = {'researcharea': ra}
+            response = RestView.render_response(request, 'researcharea', values)
         else:
             ra = ResearchArea.objects.all()
-        values = {'researchareas': ra}
-        return RestView.render_response(request, 'researchareas', values)
+            values = {'researchareas': ra}
+            response = RestView.render_response(request, 'researchareas', values)
+        return response
 
     @staticmethod
     @csrf_exempt

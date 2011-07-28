@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<researchareas xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    {% for researcharea in researchareas %}
+    <researcharea>
+        <atom:link rel="researcharea" type="application/xml" href="http://{{ url }}/researcharea/{{ researcharea.id }}"/>
+    </researcharea>
+    {% endfor %}
+</researchareas>

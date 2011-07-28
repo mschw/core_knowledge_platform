@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<researcharea xmlns="http://{{ url }}"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <title>
+        {{ researcharea.title }}
+    </title>
+    <description>
+        {{ researcharea.description }}
+    </description>
+</researcharea>
