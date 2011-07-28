@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from core_web_service.views import RestView
 from core_web_service.tests.xml_strings import author_xml, user_xml, publication_xml
 from core_web_service.models import User
+from core_web_service.tests.xml_strings import login_xml
+from core_web_service.tests.xml_strings import login_invalid_xml
 
 class ViewTests(unittest.TestCase):
 
@@ -18,6 +20,17 @@ class ViewTests(unittest.TestCase):
     def tearDown(self):
         User.objects.all().delete()
         Author.objects.all().delete()
+
+    def test_login_via_xml(self):
+        data = login_xml
+        result = self.client.post(reverse('core_web_service.views.login'), data, content_type='application/xml', HTTP_ACCEPT='application/xml')
+        self.assertEqual(result.status_code, RestView.OK_STATUS)
+
+    def test_login_via_invalid_credentials(self):
+        data = login_invalid_xml
+        result = self.client.post(reverse('core_web_service.views.login'), data, content_type='application/xml', HTTP_ACCEPT='application/xml')
+        self.assertEqual(result.status_code, RestView.BAD_REQUEST_STATUS)
+        pass
 
     def test_get_publications_returns_200(self):
         result = self.client.get(reverse('core_web_service.views.publications'), HTTP_ACCEPT='application/xml', CONTENT_TYPE='application/xml')
@@ -54,14 +67,6 @@ class ViewTests(unittest.TestCase):
     def test_insert_user_from_view_returns_200(self):
         result = self.client.post('/user/', user_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')
         self.assertEqual(result.status_code, RestView.CREATED_STATUS)
-
-    def test_login_valid_credential(self):
-        result = self.client.post(reverse('core_web_service.views.login'), {'username': 'unittest', 'password': 'unit'}, HTTP_ACCEPT='application/xml')
-        self.assertEqual(result.status_code, RestView.OK_STATUS)
-
-    def test_login_invalid_credential(self):
-        result = self.client.post(reverse('core_web_service.views.login'), {'username': 'invalid', 'password': 'test'}, HTTP_ACCEPT='application/xml')
-        self.assertEqual(result.status_code, RestView.BAD_REQUEST_STATUS)
 
     def test_post_author_returns_200(self):
         result = self.client.post(reverse('core_web_service.views.authors'), author_xml, content_type='application/xml', HTTP_ACCEPT='application/xml')

@@ -43,6 +43,34 @@ user_xml = """<?xml version="1.0" encoding="utf-8"?>
     </fields>
 </user>"""
 
+invalid_email_user_xml = """<?xml version="1.0" encoding="utf-8"?>
+<user xmlns="http://test"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <username>
+        test
+    </username>
+    <first_name>
+        Scott
+    </first_name>
+    <last_name>
+        Pilgrim
+    </last_name>
+    <password>
+        test
+    </password>
+    <email>
+        S@s
+    </email>
+    <degree>
+        
+    </degree>
+    <institution>
+        
+    </institution>
+    <fields>
+    </fields>
+</user>"""
+
 comment_xml = """<?xml version="1.0" encoding="utf-8"?>
 <comment xmlns="http://url/"
     xmlns:atom="http://www.w3.org/2005/atom">
@@ -223,15 +251,12 @@ material_xml = """<?xml version="1.0" encoding="utf-8"?>
 </referencematerial>"""
 
 keyword_xml = """<?xml version="1.0" encoding="utf-8"?>
-<keywords xmlns="http://test"
+<keyword xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">
     <keyword>
-        <title>
             Some keyword.
-        </title>
-        <atom:link rel="keyword" type="application/xml" href="http://test/keyword/%s/"/>
     </keyword>
-</keywords>"""
+</keyword>"""
 
 tag_xml = """<?xml version="1.0" encoding="utf-8"?>
 <tag xmlns="http://test"
@@ -324,3 +349,15 @@ peerreview_xml = """<?xml version="1.0" encoding="utf-8"?>
         This stuff is pretty awesome stuff and awesome in the extreme.
     </review>
 </peerreview>"""
+
+login_xml = """<?xml version="1.0" encoding="utf-8"?>
+<user>
+    <username>unittest</username>
+    <password>unit</password>
+</user>"""
+
+login_invalid_xml = """<?xml version="1.0" encoding="utf-8"?>
+<user>
+    <username>unittest</username>
+    <password>invalid</password>
+</user>"""

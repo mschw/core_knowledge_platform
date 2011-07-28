@@ -170,7 +170,6 @@ class XmlInserter(Inserter):
 
     def modify_esteem(self, data, esteem_id=None):
         """Create or modify an esteem object according to the specified value."""
-        # FIXME: fix xml data schema to match parser ?
         parsed_data = self._parse_xml_to_dict(data)
         if esteem_id:
             esteem = Esteem.objects.get(id=esteem_id)
@@ -179,7 +178,19 @@ class XmlInserter(Inserter):
         user = self._get_id_from_atom_link(parsed_data['user'])
         esteem.user = user
         esteem.value = parsed_data['value']
+        esteem.save()
         return esteem
+
+    def modify_keyword(self, data, keyword_id=None):
+        """Create or modify a keyword object according to the specified values."""
+        parsed_data = self._parse_xml_to_dict(data)
+        if keyword_id:
+            keyword = Keyword.objects.get(id=keyword_id)
+        else:
+            keyword = Keyword()
+        keyword.keyword = parsed_data['keyword']
+        keyword.save()
+        return keyword
 
     def modify_papergroup(self, data, papergroup_id=None):
         """Create or modify a papergroup object according to the specified value."""

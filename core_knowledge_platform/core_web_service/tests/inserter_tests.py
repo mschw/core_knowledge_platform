@@ -11,6 +11,8 @@ from core_web_service.tests.xml_strings import rating_xml
 from core_web_service.tests.xml_strings import papergroup_xml
 from core_web_service.tests.xml_strings import vote_xml
 from core_web_service.tests.xml_strings import downvote_xml
+from core_web_service.tests.xml_strings import keyword_xml
+from core_web_service.tests.xml_strings import invalid_email_user_xml
 
 
 class InserterTests(unittest.TestCase):
@@ -60,6 +62,10 @@ class InserterTests(unittest.TestCase):
         self.assertEqual(user.username, "test")
         self.assertEqual(user.email, 'Scott@scott.scott')
         self.assertNotEqual(user.password, 'test')
+
+    def test_insert_user_invalid_email(self):
+        """Attempts to insert a user with an invalid email."""
+        user = self.xml_inserter.modify_user(invalid_email_user_xml)
 
     def test_insert_comment(self):
         xml = comment_xml % (self.publication.id, self.user.id, self.vote.id)
@@ -125,3 +131,13 @@ class InserterTests(unittest.TestCase):
         self.assertEqual(vote.caster, self.user)
         self.assertEqual(self.comment, vote.comment)
 
+    def test_insert_keyword_from_xml(self):
+        xml = keyword_xml
+        keyword = self.xml_inserter.modify_keyword(xml)
+        self.assertEqual(keyword.keyword, "Some keyword.")
+
+    def test_modify_keyword_from_xml(self):
+        xml = keyword_xml
+        kw = Keyword.objects.create(keyword='test')
+        keyword = self.xml_inserter.modify_keyword(xml, kw.id)
+        self.assertEqual(keyword.keyword, 'Some keyword.')

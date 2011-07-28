@@ -1040,8 +1040,11 @@ class VoteDetail(RestView):
 
 def login(request):
     """Log a user in."""
-    username = request.POST['username']
-    password = request.POST['password']
+    xml = insert.XmlInserter()
+    data = request.raw_post_data
+    data = xml._parse_xml_to_dict(data)
+    username = data['username']
+    password = data['password']
     user = auth.authenticate(username=username, password=password)
     if user is not None and user.is_active:
         auth.login(request, user)
