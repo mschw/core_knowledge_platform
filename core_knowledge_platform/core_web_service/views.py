@@ -1045,20 +1045,29 @@ def login(request):
     """Log a user in."""
     xml = insert.XmlInserter()
     data = request.raw_post_data
-    data = xml._parse_xml_to_dict(data)
-    username = data['username']
-    password = data['password']
-    user = auth.authenticate(username=username, password=password)
-    if user is not None and user.is_active:
-        auth.login(request, user)
-        response = HttpResponse("""<?xml version="1.0" encoding="utf-8"?>
-<login>
-    <username>%s</username>
-    <password>--</password>
-</login>""" % (username))
-        response['Content-Type'] = 'application/xml'
-        return response
-    else:
+    try:
+        data = xml._parse_xml_to_dict(data)
+        username = data['username']
+        password = data['password']
+        logger.info("Attempt to login from %s" % (username))
+        user = auth.authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            auth.login(request, user)
+            response = HttpResponse("""<?xml version="1.0" encoding="utf-8"?>
+    <login>
+        <username>%s</username>
+        <password>--</password>
+    </login>""" % (username))
+            response['Content-Type'] = 'application/xml'
+            return response
+        else:
+            logger.info("Login failed.")
+            response = HttpResponse("Invalid credentials.")
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
+    except InvalidDataException, e:
+        logger.info("Login failed.")
+        logger.error(e)
         response = HttpResponse("Invalid credentials.")
         response.status_code = RestView.BAD_REQUEST_STATUS
         return response
