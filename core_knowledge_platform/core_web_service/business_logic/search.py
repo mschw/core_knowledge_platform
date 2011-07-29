@@ -1,6 +1,7 @@
 from core_web_service.models import ResearchArea
 from core_web_service.models import UserProfile
 from django.db.models import Q
+from django.http import QueryDict
 from core_web_service.models import Author, Publication, Keyword
 import pdb
 import operator
@@ -41,6 +42,8 @@ def _get_search_type(search_items):
     If the key is not present returns an _or_ search.
     Else returns the searchtype and removes it from the searchdict.
     """
+    if type(search_items) == QueryDict:
+        search_items = search_items.copy()
     try:
         search_type = search_items['searchtype']
         del search_items['searchtype']

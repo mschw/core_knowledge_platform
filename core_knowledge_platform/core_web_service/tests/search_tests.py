@@ -2,6 +2,7 @@ from core_web_service.business_logic.search import get_related_publications
 from core_web_service.models import ResearchArea
 from django.utils import unittest
 from django.contrib.auth.models import User
+from django.http import QueryDict
 from core_web_service.models import Author, Publication, Tag, Keyword
 from core_web_service.business_logic.search import search_publications, get_related_tags, get_related_users_for_publication
 from core_web_service.business_logic.search import get_related_keywords
@@ -76,6 +77,11 @@ class SearchLogicTests(unittest.TestCase):
         publication_query = {'title': '1', 'doi': '10.1.1.10', 'searchtype': 'or'}
         publications = search_publications(publication_terms=publication_query)
         self.assertListEqual([self.pub1, self.pub2], list(publications))
+
+    def test_search_publications_by_title_and_doi_with_querydict(self):
+        publication_query = QueryDict('title=1&doi=10.1.1.10&searchtype=and')
+        publications = search_publications(publication_terms=publication_query)
+        self.assertListEqual([self.pub1], list(publications))
 
     def test_search_without_matching_query(self):
         publication_query = {'title': 'no in database'}
