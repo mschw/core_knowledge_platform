@@ -34,22 +34,50 @@ def build_query(search_query):
             raise AttributeError("Invalid value for keyword %s: %s" % (key, value))
     return query
 
+def _get_search_type(search_items):
+    """Return the type of search to be performed.
+
+    Attempts to obtain the searchtype key from the dictionary.
+    If the key is not present returns an _or_ search.
+    Else returns the searchtype and removes it from the searchdict.
+    """
+    try:
+        search_type = search_items['searchtype']
+        del search_items['searchtype']
+    except KeyError, e:
+        search_type = 'or'
+    return (search_type, search_items)
+
+def _perform_search(search_class, search_type, query):
+    """Will perform a search on the class with the given search_type."""
+    if search_type == 'and':
+        result = search_class.objects.filter(reduce(operator.and_, query))
+    else:
+        result = search_class.objects.filter(reduce(operator.or_, query))
+    return result
+
 def search_authors(search_items):
     """Search authors matching the provided arguments."""
+    search_type, search_items = _get_search_type(search_items)
     query = build_query(search_items)
-    result = Author.objects.filter(reduce(operator.or_, query))
+    result = _perform_search(Author, search_type, query)
     return result
 
 def _search_publications(search_items):
     """Search publications matching the provided arguments."""
+    search_type, search_items = _get_search_type(search_items)
     query = build_query(search_items)
-    result = Publication.objects.filter(reduce(operator.or_, query))
+    result = _perform_search(Publication, search_type, query)
     return result
 
 def search_keywords(search_items):
-    """Search keywords matching the provided arguements."""
+    """Search keywords matching the provided arguements.
+    
+    Arguments:
+        search_items: a dictionary containing the search terms."""
+    search_type, search_items = _get_search_type(search_items)
     query = build_query(search_items)
-    result = Keyword.objects.filter(reduce(operator.or_, query))
+    result = _perform_search(Keyword, search_type, query)
     return result
 
 def search_tags(search_items):
