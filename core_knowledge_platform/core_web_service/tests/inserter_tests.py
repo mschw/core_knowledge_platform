@@ -13,6 +13,8 @@ from core_web_service.tests.xml_strings import vote_xml
 from core_web_service.tests.xml_strings import downvote_xml
 from core_web_service.tests.xml_strings import keyword_xml
 from core_web_service.tests.xml_strings import invalid_email_user_xml
+from core_web_service.tests.xml_strings import papergroup_no_publication_xml
+from core_web_service.business_logic.insert import InvalidDataException
 
 
 class InserterTests(unittest.TestCase):
@@ -115,6 +117,17 @@ class InserterTests(unittest.TestCase):
         self.assertEqual(papergroup.title, 'Nature papergroup.')
         self.assertEqual(papergroup.blind_review, '1')
         self.assertEqual(papergroup.publications.all()[0], self.publication)
+
+    def test_insert_papergroup_without_publication(self):
+        xml = papergroup_no_publication_xml % (self.user.id, self.user2.id, self.tag.id)
+        papergroup = self.xml_inserter.modify_papergroup(xml)
+        self.assertEqual(papergroup.editors.all()[0], self.user)
+        self.assertEqual(papergroup.referees.all()[0], self.user2)
+        self.assertEqual(papergroup.tags.all()[0], self.tag)
+
+    def test_insert_papergroup_invalid_editor(self):
+        xml = papergroup_no_publication_xml % ('999', self.user2.id, self.tag.id)
+        self.assertRaises(InvalidDataException, self.xml_inserter.modify_papergroup, xml)
 
     def test_insert_upvote_for_comment(self):
         xml = vote_xml % (self.user.id, self.comment.id)

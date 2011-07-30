@@ -315,6 +315,37 @@ papergroup_xml = """<?xml version="1.0" encoding="utf-8"?>
     </publications>
 </papergroup>"""
 
+papergroup_no_publication_xml = """<?xml version="1.0" encoding="utf-8"?>
+<papergroup xmlns="http://test"
+    xmlns:atom="http://www.w3.org/2005/atom">
+    <title>
+        Nature papergroup.
+    </title>
+    <description>
+        Papergroup of nature.
+    </description>
+    <blind_review>
+        1
+    </blind_review>
+    <editors>
+        <editor>
+            <atom:link rel="user" type="application/xml" href="http://test/user/%s" />
+        </editor>
+    </editors>
+    <referees>
+        <referee>
+            <atom:link rel="user" type="application/xml" href="http://test/user/%s" />
+        </referee>
+    </referees>
+    <tags>
+        <tag>
+            <atom:link rel="user" type="application/xml" href="http://test/tag/%s" />
+        </tag>
+    </tags>
+    <publications>
+    </publications>
+</papergroup>"""
+
 template_xml = """<?xml version="1.0" encoding="utf-8"?>
 <peerreviewtemplate xmlns="http://test"
     xmlns:atom="http://www.w3.org/2005/atom">

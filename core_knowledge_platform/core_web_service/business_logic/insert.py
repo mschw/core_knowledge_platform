@@ -159,14 +159,21 @@ class XmlInserter(Inserter):
             comment = Comment()
         if not user_id:
             user_id = self._get_id_from_atom_link(parsed_data['user'])
-        user = User.objects.get(id=user_id)
-        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
-        comment.publication = Publication.objects.get(id=publication_id)
-        comment.user = user
-        comment.title = parsed_data['title']
-        comment.text = parsed_data['text']
-        comment.save()
-        return comment
+        try:
+            user = User.objects.get(id=user_id)
+            publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+            comment.publication = Publication.objects.get(id=publication_id)
+            comment.user = user
+            comment.title = parsed_data['title']
+            comment.text = parsed_data['text']
+            comment.save()
+            return comment
+        except User.DoesNotExist:
+            raise InvalidDataException("The user provided does not exist (id: %s)" %
+                    (user_id))
+        except Publication.DoesNotExist:
+            raise InvalidDataException("The publication provided does not exist (id: %s)" 
+                    % publication_id)
 
     def modify_esteem(self, data, esteem_id=None):
         """Create or modify an esteem object according to the specified value."""
@@ -175,11 +182,16 @@ class XmlInserter(Inserter):
             esteem = Esteem.objects.get(id=esteem_id)
         else:
             esteem = Esteem()
-        user = self._get_id_from_atom_link(parsed_data['user'])
-        esteem.user = user
-        esteem.value = parsed_data['value']
-        esteem.save()
-        return esteem
+        try:
+            user_id = self._get_id_from_atom_link(parsed_data['user'])
+            user = User.objects.get(id=user_id)
+            esteem.user = user
+            esteem.value = parsed_data['value']
+            esteem.save()
+            return esteem
+        except User.DoesNotExist:
+            raise InvalidDataException("The user provided does not exist (id: %s)"
+                    % (user_id))
 
     def modify_keyword(self, data, keyword_id=None):
         """Create or modify a keyword object according to the specified values."""
@@ -207,23 +219,39 @@ class XmlInserter(Inserter):
         papergroup.blind_review = parsed_data['blind_review']
         papergroup.save()
         for e in parsed_data['editors']:
-            editor_id = self._get_id_from_atom_link(e)
-            editor = User.objects.get(id=editor_id)
-            papergroup.editors.add(editor)
+            try:
+                editor_id = self._get_id_from_atom_link(e)
+                editor = User.objects.get(id=editor_id)
+                papergroup.editors.add(editor)
+            except User.DoesNotExist:
+                raise InvalidDataException("The user provided does not exist (id: %s)"
+                        % (editor_id))
         editors = papergroup.editors
         for r in parsed_data['referees']:
-            referee_id = self._get_id_from_atom_link(r)
-            referee = User.objects.get(id=referee_id)
-            papergroup.referees.add(referee)
+            try:
+                referee_id = self._get_id_from_atom_link(r)
+                referee = User.objects.get(id=referee_id)
+                papergroup.referees.add(referee)
+            except User.DoesNotExist:
+                raise InvalidDataException("The user provided does not exist (id: %s)"
+                        % (referee_id))
         referees = papergroup.referees
         for p in parsed_data['publications']:
-            publication_id = self._get_id_from_atom_link(p)
-            publication = Publication.objects.get(id=publication_id)
-            papergroup.publications.add(publication)
+            try:
+                publication_id = self._get_id_from_atom_link(p)
+                publication = Publication.objects.get(id=publication_id)
+                papergroup.publications.add(publication)
+            except Publication.DoesNotExist:
+                raise InvalidDataException("The publication provided does not exist (id: %s)"
+                        % (publication_id))
         for t in parsed_data['tags']:
-            tag_id = self._get_id_from_atom_link(t)
-            tag = Tag.objects.get(id=tag_id)
-            papergroup.tags.add(tag)
+            try:
+                tag_id = self._get_id_from_atom_link(t)
+                tag = Tag.objects.get(id=tag_id)
+                papergroup.tags.add(tag)
+            except Tag.DoesNotExist:
+                raise InvalidDataException("The tag provided does not exist (id: %s)"
+                        % (tag_id))
         if editors:
             for editor in editors.all():
                 check_priviledges_for_editor(editor)
@@ -251,16 +279,27 @@ class XmlInserter(Inserter):
             peerreview = PeerReview.objects.get(id=peer_review_id)
         else:
             peerreview = PeerReview()
-        peerreviewer_id = self._get_id_from_atom_link(parsed_data['peerreviewer'])
-        peerreview.peer_reviewer = User.objects.get(id=peerreviewer_id)
-        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
-        peerreview.publication = Publication.objects.get(id=publication_id)
-        template_id = self._get_id_from_atom_link(parsed_data['template'])
-        peerreview.template = PeerReviewTemplate.objects.get(id=template_id)
-        peerreview.title = parsed_data['title']
-        peerreview.review = parsed_data['review']
-        peerreview.save()
-        return peerreview
+        try:
+            peerreviewer_id = self._get_id_from_atom_link(parsed_data['peerreviewer'])
+            peerreview.peer_reviewer = User.objects.get(id=peerreviewer_id)
+            publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+            peerreview.publication = Publication.objects.get(id=publication_id)
+            template_id = self._get_id_from_atom_link(parsed_data['template'])
+            peerreview.template = PeerReviewTemplate.objects.get(id=template_id)
+            peerreview.title = parsed_data['title']
+            peerreview.review = parsed_data['review']
+            peerreview.save()
+            return peerreview
+        except User.DoesNotExist:
+            raise InvalidDataException("The user provided does not exist (id: %s)"
+                    % (peerreviewer_id))
+        except Publication.DoesNotExist:
+            raise InvalidDataException("The publication provided does not exist (id: %s)"
+                    % (publication_id))
+        except PeerReviewTemplate.DoesNotExist:
+            raise InvalidDataException("The template provided does not exist (id: %s)"
+                    % (template_id))
+
 
     def modify_publication(self, data, publication_id=None, owner=None):
         """Create or modify a publication object according to the specified value."""
@@ -330,14 +369,18 @@ class XmlInserter(Inserter):
             rating = Rating.objects.get(id=rating_id)
         else:
             rating = Rating()
-        parsed_data = self._parse_xml_to_dict(data)
-        new_rating = parsed_data['rating']
-        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
-        publication = Publication.objects.get(id=publication_id)
-        rating.rating = new_rating
-        rating.publication = publication
-        rating.save()
-        return rating
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            new_rating = parsed_data['rating']
+            publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+            publication = Publication.objects.get(id=publication_id)
+            rating.rating = new_rating
+            rating.publication = publication
+            rating.save()
+            return rating
+        except Publication.DoesNotExist:
+            raise InvalidDataException("The publication provided does not exist (id: %s)"
+                    % (publication_id))
 
     def modify_reference_material(self, data, material_id=None):
         """Create or modify a reference material object according to the specified value."""
@@ -346,13 +389,17 @@ class XmlInserter(Inserter):
             material = ReferenceMaterial.objects.get(id=material_id)
         else:
             material = ReferenceMaterial()
-        publication_id = self._get_id_from_atom_link(parsed_data['publication'])
-        material.publication = Publication.objects.get(id=publication_id)
-        material.name = parsed_data['name']
-        material.url = parsed_data['url']
-        material.notes = parsed_data['notes']
-        material.save()
-        return material
+        try:
+            publication_id = self._get_id_from_atom_link(parsed_data['publication'])
+            material.publication = Publication.objects.get(id=publication_id)
+            material.name = parsed_data['name']
+            material.url = parsed_data['url']
+            material.notes = parsed_data['notes']
+            material.save()
+            return material
+        except Publication.DoesNotExist:
+            raise InvalidDataException("The publication provided does not exist (id: %s)"
+                    % (publication_id))
 
     def modify_tag(self, data, tag_id=None):
         """Create or modify a tag object according to the specified value."""
@@ -393,14 +440,22 @@ class XmlInserter(Inserter):
             vote = Vote.objects.get(id=vote_id)
         else:
             vote = Vote()
-        vote.votetype = parsed_data['votetype'].lower()
-        comment_id = self._get_id_from_atom_link(parsed_data['comment'])
-        comment = Comment.objects.get(id=comment_id)
-        vote.comment = comment
-        caster_id = self._get_id_from_atom_link(parsed_data['caster'])
-        caster = User.objects.get(id=caster_id)
-        vote.caster = caster
-        return vote
+        try:
+            vote.votetype = parsed_data['votetype'].lower()
+            comment_id = self._get_id_from_atom_link(parsed_data['comment'])
+            comment = Comment.objects.get(id=comment_id)
+            vote.comment = comment
+            caster_id = self._get_id_from_atom_link(parsed_data['caster'])
+            caster = User.objects.get(id=caster_id)
+            vote.caster = caster
+            return vote
+        except Comment.DoesNotExist:
+            raise InvalidDataException("The comment provided does not exist (id: %s)"
+                    % (comment_id))
+        except User.DoesNotExist:
+            raise InvalidDataException("The user provided does not exist (id: %s)"
+                    % (caster_id))
+
 
     def _get_namespace(self, element):
         """Return the main namespace for a given ElementTree.element."""

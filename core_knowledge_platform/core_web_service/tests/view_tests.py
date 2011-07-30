@@ -35,6 +35,7 @@ class ViewTests(unittest.TestCase):
     def test_get_publications_returns_200(self):
         result = self.client.get(reverse('core_web_service.views.publications'), HTTP_ACCEPT='application/xml', CONTENT_TYPE='application/xml')
         self.assertEqual(result.status_code, RestView.OK_STATUS)
+        self.assertEqual(result['Content-Type'], 'application/xml')
 
     def test_delete_list_of_publications_not_allowed(self):
         result = self.client.delete(reverse('core_web_service.views.publications'))

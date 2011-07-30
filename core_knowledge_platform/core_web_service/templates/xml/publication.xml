@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <publication xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
+    <abstract>
+        {{ publication.abstract }}
+    </abstract>
     <address>
         {{ publication.address }}
     </address>
@@ -68,9 +71,11 @@
         {{ publication.year }}
     </year>
     <ratings>
-    {% for rating in publication.rating_set.all %}
-        <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
-    {% endfor %}
+        {% for rating in publication.rating_set.all %}
+        <rating>
+            <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
+        </rating>
+        {% endfor %}
     </ratings>
     <owner>
         <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
@@ -117,7 +122,9 @@
     </tags>
     <keywords>
         {% for keyword in publication.keywords.all %}
+        <keyword>
             <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}" ></atom:link>
+        </keyword>
         {% endfor %}
     </keywords>
     <referencematerials>
