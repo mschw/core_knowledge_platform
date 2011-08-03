@@ -335,9 +335,9 @@ class XmlInserter(Inserter):
             publication.note = parsed_data['note']
             publication.year = parsed_data['year']
             owner_id = self._get_id_from_atom_link(parsed_data['owner'])
-            if publication:
+            xml_owner = User.objects.get(id=owner_id)
+            if publication_id:
                 current_owner = User.objects.get(id=publication.owner.id)
-                xml_owner = User.objects.get(id=owner_id)
                 if requester:
                     if current_owner == requester:
                         publication.owner = requester
@@ -346,7 +346,10 @@ class XmlInserter(Inserter):
                 else:
                     publication.owner = xml_owner
             else:
-                publication.owner = requester
+                if requester:
+                    publication.owner = requester
+                elif xml_owner:
+                    publication.owner = xml_owner 
             publication.save()
             for a in parsed_data['authors']:
                 author_id = self._get_id_from_atom_link(a)
