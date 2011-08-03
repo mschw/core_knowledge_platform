@@ -334,7 +334,7 @@ class XmlInserter(Inserter):
             publication.month = parsed_data['month']
             publication.note = parsed_data['note']
             publication.year = parsed_data['year']
-            owner_id = self._get_id_from_atom_link(parsed_data['requester'])
+            owner_id = self._get_id_from_atom_link(parsed_data['owner'])
             if owner_id:
                 xml_owner = User.objects.get(id=owner_id)
                 if requester:

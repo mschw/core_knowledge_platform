@@ -590,7 +590,7 @@ class Publications(RestView):
                 inserted_publications = insert.insert_bibtex_publication(data, requester)
             else:
                 inserter = insert.get_inserter(content_type)
-                inserted_publications = inserter.modify_publication(data, owner=requester)
+                inserted_publications = inserter.modify_publication(data, requester=requester)
             values = {'publication_list': inserted_publications}
             response = RestView.render_response(request, 'publications', values)
             response.status_code = RestView.CREATED_STATUS
@@ -615,7 +615,7 @@ class PublicationDetail(RestView):
             inserted_publication = insert.insert_bibtex_publication(data, requester)
         else:
             inserter = insert.get_inserter(content_type)
-            inserted_publication = inserter.modify_publication(data, publication_id, requester)
+            inserted_publication = inserter.modify_publication(data, publication_id, requester=requester)
         return inserted_publication
 
     @staticmethod
@@ -1052,11 +1052,8 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             auth.login(request, user)
-            response = HttpResponse("""<?xml version="1.0" encoding="utf-8"?>
-    <login>
-        <username>%s</username>
-        <password>--</password>
-    </login>""" % (username))
+            values = {'user': user}
+            response = RestView.render_response(request, 'login', values)
             response['Content-Type'] = 'application/xml'
             return response
         else:
