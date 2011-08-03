@@ -305,7 +305,7 @@ class XmlInserter(Inserter):
                     % (template_id))
 
 
-    def modify_publication(self, data, publication_id=None, owner=None):
+    def modify_publication(self, data, publication_id=None, requester=None):
         """Create or modify a publication object according to the specified value."""
         parsed_data = self._parse_xml_to_dict(data)
         if publication_id:
@@ -333,18 +333,18 @@ class XmlInserter(Inserter):
         publication.month = parsed_data['month']
         publication.note = parsed_data['note']
         publication.year = parsed_data['year']
-        owner_id = self._get_id_from_atom_link(parsed_data['owner'])
+        owner_id = self._get_id_from_atom_link(parsed_data['requester'])
         if owner_id:
             xml_owner = User.objects.get(id=owner_id)
-            if owner:
-                if xml_owner == owner:
-                    publication.owner = owner
+            if requester:
+                if xml_owner == requester:
+                    publication.owner = requester
                 else:
-                    raise InvalidDataException("Can not change owner of a publication.")
+                    raise InvalidDataException("Only the owner can change the publication.")
             else:
                 publication.owner = xml_owner
         else:
-            publication.owner = owner
+            publication.owner = requester
         publication.save()
         for a in parsed_data['authors']:
             author_id = self._get_id_from_atom_link(a)
