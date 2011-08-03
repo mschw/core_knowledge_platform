@@ -1,4 +1,5 @@
 import pdb
+from django.contrib.auth.models import Group
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from core_web_service.models import Comment, Esteem, PaperGroup, UserProfile
@@ -13,11 +14,13 @@ def handle_assignment_to_papergroup_groups(sender, **kwargs):
     papergroup = kwargs['instance']
     editors = papergroup.editors
     for editor in editors.all():
-        editor.groups.add('editor')
+        editor_group, created = Group.objects.get_or_create(name='editor')
+        editor.groups.add(editor_group)
         editor.save()
     referees = papergroup.referees
     for referee in referees.all():
-        referee.groups.add('referee')
+        referee_group, created = Group.objects.get_or_create(name='referee')
+        referee.groups.add(referee_group)
         referee.save()
 
 @receiver(pre_save, sender=UserProfile)
@@ -32,7 +35,6 @@ def automatically_create_esteem_for_new_user(sender, **kwargs):
         user_profile.esteem = esteem
 
 # TODO: calculate esteem based on comments.
-# FIXME: When a user that uploaded the document upvoted it you gain +20 esteem points.
 @receiver(post_save, sender=Vote)
 def recalculate_esteem_for_user(sender, **kwargs):
     """Use the information from a vote to recalculate the esteem of a user."""

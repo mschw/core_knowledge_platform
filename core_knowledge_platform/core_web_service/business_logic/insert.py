@@ -307,65 +307,76 @@ class XmlInserter(Inserter):
 
     def modify_publication(self, data, publication_id=None, requester=None):
         """Create or modify a publication object according to the specified value."""
-        parsed_data = self._parse_xml_to_dict(data)
-        if publication_id:
-            publication = Publication.objects.get(id=publication_id)
-        else:
-            publication = Publication()
-        publication.address = parsed_data['address']
-        publication.booktitle = parsed_data['booktitle']
-        publication.chapter = parsed_data['chapter']
-        publication.edition = parsed_data['edition']
-        publication.editor = parsed_data['editor']
-        publication.how_published = parsed_data['howpublished']
-        publication.institution = parsed_data['institution']
-        publication.isbn = parsed_data['isbn']
-        publication.journal = parsed_data['journal']
-        publication.number = parsed_data['number']
-        publication.organization = parsed_data['organization']
-        publication.pages = parsed_data['pages']
-        publication.publisher = parsed_data['publisher']
-        publication.review_status = parsed_data['review_status']
-        publication.series = parsed_data['series']
-        publication.publication_type = parsed_data['publicationtype']
-        publication.volume = parsed_data['volume']
-        publication.title = parsed_data['title']
-        publication.month = parsed_data['month']
-        publication.note = parsed_data['note']
-        publication.year = parsed_data['year']
-        owner_id = self._get_id_from_atom_link(parsed_data['requester'])
-        if owner_id:
-            xml_owner = User.objects.get(id=owner_id)
-            if requester:
-                if xml_owner == requester:
-                    publication.owner = requester
-                else:
-                    raise InvalidDataException("Only the owner can change the publication.")
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            if publication_id:
+                publication = Publication.objects.get(id=publication_id)
             else:
-                publication.owner = xml_owner
-        else:
-            publication.owner = requester
-        publication.save()
-        for a in parsed_data['authors']:
-            author_id = self._get_id_from_atom_link(a)
-            if author_id:
-                author = Author.objects.get(id=author_id)
-                publication.authors.add(author)
-        for t in parsed_data['tags']:
-            tag_id = self._get_id_from_atom_link(t)
-            if tag_id:
-                tag = Tag.objects.get(id=tag_id)
-                publication.tags.add(tag)
-        for r in parsed_data['referencematerials']:
-            material_id = self._get_id_from_atom_link(r)
-            if material_id:
-                material = ReferenceMaterial.objects.get(id=material_id)
-                publication.reference_material_set.add(material)
-        for f in parsed_data['fields']:
-            key = f.tag
-            furtherfield, created = FurtherField.objects.get_or_create(key=key, publication=publication)
-        publication.save()
-        return publication
+                publication = Publication()
+            publication.address = parsed_data['address']
+            publication.booktitle = parsed_data['booktitle']
+            publication.chapter = parsed_data['chapter']
+            publication.edition = parsed_data['edition']
+            publication.editor = parsed_data['editor']
+            publication.how_published = parsed_data['howpublished']
+            publication.institution = parsed_data['institution']
+            publication.isbn = parsed_data['isbn']
+            publication.journal = parsed_data['journal']
+            publication.number = parsed_data['number']
+            publication.organization = parsed_data['organization']
+            publication.pages = parsed_data['pages']
+            publication.publisher = parsed_data['publisher']
+            publication.review_status = parsed_data['review_status']
+            publication.series = parsed_data['series']
+            publication.publication_type = parsed_data['publicationtype']
+            publication.volume = parsed_data['volume']
+            publication.title = parsed_data['title']
+            publication.month = parsed_data['month']
+            publication.note = parsed_data['note']
+            publication.year = parsed_data['year']
+            owner_id = self._get_id_from_atom_link(parsed_data['requester'])
+            if owner_id:
+                xml_owner = User.objects.get(id=owner_id)
+                if requester:
+                    if xml_owner == requester:
+                        publication.owner = requester
+                    else:
+                        raise InvalidDataException("Only the owner can change the publication.")
+                else:
+                    publication.owner = xml_owner
+            else:
+                publication.owner = requester
+            publication.save()
+            for a in parsed_data['authors']:
+                author_id = self._get_id_from_atom_link(a)
+                if author_id:
+                    author = Author.objects.get(id=author_id)
+                    publication.authors.add(author)
+            for t in parsed_data['tags']:
+                tag_id = self._get_id_from_atom_link(t)
+                if tag_id:
+                    tag = Tag.objects.get(id=tag_id)
+                    publication.tags.add(tag)
+            for r in parsed_data['referencematerials']:
+                material_id = self._get_id_from_atom_link(r)
+                if material_id:
+                    material = ReferenceMaterial.objects.get(id=material_id)
+                    publication.reference_material_set.add(material)
+            for f in parsed_data['fields']:
+                key = f.tag
+                furtherfield, created = FurtherField.objects.get_or_create(key=key, publication=publication)
+            publication.save()
+            return publication
+        except Author.DoesNotExist:
+            raise InvalidDataException("The author provided does not exist (id: %s)"
+                    % (author_id))
+        except Tag.DoesNotExist:
+
+            raise InvalidDataException("The tag provided does not exist (id: %s)"
+                    % (tag_id))
+        except ReferenceMaterial.DoesNotExist:
+            raise InvalidDataException("The reference material provided does not exist (id: %s)"
+                    % (material_id))
 
     def modify_rating(self, data, rating_id=None):
         """Create or modify a rating object according to the specified value."""

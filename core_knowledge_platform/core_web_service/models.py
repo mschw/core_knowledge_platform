@@ -162,7 +162,7 @@ class UserProfile(models.Model):
     research_areas = models.ManyToManyField(ResearchArea, blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s - %s - %s' % (self.id, self.user.id, self.user.username)
+        return u'%s - %s' % (self.user.id, self.user.username)
 
 
 class ProfileField(models.Model):
