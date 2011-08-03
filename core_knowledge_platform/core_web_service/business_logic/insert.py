@@ -131,7 +131,9 @@ class XmlInserter(Inserter):
                     for subnode in node:
                         parsed_dict[tag].append(subnode)
                 else:
-                    parsed_dict[tag] = node.text.strip()
+                    text = node.text
+                    if text:
+                        parsed_dict[tag] = text.strip()
             return parsed_dict
         except ParseError, e:
             raise InvalidDataException("No data was provided that could be inserted")
