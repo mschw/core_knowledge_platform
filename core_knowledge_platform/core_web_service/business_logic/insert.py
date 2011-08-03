@@ -335,10 +335,11 @@ class XmlInserter(Inserter):
             publication.note = parsed_data['note']
             publication.year = parsed_data['year']
             owner_id = self._get_id_from_atom_link(parsed_data['owner'])
-            if owner_id:
+            if publication:
+                current_owner = User.objects.get(id=publication.owner.id)
                 xml_owner = User.objects.get(id=owner_id)
                 if requester:
-                    if xml_owner == requester:
+                    if current_owner == requester:
                         publication.owner = requester
                     else:
                         raise InvalidDataException("Only the owner can change the publication.")
