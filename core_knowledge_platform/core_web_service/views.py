@@ -584,16 +584,13 @@ class Publications(RestView):
         try:
             content_type = RestView.get_content_type(request)
             data = request.raw_post_data
-            owner = request.user
+            requester = request.user
             inserted_publications = None
-            if not owner:
-                # FIXME: owner is person to issue request.
-                owner = User.get_or_create(name='Anonymous')
             if 'application/x-bibtex' in content_type:
-                inserted_publications = insert.insert_bibtex_publication(data, owner)
+                inserted_publications = insert.insert_bibtex_publication(data, requester)
             else:
                 inserter = insert.get_inserter(content_type)
-                inserted_publications = inserter.modify_publication(data, owner=owner)
+                inserted_publications = inserter.modify_publication(data, owner=requester)
             values = {'publication_list': inserted_publications}
             response = RestView.render_response(request, 'publications', values)
             response.status_code = RestView.CREATED_STATUS
@@ -613,12 +610,12 @@ class PublicationDetail(RestView):
     def _insert_publication(request, publication_id):
         content_type = RestView.get_content_type(request)
         data = request.raw_post_data
-        owner = request.user
+        requester = request.user
         if 'application/x-bibtex' in content_type:
-            inserted_publication = insert.insert_bibtex_publication(data, owner)
+            inserted_publication = insert.insert_bibtex_publication(data, requester)
         else:
             inserter = insert.get_inserter(content_type)
-            inserted_publication = inserter.modify_publication(data, publication_id, owner)
+            inserted_publication = inserter.modify_publication(data, publication_id, requester)
         return inserted_publication
 
     @staticmethod
