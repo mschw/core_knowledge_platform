@@ -598,6 +598,7 @@ class Publications(RestView):
             if type(inserted_publications) == type(Publication):
                 response['Location'] = "%s/publication/%s" % (service_url, inserted_publications.id)
         except InvalidDataException, e:
+            logger.error(e)
             response = HttpResponse(e.message)
             response.status_code = RestView.BAD_REQUEST_STATUS
         return response
@@ -644,6 +645,7 @@ class PublicationDetail(RestView):
             response = RestView.render_response(request, 'publication', values)
             response.status_code = RestView.CREATED_STATUS
         except InvalidDataException, e:
+            logger.error(e)
             response = HttpResponse(e.message)
             response.status_code = RestView.BAD_REQUEST_STATUS
         return response
