@@ -143,7 +143,8 @@ class XmlInserter(Inserter):
         except ParseError, e:
             logger.error(e)
             logger.error(e.message)
-            raise InvalidDataException("No data was provided that could be inserted")
+            raise InvalidDataException("The data provided was not a valid XML\
+                    document. Please validate your xml and try again.")
 
     def modify_author(self, data, author_id=None):
         """Create or modify an author object according to the specified value."""
@@ -183,6 +184,8 @@ class XmlInserter(Inserter):
         except Publication.DoesNotExist:
             raise InvalidDataException("The publication provided does not exist (id: %s)" 
                     % publication_id)
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_esteem(self, data, esteem_id=None):
         """Create or modify an esteem object according to the specified value."""
@@ -201,85 +204,96 @@ class XmlInserter(Inserter):
         except User.DoesNotExist:
             raise InvalidDataException("The user provided does not exist (id: %s)"
                     % (user_id))
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_keyword(self, data, keyword_id=None):
         """Create or modify a keyword object according to the specified values."""
-        parsed_data = self._parse_xml_to_dict(data)
-        if keyword_id:
-            keyword = Keyword.objects.get(id=keyword_id)
-        else:
-            keyword = Keyword()
-        keyword.keyword = parsed_data['keyword']
-        keyword.save()
-        return keyword
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            if keyword_id:
+                keyword = Keyword.objects.get(id=keyword_id)
+            else:
+                keyword = Keyword()
+            keyword.keyword = parsed_data['keyword']
+            keyword.save()
+            return keyword
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_papergroup(self, data, papergroup_id=None):
         """Create or modify a papergroup object according to the specified value."""
         # TODO: check if editors are added / removed.
-        parsed_data = self._parse_xml_to_dict(data)
-        if papergroup_id:
-            papergroup = PaperGroup.objects.get(id=papergroup_id)
-            editors = papergroup.editors.all()
-            referees = papergroup.editors.all()
-        else:
-            papergroup = PaperGroup()
-        papergroup.title = parsed_data['title']
-        papergroup.description = parsed_data['description']
-        papergroup.blind_review = parsed_data['blind_review']
-        papergroup.save()
-        for e in parsed_data['editors']:
-            try:
-                editor_id = self._get_id_from_atom_link(e)
-                editor = User.objects.get(id=editor_id)
-                papergroup.editors.add(editor)
-            except User.DoesNotExist:
-                raise InvalidDataException("The user provided does not exist (id: %s)"
-                        % (editor_id))
-        editors = papergroup.editors
-        for r in parsed_data['referees']:
-            try:
-                referee_id = self._get_id_from_atom_link(r)
-                referee = User.objects.get(id=referee_id)
-                papergroup.referees.add(referee)
-            except User.DoesNotExist:
-                raise InvalidDataException("The user provided does not exist (id: %s)"
-                        % (referee_id))
-        referees = papergroup.referees
-        for p in parsed_data['publications']:
-            try:
-                publication_id = self._get_id_from_atom_link(p)
-                publication = Publication.objects.get(id=publication_id)
-                papergroup.publications.add(publication)
-            except Publication.DoesNotExist:
-                raise InvalidDataException("The publication provided does not exist (id: %s)"
-                        % (publication_id))
-        for t in parsed_data['tags']:
-            try:
-                tag_id = self._get_id_from_atom_link(t)
-                tag = Tag.objects.get(id=tag_id)
-                papergroup.tags.add(tag)
-            except Tag.DoesNotExist:
-                raise InvalidDataException("The tag provided does not exist (id: %s)"
-                        % (tag_id))
-        if editors:
-            for editor in editors.all():
-                check_priviledges_for_editor(editor)
-        if referees:
-            for referee in referees.all():
-                check_priviledges_for_referee(referee)
-        return papergroup
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            if papergroup_id:
+                papergroup = PaperGroup.objects.get(id=papergroup_id)
+                editors = papergroup.editors.all()
+                referees = papergroup.editors.all()
+            else:
+                papergroup = PaperGroup()
+            papergroup.title = parsed_data['title']
+            papergroup.description = parsed_data['description']
+            papergroup.blind_review = parsed_data['blind_review']
+            papergroup.save()
+            for e in parsed_data['editors']:
+                try:
+                    editor_id = self._get_id_from_atom_link(e)
+                    editor = User.objects.get(id=editor_id)
+                    papergroup.editors.add(editor)
+                except User.DoesNotExist:
+                    raise InvalidDataException("The user provided does not exist (id: %s)"
+                            % (editor_id))
+            editors = papergroup.editors
+            for r in parsed_data['referees']:
+                try:
+                    referee_id = self._get_id_from_atom_link(r)
+                    referee = User.objects.get(id=referee_id)
+                    papergroup.referees.add(referee)
+                except User.DoesNotExist:
+                    raise InvalidDataException("The user provided does not exist (id: %s)"
+                            % (referee_id))
+            referees = papergroup.referees
+            for p in parsed_data['publications']:
+                try:
+                    publication_id = self._get_id_from_atom_link(p)
+                    publication = Publication.objects.get(id=publication_id)
+                    papergroup.publications.add(publication)
+                except Publication.DoesNotExist:
+                    raise InvalidDataException("The publication provided does not exist (id: %s)"
+                            % (publication_id))
+            for t in parsed_data['tags']:
+                try:
+                    tag_id = self._get_id_from_atom_link(t)
+                    tag = Tag.objects.get(id=tag_id)
+                    papergroup.tags.add(tag)
+                except Tag.DoesNotExist:
+                    raise InvalidDataException("The tag provided does not exist (id: %s)"
+                            % (tag_id))
+            if editors:
+                for editor in editors.all():
+                    check_priviledges_for_editor(editor)
+            if referees:
+                for referee in referees.all():
+                    check_priviledges_for_referee(referee)
+            return papergroup
+        except KeyError, e:
+            raise InvalidDataException('The data you sent was missing an attribute')
 
     def modify_peerreviewtemplate(self, data, template_id=None):
         """Create or modify a template object according to the specified value."""
-        parsed_data = self._parse_xml_to_dict(data)
-        if template_id:
-            template = PeerReviewTemplate.objects.get(id=template_id)
-        else:
-            template = PeerReviewTemplate()
-        template.template_text = parsed_data['templatetext']
-        template.template_binary_path = parsed_data['binarypath']
-        template.save()
-        return template
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            if template_id:
+                template = PeerReviewTemplate.objects.get(id=template_id)
+            else:
+                template = PeerReviewTemplate()
+            template.template_text = parsed_data['templatetext']
+            template.template_binary_path = parsed_data['binarypath']
+            template.save()
+            return template
+        except KeyError, e:
+            raise InvalidDataException('The data sent was missing an attribute')
 
     def modify_peerreview(self, data, peer_review_id=None):
         """Create or modify a peer review object according to the specified value."""
@@ -308,6 +322,8 @@ class XmlInserter(Inserter):
         except PeerReviewTemplate.DoesNotExist:
             raise InvalidDataException("The template provided does not exist (id: %s)"
                     % (template_id))
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
 
     def modify_publication(self, data, publication_id=None, requester=None):
@@ -389,6 +405,8 @@ class XmlInserter(Inserter):
         except ReferenceMaterial.DoesNotExist:
             raise InvalidDataException("The reference material provided does not exist (id: %s)"
                     % (material_id))
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_rating(self, data, rating_id=None):
         """Create or modify a rating object according to the specified value."""
@@ -408,6 +426,8 @@ class XmlInserter(Inserter):
         except Publication.DoesNotExist:
             raise InvalidDataException("The publication provided does not exist (id: %s)"
                     % (publication_id))
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_reference_material(self, data, material_id=None):
         """Create or modify a reference material object according to the specified value."""
@@ -427,39 +447,47 @@ class XmlInserter(Inserter):
         except Publication.DoesNotExist:
             raise InvalidDataException("The publication provided does not exist (id: %s)"
                     % (publication_id))
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_tag(self, data, tag_id=None):
         """Create or modify a tag object according to the specified value."""
-        parsed_data = self._parse_xml_to_dict(data)
-        if tag_id:
-            tag = Tag.objects.get(id=tag_id)
-        else:
-            tag = Tag()
-        tag.name = parsed_data['name']
-        tag.description = parsed_data['description']
-        tag.save()
-        return tag
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            if tag_id:
+                tag = Tag.objects.get(id=tag_id)
+            else:
+                tag = Tag()
+            tag.name = parsed_data['name']
+            tag.description = parsed_data['description']
+            tag.save()
+            return tag
+        except KeyError, e:
+            raise InvalidDataException('The data sent was missing an attribute!')
 
     def modify_user(self, data, user_id=None):
-        parsed_data = self._parse_xml_to_dict(data)
-        if user_id:
-            user = User.objects.get(id=user_id)
-        else:
-            user = User.objects.create_user(parsed_data['username'],
-                    parsed_data['email'], parsed_data['password'])
-        user_profile = user.profile
-        user_profile.degree = parsed_data['degree']
-        user_profile.institution = parsed_data['institution']
-        fields = parsed_data['fields']
-        user_profile.save()
-        for item in fields:
-            field, created = ProfileField.objects.get_or_create(value=item,
-                    user_profile=user_profile)
-            field.userprofile = user_profile
-            field.save()
-        user.save()
-        user_profile.save()
-        return user
+        try:
+            parsed_data = self._parse_xml_to_dict(data)
+            if user_id:
+                user = User.objects.get(id=user_id)
+            else:
+                user = User.objects.create_user(parsed_data['username'],
+                        parsed_data['email'], parsed_data['password'])
+            user_profile = user.profile
+            user_profile.degree = parsed_data['degree']
+            user_profile.institution = parsed_data['institution']
+            fields = parsed_data['fields']
+            user_profile.save()
+            for item in fields:
+                field, created = ProfileField.objects.get_or_create(value=item,
+                        user_profile=user_profile)
+                field.userprofile = user_profile
+                field.save()
+            user.save()
+            user_profile.save()
+            return user
+        except KeyError, e:
+            raise InvalidDataException('The data sent was missing an attribute!')
 
     def modify_vote(self, data, vote_id=None):
         parsed_data = self._parse_xml_to_dict(data)
@@ -482,7 +510,8 @@ class XmlInserter(Inserter):
         except User.DoesNotExist:
             raise InvalidDataException("The user provided does not exist (id: %s)"
                     % (caster_id))
-
+        except KeyError, e:
+            raise InvalidDataException("The data sent was missing an attribute!")
 
     def _get_namespace(self, element):
         """Return the main namespace for a given ElementTree.element."""
