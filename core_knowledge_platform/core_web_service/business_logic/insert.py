@@ -376,6 +376,9 @@ class XmlInserter(Inserter):
                 furtherfield, created = FurtherField.objects.get_or_create(key=key, publication=publication)
             publication.save()
             return publication
+        except User.DoesNotExist:
+            raise InvalidDataException("The user provided does not exist (id: %s)"
+                    % (owner_id))
         except Author.DoesNotExist:
             raise InvalidDataException("The author provided does not exist (id: %s)"
                     % (author_id))

@@ -584,6 +584,7 @@ class Publications(RestView):
         try:
             content_type = RestView.get_content_type(request)
             data = request.raw_post_data
+            logger.info("Attempt to insert publication: %s" % (data))
             requester = request.user
             inserted_publications = None
             if 'application/x-bibtex' in content_type:
@@ -610,6 +611,7 @@ class PublicationDetail(RestView):
     def _insert_publication(request, publication_id):
         content_type = RestView.get_content_type(request)
         data = request.raw_post_data
+        logger.info("Attempt to insert publication: %s" % (data))
         requester = request.user
         if 'application/x-bibtex' in content_type:
             inserted_publication = insert.insert_bibtex_publication(data, requester)

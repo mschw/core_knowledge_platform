@@ -119,7 +119,7 @@ publication_xml = """<publication xmlns="http://du865.o1.gondor.io" xmlns:atom="
 <year>2006</year>
 <ratings></ratings>
 <owner>
-<atom:link rel="owner" type="application/xml" href="http://du865.o1.gondor.io/user/7"/>
+<atom:link rel="owner" type="application/xml" href="http://du865.o1.gondor.io/user/3"/>
 </owner>
 <authors>
 <author>
@@ -128,7 +128,7 @@ publication_xml = """<publication xmlns="http://du865.o1.gondor.io" xmlns:atom="
 </authors>
 <comments>
 <comment>
-<atom:link rel="comment" type="application/xml" href="http://du865.o1.gondor.io/comment/0"/>
+<atom:link rel="comment" type="application/xml" href="http://du865.o1.gondor.io/comment/1"/>
 </comment>
 </comments>
 <tags></tags>
