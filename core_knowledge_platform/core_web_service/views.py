@@ -268,21 +268,26 @@ class Comments(RestView):
     @staticmethod
     def GET(request, publication_id):
         """Return a list of all comments for a given publication."""
-        try:
-            publication = Publication.objects.get(id=publication_id)
-            comment = Comment.objects.get(publication=publication)
-            values = {'comment': comment}
-            response = RestView.render_response(request, 'comments', values)
-        except Publication.DoesNotExist:
-            response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
-            response.status_code = RestView.NOT_FOUND_STATUS
+        if publication_id:
+            try:
+                publication = Publication.objects.get(id=publication_id)
+                comment = Comment.objects.get(publication=publication)
+                values = {'comment': comment}
+                response = RestView.render_response(request, 'comments', values)
+            except Publication.DoesNotExist:
+                response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
+                response.status_code = RestView.NOT_FOUND_STATUS
+        else:
+                comment = Comment.objects.all()
+                values = {'comment': comment}
+                response = RestView.render_response(request, 'comments', values)
         return response
 
     @staticmethod
     @csrf_exempt
     @login_required(login_url='/user/login')
     def POST(request, publication_id):
-        """docstring for POST"""
+        """Insert a new comment."""
         user = request.user
         return RestView.insert_object(request, 'comment', user_id=user.id)
 
