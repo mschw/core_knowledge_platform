@@ -266,7 +266,7 @@ class Comments(RestView):
     allowed_methods = ("GET", "POST")
 
     @staticmethod
-    def GET(request, publication_id):
+    def GET(request, publication_id=None):
         """Return a list of all comments for a given publication."""
         if publication_id:
             try:
