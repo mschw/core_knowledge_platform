@@ -1044,6 +1044,7 @@ def login(request):
     """Log a user in."""
     xml = insert.XmlInserter()
     data = request.raw_post_data
+    logger.info("Login")
     try:
         data = xml._parse_xml_to_dict(data)
         username = data['username']
@@ -1064,7 +1065,8 @@ def login(request):
     except InvalidDataException, e:
         logger.info("Login failed.")
         logger.error(e)
-        response = HttpResponse("Invalid credentials.")
+        logger.error(e.message)
+        response = HttpResponse("Data could not be parsed.")
         response.status_code = RestView.BAD_REQUEST_STATUS
         return response
 

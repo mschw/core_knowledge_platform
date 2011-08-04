@@ -1,8 +1,8 @@
 import cookielib, urllib2
 from urllib2 import HTTPError
 
-base_url = 'http://127.0.0.1:8000/'
-#base_url = 'http://du865.o1.gondor.io/'
+#base_url = 'http://127.0.0.1:8000/'
+base_url = 'http://du865.o1.gondor.io/'
 cookies = cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
 headers = [('accept', 'application/xml'), ('content-type', 'application/xml'),]
@@ -18,13 +18,19 @@ def print_response(response):
 def login(username, password):
     """log a client in."""
     login_xml = """<?xml version="1.0" encoding="utf-8"?>
-    <login>
+    <login xmlns:atom="http://www.w3.org/2005/atom">
         <username>%s</username>
         <password>%s</password>
-    </login>""" % (username, password)
+        <user>
+            <atom:link rel='user' type='application/xml' href='%s/user/0'/>
+        </user>
+    </login>""" % (username, password, base_url)
     url = base_url + 'user/login/'
-    response = opener.open(url, login_xml)
-    print_response(response)
+    try:
+        response = opener.open(url, login_xml)
+        print_response(response)
+    except HTTPError, e:
+        print "Error: %s\n%s" % (e, e.read())
 
 def post_resource(url, xml, content_type):
     try:

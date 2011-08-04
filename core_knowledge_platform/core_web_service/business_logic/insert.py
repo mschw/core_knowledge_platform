@@ -3,10 +3,13 @@ from core_web_service.business_logic.access import check_priviledges_for_referee
 from core_web_service.business_logic.access import check_priviledges_for_editor
 from abc import ABCMeta, abstractmethod
 import pdb
+import logging
 from xml.etree.ElementTree import XML, ParseError
 
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Rating, PeerReview, PeerReviewTemplate, Tag, Esteem, Vote, Author, Publication, ProfileField, FurtherField, Keyword, User, Comment, PaperGroup, ReferenceMaterial
+
+logger = logging.getLogger('myproject.custom')
 
 
 class MissingValueException(Exception):
@@ -138,6 +141,8 @@ class XmlInserter(Inserter):
                         parsed_dict[tag] = ""
             return parsed_dict
         except ParseError, e:
+            logger.error(e)
+            logger.error(e.message)
             raise InvalidDataException("No data was provided that could be inserted")
 
     def modify_author(self, data, author_id=None):
