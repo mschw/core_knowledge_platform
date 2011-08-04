@@ -386,7 +386,7 @@ class XmlInserter(Inserter):
                 material_id = self._get_id_from_atom_link(r)
                 if material_id:
                     material = ReferenceMaterial.objects.get(id=material_id)
-                    publication.reference_material_set.add(material)
+                    publication.referencematerial_set.add(material)
             for f in parsed_data['fields']:
                 key = f.tag
                 furtherfield, created = FurtherField.objects.get_or_create(key=key, publication=publication)
