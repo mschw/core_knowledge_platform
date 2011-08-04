@@ -406,6 +406,7 @@ class XmlInserter(Inserter):
             raise InvalidDataException("The reference material provided does not exist (id: %s)"
                     % (material_id))
         except KeyError, e:
+            logger.error(e)
             raise InvalidDataException("The data sent was missing an attribute!")
 
     def modify_rating(self, data, rating_id=None):
