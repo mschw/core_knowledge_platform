@@ -286,7 +286,7 @@ class Comments(RestView):
     @staticmethod
     @csrf_exempt
     @login_required(login_url='/user/login')
-    def POST(request, publication_id):
+    def POST(request):
         """Insert a new comment."""
         user = request.user
         return RestView.insert_object(request, 'comment', user_id=user.id)
