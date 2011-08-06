@@ -24,6 +24,7 @@ admin.site.register(Comment, CommentAdmin)
 class UserProfileInline(admin.StackedInline):
     """Defines the user profile as an inline element for the user model."""
     model = UserProfile
+    exclude = ['esteem']
     max_num = 1
     can_delete = False
     filter_horizontal = ['research_areas']
