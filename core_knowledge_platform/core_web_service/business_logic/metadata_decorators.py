@@ -8,6 +8,10 @@ import logging
 
 logger = logging.getLogger('myproject.custom')
 
+def built_citeseer_uri(doi):
+    """Built a correct uri from the provided doi and base-url."""
+    DOI_PREFIX = 'oai:CiteSeerXPSU:'
+    return DOI_PREFIX + doi
 
 class OaiPmhDecorator(object):
     """Query a web service and add metadata to an object.
@@ -15,10 +19,9 @@ class OaiPmhDecorator(object):
     Will query a web service that supports the OAI-PMH protocol and add information
     to the object."""
     
-    DOI_PREFIX = 'oai:CiteSeerXPSU:'
     META_DATA_PREFIX = 'oai_dc'
 
-    def __init__(self, url=None, expected_meta_data=None):
+    def __init__(self, url=None, expected_meta_data=None, built_uri=None):
         """Create a decorator.
 
         Arguments:
@@ -35,6 +38,10 @@ class OaiPmhDecorator(object):
             self.expected_meta_data = expected_meta_data
         else:
             self.expected_meta_data = ['identifier', 'source']
+        if built_uri:
+            self.built_uri = built_uri
+        else:
+            self.built_uri = built_citeseer_uri
         registry = MetadataRegistry()
         registry.registerReader(OaiPmhDecorator.META_DATA_PREFIX, oai_dc_reader)
         self.oai_client = Client(self.citeseer_url, registry)
@@ -42,7 +49,7 @@ class OaiPmhDecorator(object):
     def decorate_publication(self, publication):
         """Decorate a publication with the metadata for this object."""
         decorated_publication = None
-        doi = OaiPmhDecorator.DOI_PREFIX + publication.doi
+        doi = self.built_uri(publication.doi)
         if doi:
             metadata = self.query_service(doi, publication)
             self.add_decoration_to_publication(publication, metadata)
