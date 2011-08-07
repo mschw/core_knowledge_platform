@@ -1,8 +1,8 @@
 import cookielib, urllib2
 from urllib2 import HTTPError
 
-#base_url = 'http://127.0.0.1:8000/'
-base_url = 'http://du865.o1.gondor.io/'
+base_url = 'http://127.0.0.1:8000/'
+#base_url = 'http://du865.o1.gondor.io/'
 cookies = cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
 headers = [('accept', 'application/xml'), ('content-type', 'application/xml'),]
@@ -59,26 +59,7 @@ def get_resource(url):
     response = opener.open(url)
     print_response(response)
 
-login('amir', 'amiradmin')
+login('testuser', 'django')
 
-#data = file("entries.bib").read()
-#post_resource(base_url + 'publication/', data, 'application/x-bibtex')
-comment_xml = """<?xml version="1.0" encoding="utf-8"?>
-<comment xmlns="http://url/"
-    xmlns:atom="http://www.w3.org/2005/atom">
-    <title>
-        A Comment
-    </title>
-    <text>
-        Text
-    </text>
-    <publication>
-        <atom:link rel="publication" type="application/xml" href="http://test/publication/1"/>
-    </publication>
-    <user>
-            <atom:link rel="user" type="application/xml" href="http://test/user/1"/>
-    </user>
-    <votes>
-    </votes>
-</comment>"""
-post_resource(base_url + 'comment/', comment_xml, 'application/xml')
+data = file("entries.bib").read()
+post_resource(base_url + 'publication/', data, 'application/x-bibtex')

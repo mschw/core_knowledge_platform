@@ -18,9 +18,11 @@
     </user>
     <votes>
         {% for vote in comment.vote_set.all %}
+        {% if not vote.votetype == 2 %}
         <vote>
                 <atom:link rel="vote" type="application/xml" href="http://{{ url }}/vote/{{ vote.id }}"/>
         </vote>
+        {% endif %}
         {% endfor %}
     </votes>
 </comment>

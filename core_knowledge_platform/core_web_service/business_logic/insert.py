@@ -1,4 +1,3 @@
-from core_web_service.models import Vote
 from core_web_service.business_logic.access import check_priviledges_for_referee
 from core_web_service.business_logic.access import check_priviledges_for_editor
 from abc import ABCMeta, abstractmethod
@@ -7,19 +6,9 @@ import logging
 from xml.etree.ElementTree import XML, ParseError
 
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
-from core_web_service.models import Rating, PeerReview, PeerReviewTemplate, Tag, Esteem, Vote, Author, Publication, ProfileField, FurtherField, Keyword, User, Comment, PaperGroup, ReferenceMaterial
+from core_web_service.models import Rating, PeerReview, PeerReviewTemplate, Tag, Esteem, Vote, Author, Publication, ProfileField, FurtherField, Keyword, User, Comment, PaperGroup, ReferenceMaterial, MissingValueException
 
 logger = logging.getLogger('myproject.custom')
-
-
-class MissingValueException(Exception):
-    """Raise when a publication is missing a required attribute."""
-    def __init__(self, message):
-        super(MissingValueException, self).__init__()
-        self.message = message
-    
-    def __str__(self):
-        return repr(self.message)
 
 
 class InvalidDataException(Exception):
@@ -563,11 +552,10 @@ def insert_bibtex_publication(bibtex, owner):
     parser = BibtexParser()
     entries = parser.bib_entry.searchString(bibtex)
     for entry in entries:
-        #insert_publication_from_list(entry)
-        publication = Publication()
-        publication.publication_type = entry.entry_type
         owner, created = User.objects.get_or_create(username=owner.username)
-        publication.owner = owner
+        publication_type = entry.entry_type
+        publication = Publication.objects.create(owner=owner,
+                publication_type = publication_type)
         authors = []
         further_fields = []
         keywords = []
@@ -575,23 +563,11 @@ def insert_bibtex_publication(bibtex, owner):
             key = field[0].lower()
             value = field[1]
             if key == "keywords":
-                #create keyword
-                kw = value.split(',')
-                for k in kw:
-                    keyw, created = Keyword.objects.get_or_create(keyword=k)
-                    keywords.append(keyw)
+                keywords = _insert_keywords(value)
             elif key == "author":
-                #create author
-                parsed_authors = [author.strip() for author in value.split('and')]
-                for author in parsed_authors:
-                    #a, created = Author.objects.get_or_create(name__icontains=author)
-                    #if created:
-                    a = Author()
-                    a.name = author
-                    a.save()
-                    authors.append(a)
+                authors = _insert_authors(value)
             else:
-                #insert into publication or furtherfield
+                #insert into publication if valid field, into furtherfield otherwise
                 try:
                     getattr(publication, key)
                     setattr(publication, key, value)
@@ -601,7 +577,7 @@ def insert_bibtex_publication(bibtex, owner):
                     further_field.value = value
                     further_fields.append(further_field)
         try:
-            validate_required_fields(publication)
+            publication.full_clean()
             publication.save()
             for field in further_fields:
                 field.publication = publication
@@ -617,47 +593,45 @@ def insert_bibtex_publication(bibtex, owner):
             raise e
     return inserted_publication
 
-required_fields_by_publication_type = {
-        'article': ['title', 'year'],
-        'book': ['publisher', 'title', 'year'],
-        'booklet': [],
-        'inbook': ['chapter', 'editor', 'pages', 'publisher', 'year'],
-        'incollection': ['booktitle', 'publisher', 'title', 'year'],
-        'manual': ['title'],
-        'masterthesis': ['school', 'title', 'year'],
-        'misc': [],
-        'phdthesis': ['school', 'title', 'year'],
-        'proceedings': ['title', 'year'],
-        'techreport': ['institution', 'title', 'year'],
-        'unpublished': ['note', 'title'],
-        }
+def _insert_keywords(keywords):
+    """Inserts the keywords from bibtex."""
+    words = keywords.split(',')
+    inserted_keywords = []
+    for word in words:
+        keyword, created = Keyword.objects.get_or_create(keyword=word)
+        inserted_keywords.append(keyword)
+    return inserted_keywords
 
-def validate_required_fields(publication):
-    """Check if a publication has all fields that are required according to its type.
-    
-    The required fields for a publication are based on the BibTeX standard that can
-    be found under: amath.colorado.edu/documentation/LaTeX/reference/faq/bibtex.pdf.
-    Arguments:
-        publication: the publication object to be validated.
-    """
-    publication_type = publication.publication_type.lower()
-    try:
-        fields = required_fields_by_publication_type[publication_type]
-    except KeyError:
-        return True
-    all_fields_present = True
-    errors = []
-    for field in fields:
+def _insert_authors(authors):
+    """Inserts the authors from bibtex."""
+    parsed_authors = [author.strip() for author in authors.split('and')]
+    inserted_authors = []
+    for author in parsed_authors:
+        author = _get_normalized_name(author)
         try:
-            attribute = getattr(publication, field)
-            if (attribute is None) or (len(attribute) == 0):
-                all_fields_present = False
-                errors.append('Publication of type %s is missing field %s' % (publication_type, field))
-        except AttributeError:
-            all_fields_present = False
-            errors.append('Publication of type %s is missing field %s' % (publication_type, field))
-    errors = "".join(errors)
-    if all_fields_present:
-        return True
+            inserted_author = Author.objects.get(name=author)
+        except Author.DoesNotExist:
+            inserted_author = Author.objects.create()
+            inserted_author.name = author
+            inserted_author.save()
+        #inserted_author, created = Author.objects.get_or_create(name__icontains=author)
+        #if created:
+        inserted_authors.append(inserted_author)
+    return inserted_authors
+
+def _get_normalized_name(name):
+    """Return a bibtex name as 'Firstname Lastname'."""
+    parts = name.split(',')
+    parts = [part.strip() for part in parts]
+    length = len(parts)
+    if length > 1:
+        # The supplied name is in BibTeX format:
+        # von Last, First
+        # von Last, Jr, First
+        if length == 2:
+            standard_name = parts[1] + " " + parts[0]
+        elif length == 3:
+            standard_name = parts[2] + " " + parts[0] + " " + parts[1]
     else:
-        raise MissingValueException(errors)
+        standard_name = parts[0]
+    return standard_name

@@ -1,9 +1,12 @@
 import pdb
+import logging
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from core_web_service.models import Comment, Esteem, PaperGroup, UserProfile
 from core_web_service.models import Vote
+
+logger = logging.getLogger('myproject.custom')
 
 
 """Module to act upon receiving signals from the django framework."""
@@ -42,21 +45,24 @@ def recalculate_esteem_for_user(sender, **kwargs):
     vote = kwargs['instance']
     comment = vote.comment
     publication = comment.publication
-    user = comment.user
-    old_esteem = user.profile.esteem.value
-    esteem = user.profile.esteem
-    if user:
-        publication = comment.publication
-        publication_owner = publication.owner
-        if vote.votetype == 0:
-            m = 1
-        else:
-            m = -1
-        caster = vote.caster
-        if caster == publication_owner:
-            new_esteem += 20 * m
-        else:
-            new_esteem += 5 * m
-    new_esteem = old_esteem + new_esteem
-    esteem.value = new_esteem
-    esteem.save()
+    try:
+        user = comment.user
+        old_esteem = user.profile.esteem.value
+        esteem = user.profile.esteem
+        if user:
+            publication = comment.publication
+            publication_owner = publication.owner
+            if vote.votetype == 0:
+                m = 1
+            else:
+                m = -1
+            caster = vote.caster
+            if caster == publication_owner:
+                new_esteem += 20 * m
+            else:
+                new_esteem += 5 * m
+        new_esteem = old_esteem + new_esteem
+        esteem.value = new_esteem
+        esteem.save()
+    except AttributeError, e:
+        logger.error(e)

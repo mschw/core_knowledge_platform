@@ -3,8 +3,9 @@ from core_web_service.models import Publication
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import QueryDict
-from core_web_service.business_logic.insert import insert_bibtex_publication, MissingValueException, validate_required_fields
+from core_web_service.business_logic.insert import insert_bibtex_publication
 from core_web_service.business_logic.search import build_query
+from core_knowledge_platform.core_web_service.models import MissingValueException
 
 class BusinessLogicTests(unittest.TestCase):
 
@@ -40,8 +41,7 @@ class BusinessLogicTests(unittest.TestCase):
 
     def test_raise_exception_incomplete_publication(self):
         publication = Publication(publication_type="book")
-        with self.assertRaises(MissingValueException):
-            validate_required_fields(publication)
+        self.assertRaises(MissingValueException, publication.validate_required_fields)
 
     def test_insert_book_bibtex(self):
         publications = insert_bibtex_publication(self.book_bibtex, self.user)

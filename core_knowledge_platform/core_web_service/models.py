@@ -1,7 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
+import pdb
 
 # Publication related classes
+
+class MissingValueException(Exception):
+    """Raise when a required attribute is missing."""
+    def __init__(self, message):
+        super(MissingValueException, self).__init__()
+        self.message = message
+    
+    def __str__(self):
+        return repr(self.message)
 
 
 class Author(models.Model):
@@ -51,8 +61,8 @@ class Publication(models.Model):
             (REVIEWED_STATUS, 'Reviewed'),
             (IN_REVIEW_STATUS, 'Being reviewed'),
             )
-    abstract = models.TextField(blank=True)
-    address = models.CharField(max_length = 255, blank = True, null = True)
+    abstract = models.TextField(blank=True, null=True)
+    address = models.CharField(max_length = 255, blank=True, null=True)
     booktitle = models.CharField(max_length = 255, blank = True, null = True)
     chapter = models.CharField(max_length = 255, blank = True, null = True)
     # TODO: Validate a DOI to be valid.
@@ -75,7 +85,6 @@ class Publication(models.Model):
     month = models.CharField(max_length = 255, blank = True, null = True)
     note = models.TextField(blank = True, null = True)
     year = models.IntegerField(blank = True, null = True)
-    # TODO: check how to reference integrated User subsystem
     owner = models.ForeignKey(User)
     authors = models.ManyToManyField(Author)
     tags = models.ManyToManyField(Tag, blank=True, null=True)
@@ -83,6 +92,62 @@ class Publication(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.title)
+
+    def clean(self):
+        """Perform custom validation."""
+        try:
+            self.validate_required_fields()
+        except MissingValueException, e:
+            raise ValidationError(e.errors)
+
+    required_fields_by_publication_type = {
+            'article': ['title', 'year'],
+            'book': ['publisher', 'title', 'year'],
+            'booklet': [],
+            'inbook': ['chapter', 'editor', 'pages', 'publisher', 'year'],
+            'incollection': ['booktitle', 'publisher', 'title', 'year'],
+            'manual': ['title'],
+            'masterthesis': ['school', 'title', 'year'],
+            'misc': [],
+            'phdthesis': ['school', 'title', 'year'],
+            'proceedings': ['title', 'year'],
+            'techreport': ['institution', 'title', 'year'],
+            'unpublished': ['note', 'title'],
+            }
+
+    def validate_required_fields(self):
+        """Check if a publication has all fields that are required according to its type.
+        
+        The required fields for a publication are based on the BibTeX standard that can
+        be found under: amath.colorado.edu/documentation/LaTeX/reference/faq/bibtex.pdf.
+        Arguments:
+            publication: the publication object to be validated.
+        """
+        if self.publication_type:
+            publication_type = self.publication_type.lower()
+        else:
+            return True
+        try:
+            fields = self.required_fields_by_publication_type[publication_type]
+        except KeyError:
+            return True
+        all_fields_present = True
+        errors = []
+        for field in fields:
+            try:
+                attribute = getattr(self, field)
+                if not isinstance(attribute, int):
+                    if (attribute is None) or (len(attribute) == 0):
+                        all_fields_present = False
+                        errors.append('Publication of type %s is missing field %s' % (publication_type, field))
+            except AttributeError:
+                all_fields_present = False
+                errors.append('Publication of type %s is missing field %s' % (publication_type, field))
+        errors = "".join(errors)
+        if all_fields_present:
+            return True
+        else:
+            raise MissingValueException(errors)
 
 
 class Comment(models.Model):
@@ -102,6 +167,7 @@ class Vote(models.Model):
     VOTE_CHOICES = (
             (0, 'upvote'),
             (1, 'downvote'),
+            (2, 'deleted'),
             )
     votetype = models.IntegerField(max_length=2, choices=VOTE_CHOICES)
     # A vote needs a user, but a user needs no votes
