@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 import pdb
 
 # Publication related classes
@@ -98,7 +99,7 @@ class Publication(models.Model):
         try:
             self.validate_required_fields()
         except MissingValueException, e:
-            raise ValidationError(e.errors)
+            raise ValidationError(e.message)
 
     required_fields_by_publication_type = {
             'article': ['title', 'year'],

@@ -337,6 +337,7 @@ class XmlInserter(Inserter):
             publication.pages = parsed_data['pages']
             publication.publisher = parsed_data['publisher']
             publication.review_status = parsed_data['review_status']
+            
             publication.series = parsed_data['series']
             publication.publication_type = parsed_data['publicationtype']
             publication.volume = parsed_data['volume']
@@ -548,10 +549,12 @@ def insert_bibtex_publication(bibtex, owner):
         owner: the user object that will insert the publication.
     """
     # TODO: check that owner is a user object.
+    logger.info('Bibtex insertion: %s' % (bibtex))
     inserted_publication = []
     parser = BibtexParser()
     entries = parser.bib_entry.searchString(bibtex)
     for entry in entries:
+        logger.info('Processing: %s' % (entry))
         owner, created = User.objects.get_or_create(username=owner.username)
         publication_type = entry.entry_type
         publication = Publication.objects.create(owner=owner,
@@ -566,6 +569,8 @@ def insert_bibtex_publication(bibtex, owner):
                 keywords = _insert_keywords(value)
             elif key == "author":
                 authors = _insert_authors(value)
+            elif key == "owner":
+                pass
             else:
                 #insert into publication if valid field, into furtherfield otherwise
                 try:
@@ -590,7 +595,9 @@ def insert_bibtex_publication(bibtex, owner):
                 publication.save()
             inserted_publication.append(publication)
         except MissingValueException, e:
+            logger.error(e)
             raise e
+    logger.info('Processed %s entries' % (len(entries)))
     return inserted_publication
 
 def _insert_keywords(keywords):

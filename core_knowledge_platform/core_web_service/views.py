@@ -7,6 +7,7 @@ from django.template import Context
 from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
 
+import core_web_service.business_logic.access as access
 from core_web_service.business_logic import search, insert
 from core_web_service.business_logic.insert import InvalidDataException
 from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User, Keyword, ResearchArea, Vote
@@ -561,6 +562,7 @@ class Publications(RestView):
         pub_parameters = None
         auth_parameters = None
         key_parameters = None
+        tag_parameters = None
         if pub_search:
             pub_parameters = QueryDict(pub_search)
         if auth_search:
@@ -908,14 +910,18 @@ class PaperGroupDetail(RestView):
     allowed_methods = ("GET", "PUT", "DELETE")
 
     @staticmethod
+    @login_required(login_url='user/login/')
     def GET(request, papergroup_id):
-        # TODO: Only editor and referee can get a pg.
-        # TODO: Only a referee can add peer reviews.
         # TODO: Only an editor can change a peer review status.
         """Return specific information about one papergroup."""
-        papergroup = PaperGroup.objects.get(id=papergroup_id)
-        values = {'papergroup': papergroup}
-        response = RestView.render_response(request, 'papergroup', values)
+        user = request.user
+        if access.validate_referee_or_editor(user, papergroup_id):
+            papergroup = PaperGroup.objects.get(id=papergroup_id)
+            values = {'papergroup': papergroup}
+            response = RestView.render_response(request, 'papergroup', values)
+        else:
+            response = HttpResponse('Access denied.')
+            response.status_code = RestView.FORBIDDEN_STATUS
         return response
 
     @staticmethod

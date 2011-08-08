@@ -27,10 +27,11 @@ class BibtexParser(object):
     quoted_value = QuotedString(quoteChar='"', escChar='\\') 
 
     number = Word(nums)
-    value = Word(alphanums)
+    month = Word(alphanums, exact=3)
+    value = Word(alphanums+'-.()[]')
 
     entry_type = value('entry_type')
-    field_value = (braced_value | quoted_value | number)('field_value')
+    field_value = (braced_value | quoted_value | number | month)('field_value')
     key = Suppress(value('key'))
     field_name = value('field_name')
     field = (field_name + equal + field_value)

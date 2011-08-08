@@ -19,3 +19,13 @@ def check_priviledges_for_referee(user):
     if not papergroups:
         user.groups.remove('referee')
         # TODO: make sure the group exists?
+
+def validate_referee_or_editor(user, papergroup_id):
+    """Return true if a user is an editor/referee in a special group, false otherwise."""
+    papergroup = PaperGroup.objects.get(id=papergroup_id)
+    valid = False
+    if user in papergroup.referees.all():
+        valid = True
+    if user in papergroup.editors.all():
+        valid = True
+    return valid
