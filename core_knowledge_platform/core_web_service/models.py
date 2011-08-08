@@ -137,7 +137,7 @@ class Publication(models.Model):
         for field in fields:
             try:
                 attribute = getattr(self, field)
-                if not isinstance(attribute, int):
+                if (not isinstance(attribute, int)) and (not isinstance(attribute, long)):
                     if (attribute is None) or (len(attribute) == 0):
                         all_fields_present = False
                         errors.append('Publication of type %s is missing field %s' % (publication_type, field))

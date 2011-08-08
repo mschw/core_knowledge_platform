@@ -8,6 +8,10 @@ import operator
 from django.contrib.auth.models import User
 from core_web_service.models import Tag
 
+import logging
+
+logger = logging.getLogger('myproject.custom')
+
 def build_query(search_query):
     """Build the query for a given dictionary.
     
@@ -85,16 +89,16 @@ def search_keywords(search_items):
 
 def search_tags(search_items):
     """Search tags matching the provided arguments."""
+    search_type, search_items = _get_search_type(search_items)
     query = build_query(search_items)
-    result = Tag.objects.filter(reduce(operator.or_, query))
+    result = _perform_search(Tag, search_type, query)
     return result
 
 def search_publications(publication_terms=None, author_terms=None,
         keyword_terms=None, tag_terms=None):
     """Return publications that match the provided conditions."""
-    publications = None
-    authors = None
-    keywords = None
+    logger.info('Searching publication with %s %s %s %s' % (publication_terms,
+        author_terms, keyword_terms, tag_terms))
     if publication_terms:
         publications = _search_publications(publication_terms)
     else:
