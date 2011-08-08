@@ -552,7 +552,8 @@ class Publications(RestView):
     allowed_methods = ('GET', 'POST')
 
     @staticmethod
-    def GET(request, pub_search=None, auth_search=None, key_search=None):
+    def GET(request, pub_search=None, auth_search=None, key_search=None,
+            tag_search=None):
         """Returns publications stored in the database.
         
         If called with a query string the publications will be searched,
@@ -566,8 +567,11 @@ class Publications(RestView):
             auth_parameters = QueryDict(auth_search)
         if key_search:
             key_parameters = QueryDict(key_search)
+        if tag_search:
+            tag_parameters = QueryDict(tag_search)
         publication_list = search.search_publications(pub_parameters, auth_parameters,
-                key_parameters).exclude(review_status=Publication.IN_REVIEW_STATUS)
+                key_parameters, tag_parameters).exclude(review_status=
+                        Publication.IN_REVIEW_STATUS)
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
         return response
@@ -905,6 +909,9 @@ class PaperGroupDetail(RestView):
 
     @staticmethod
     def GET(request, papergroup_id):
+        # TODO: Only editor and referee can get a pg.
+        # TODO: Only a referee can add peer reviews.
+        # TODO: Only an editor can change a peer review status.
         """Return specific information about one papergroup."""
         papergroup = PaperGroup.objects.get(id=papergroup_id)
         values = {'papergroup': papergroup}
