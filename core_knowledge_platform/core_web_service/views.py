@@ -445,11 +445,18 @@ class PeerReviews(RestView):
     @login_required
     def POST(request, publication_id):
         """Creates a new peer review."""
-        if request.user.has_perm('core_web_service.add_peerreview'):
-            return RestView.insert_object(request, 'peerreview')
-        else:
-            response = HttpResponse("Invalid priviledges: user not allowed to add peer review.")
-            response.status_code = RestView.FORBIDDEN_STATUS
+        try:
+            publication_id = Publication.objects.get(id=publication_id)
+            if access.validate_referee(request.user):
+                return RestView.insert_object(request, 'peerreview')
+            else:
+                response = HttpResponse("Invalid priviledges: user not allowed to add peer review.")
+                response.status_code = RestView.FORBIDDEN_STATUS
+                return response
+        except Publication.DoesNotExist:
+            response = HttpResponse("The publication with id %s does not exist" %
+                    (publication_id))
+            response.status_code = RestView.BAD_REQUEST_STATUS
             return response
 
 
