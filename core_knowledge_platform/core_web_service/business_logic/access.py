@@ -29,3 +29,22 @@ def validate_referee_or_editor(user, papergroup_id):
     if user in papergroup.editors.all():
         valid = True
     return valid
+
+def validate_editor(user):
+    """Return true of the user is an editor."""
+    is_editor = False
+    papergroups = PaperGroup.objects.filter(editors__id__in=[user.id])
+    if papergroups:
+        is_editor = True
+    return is_editor
+
+def user_in_group_for_publication(user, publication):
+    """Return true if the user is in a group refereeing the publication, false else."""
+    allow_access = False
+    groups = PaperGroup.objects.filter(publications__id__in=[publication.id])
+    for group in groups:
+        if user in group.editors.all():
+            allow_access = True
+        if user in group.referees.all():
+            allow_access = True
+    return allow_access

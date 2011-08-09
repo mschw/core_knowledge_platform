@@ -13,6 +13,7 @@ from core_web_service.business_logic.insert import InvalidDataException
 from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User, Keyword, ResearchArea, Vote
 
 import logging
+from django.template.context import RequestContext
 
 logger = logging.getLogger('myproject.custom')
 
@@ -153,7 +154,7 @@ class RestView(object):
             return RestView.unsupported_format_requested(response_type)
         dotted_suffix = ".%s" % (suffix)
         template = get_template(template_name + dotted_suffix)
-        response = template.render(Context(dictionary))
+        response = template.render(RequestContext(request, dictionary))
         return_response = HttpResponse(response)
         return_response.status_code = 200
         return_response['Content-Type'] = 'application/%s' % (suffix)
@@ -632,13 +633,31 @@ class PublicationDetail(RestView):
             inserted_publication = inserter.modify_publication(data, publication_id, requester=requester)
         return inserted_publication
 
-    @staticmethod
-    def GET(request, publication_id):
-        """Returns the information about the publication."""
-        try:
-            publication = Publication.objects.get(id=publication_id)
+    @login_required(login_url='/user/login')
+    def _get_restricted_publication(request, publication):
+        """Return if a user can see an in_review publication."""
+        user = request.user
+        if access.user_in_group_for_publication(user, publication):
             values = {'publication': publication}
             response = RestView.render_response(request, 'publication', values)
+        else:
+            response = HttpResponse('Access denied')
+            response.status_code = RestView.FORBIDDEN_STATUS
+        return response
+
+    @staticmethod
+    def GET(request, publication_id):
+        """Returns the information about the publication.
+        
+        If a publication is in review only an editor or referee of the reviewing
+        group should be allowed to see it."""
+        try:
+            publication = Publication.objects.get(id=publication_id)
+            if publication.review_status == 3:
+                return PublicationDetail._get_restricted_publication(request, publication)
+            else:
+                values = {'publication': publication}
+                response = RestView.render_response(request, 'publication', values)
         except Publication.DoesNotExist:
             response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
             response.status_code = RestView.NOT_FOUND_STATUS

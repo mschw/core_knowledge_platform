@@ -5,6 +5,7 @@ import pdb
 import logging
 from xml.etree.ElementTree import XML, ParseError
 
+import core_web_service.business_logic.access as access
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
 from core_web_service.models import Rating, PeerReview, PeerReviewTemplate, Tag, Esteem, Vote, Author, Publication, ProfileField, FurtherField, Keyword, User, Comment, PaperGroup, ReferenceMaterial, MissingValueException
 
@@ -336,8 +337,14 @@ class XmlInserter(Inserter):
             publication.organization = parsed_data['organization']
             publication.pages = parsed_data['pages']
             publication.publisher = parsed_data['publisher']
+            curr_review = publication.review_status
+            new_review = parsed_data['review_status']
+            if publication_id:
+                # Only relevant when changing
+                if curr_review != new_review:
+                    if not requester or not access.validate_editor(requester):
+                        raise InvalidDataException("Only an editor can change the review status")
             publication.review_status = parsed_data['review_status']
-            
             publication.series = parsed_data['series']
             publication.publication_type = parsed_data['publicationtype']
             publication.volume = parsed_data['volume']

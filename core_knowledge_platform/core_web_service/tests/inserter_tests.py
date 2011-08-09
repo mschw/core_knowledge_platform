@@ -81,6 +81,12 @@ class InserterTests(unittest.TestCase):
         self.assertEqual(publication.tags.get(), self.tag)
         self.assertEqual(publication.owner, self.user)
 
+    def test_change_publication_review_status_non_editor(self):
+        xml = publication_xml % (self.user.id, self.author.id, self.comment.id, self.tag.id)
+        with self.assertRaises(InvalidDataException):
+            self.xml_inserter.modify_publication(xml,
+                self.publication.id, self.user)
+
     def test_insert_peer_review_template_from_xml(self):
         xml = template_xml
         text = """A template.

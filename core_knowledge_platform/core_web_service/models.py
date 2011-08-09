@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 import pdb
 
@@ -290,6 +290,16 @@ class ReferenceMaterial(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.name)
+
+
+class PermissionProxy(Permission):
+    """Proxy to adjust the display of permissions for the admin interface."""
+    class Meta:
+        proxy = True
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+        
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 from core_web_service.business_logic.signals import *
