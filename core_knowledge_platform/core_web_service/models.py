@@ -254,10 +254,10 @@ class FurtherField(models.Model):
 
 class PeerReviewTemplate(models.Model):
     """Represent templates for a peer review report."""
-    template_text = models.TextField()
+    template_text = models.TextField(null=True, blank=True)
     # Storing the path to the binary file containing a template.
     # 4096 - Maximum path length on a UNIX file system: /usr/src/linux-2.4.20-8/include/linux/limits.h.
-    template_binary_path = models.CharField(max_length=4096)
+    template_binary_path = models.CharField(max_length=4096, null=True, blank=True)
     
     def __unicode__(self):
         return u'%s' % (self.id)
@@ -265,9 +265,9 @@ class PeerReviewTemplate(models.Model):
 
 class PeerReview(models.Model):
     """Represents a peer review."""
-    peer_reviewer = models.OneToOneField(User)
+    peer_reviewer = models.ForeignKey(User)
     publication = models.ForeignKey(Publication)
-    template = models.ForeignKey(PeerReviewTemplate)
+    template = models.ForeignKey(PeerReviewTemplate, null=True, blank=True)
     title = models.CharField(max_length=255)
     review = models.TextField()
 

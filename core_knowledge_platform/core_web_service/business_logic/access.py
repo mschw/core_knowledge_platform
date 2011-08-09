@@ -30,12 +30,15 @@ def validate_referee_or_editor(user, papergroup_id):
         valid = True
     return valid
 
-def validate_editor(user):
-    """Return true of the user is an editor."""
+def validate_editor_for_publication(user, publication):
+    """Return true of the user is an editor and the publication is being
+    reviewed by a group the user is an editor of."""
     is_editor = False
     papergroups = PaperGroup.objects.filter(editors__id__in=[user.id])
-    if papergroups:
-        is_editor = True
+    for papergroup in papergroups:
+        if publication in papergroup.publications.all():
+            is_editor = True
+            break
     return is_editor
 
 def user_in_group_for_publication(user, publication):
@@ -48,3 +51,34 @@ def user_in_group_for_publication(user, publication):
         if user in group.referees.all():
             allow_access = True
     return allow_access
+
+def validate_access_to_peer_review_for_user(peerreview, user):
+    """Return true if a user may see the peer review, false otherwise.
+    
+    A user can see a peerreview if the publication is publicly accessible.
+    If it is still in review only an editor or the peerreviewer may see the peer review.
+    
+    Arguments:
+        peerreview: a peerreview object.
+        user: a user object.
+
+    Returns:
+        True if user is editor fo publication, false otherwise.
+    """
+    allow_access = False
+    publication = peerreview.publication
+    if publication.review_status == 3:
+        if validate_editor_for_publication(user, publication):
+            allow_access = True
+        elif validate_user_is_peerreviewer(peerreview, user):
+            allow_access = True
+    else:
+        allow_access = True
+    return allow_access
+
+def validate_user_is_peerreviewer(peerreview, user):
+    """Return true if the user has written the peer review, false otherwise."""
+    if peerreview.peer_reviewer == user:
+        return True
+    else:
+        return False

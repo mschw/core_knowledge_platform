@@ -428,7 +428,9 @@ class PeerReviews(RestView):
     @staticmethod
     @login_required(login_url='/user/login/')
     def GET(request, publication_id):
-        """Return a list of peer reviews for a certain publication."""
+        """Return a list of peer reviews for a certain publication.
+        
+        If the publication is still in review only editors may see reviews."""
         try:
             peer_reviews = PeerReview.objects.filter(publication__id=publication_id)
             values = {'peerreviews': peer_reviews}
@@ -459,11 +461,17 @@ class PeerReviewDetail(RestView):
     @staticmethod
     @login_required(login_url='/user/login/')
     def GET(request, peer_review_id):
-        """Return details for a specific peer review."""
+        """Return details for a specific peer review.
+        
+        If the publication is still in review only reviewers can see a review."""
         try:
             peer_review = PeerReview.objects.get(id=peer_review_id)
-            values = {'peerreview': peer_review}
-            response = RestView.render_response(request, 'peerreview', values)
+            if access.validate_access_to_peer_review_for_user(peer_review, request.user):
+                values = {'peerreview': peer_review}
+                response = RestView.render_response(request, 'peerreview', values)
+            else:
+                response = HttpResponse('Access denied.')
+                response.status_code = RestView.FORBIDDEN_STATUS
         except PeerReview.DoesNotExist:
             response = HttpResponse("Peer review with id %s does not exist" % (peer_review_id))
             response.status_code = RestView.NOT_FOUND_STATUS
@@ -473,13 +481,20 @@ class PeerReviewDetail(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def PUT(request, review_id):
-        """docstring for PUT"""
-        if request.user.has_perm('core_web_service.add_peerreview'):
-            return RestView.insert_object(request, 'peerreview', review_id)
-        else:
-            response = HttpResponse("Invalid priviledges: user not allowed to add a peer review.")
-            response.status_code = RestView.FORBIDDEN_STATUS
-            return response
+        """Changes a peer review.
+        
+        Only allowed for the user that created it."""
+        try:
+            peerreview = PeerReview.objects.get(id=review_id)
+            if access.validate_user_is_peerreviewer(peerreview, request.user):
+                return RestView.insert_object(request, 'peerreview', review_id)
+            else:
+                response = HttpResponse("Invalid priviledges: user not allowed to change the peer review.")
+                response.status_code = RestView.FORBIDDEN_STATUS
+                return response
+        except PeerReview.DoesNotExist:
+            response = HttpResponse("Peer review with id %s does not exist" % (review_id))
+            response.status_code = RestView.NOT_FOUND_STATUS
 
     @staticmethod
     @csrf_exempt

@@ -342,7 +342,8 @@ class XmlInserter(Inserter):
             if publication_id:
                 # Only relevant when changing
                 if curr_review != new_review:
-                    if not requester or not access.validate_editor(requester):
+                    if not requester or not access.validate_editor_for_publication(
+                            requester, publication):
                         raise InvalidDataException("Only an editor can change the review status")
             publication.review_status = parsed_data['review_status']
             publication.series = parsed_data['series']
