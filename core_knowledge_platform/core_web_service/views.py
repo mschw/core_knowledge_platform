@@ -595,8 +595,9 @@ class Publications(RestView):
         if tag_search:
             tag_parameters = QueryDict(tag_search)
         publication_list = search.search_publications(pub_parameters, auth_parameters,
-                key_parameters, tag_parameters).exclude(review_status=
-                        Publication.IN_REVIEW_STATUS)
+                key_parameters, tag_parameters)
+        if not access.validate_user_is_editor(request.user):
+            publication_list = publication_list.exclude(review_status=Publication.IN_REVIEW_STATUS)
         values = {'publication_list': publication_list}
         response = RestView.render_response(request, 'publications', values)
         return response

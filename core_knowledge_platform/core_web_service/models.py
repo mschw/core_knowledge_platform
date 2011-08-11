@@ -292,6 +292,17 @@ class ReferenceMaterial(models.Model):
         return u'%s - %s' % (self.id, self.name)
 
 
+class Message(models.Model):
+    """A simple message that can be sent from one user to another."""
+    #sender = models.ForeignKey(User, related_name='message_sender')
+    receiver = models.ForeignKey(User, related_name='message_receiver')
+    message = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.id, self.sender)
+
+
 class PermissionProxy(Permission):
     """Proxy to adjust the display of permissions for the admin interface."""
     class Meta:

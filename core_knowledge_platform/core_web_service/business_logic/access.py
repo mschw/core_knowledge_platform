@@ -20,6 +20,22 @@ def check_priviledges_for_referee(user):
         user.groups.remove('referee')
         # TODO: make sure the group exists?
 
+def validate_user_is_referee(user):
+    """Return true if the user is a referee."""
+    papergroups = PaperGroup.objects.filter(referees__id__in=[user.id])
+    if papergroups:
+        return True
+    else:
+        return False
+
+def validate_user_is_editor(user):
+    """Return true if the user is an editor."""
+    papergroups = PaperGroup.objects.filter(editors__id__in=[user.id])
+    if papergroups:
+        return True
+    else:
+        return False
+
 def validate_referee_for_publication(user, publication):
     """Return true if a user is a referee."""
     is_referee = False
