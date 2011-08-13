@@ -11,16 +11,18 @@ The supported entries must conform to the following description of the BibTeX fo
 
 Refer to: http://artis.imag.fr/~Xavier.Decoret/resources/xdkbibtex/bibtex_summary.html
 
-<comment>   :== %
-<entry>     :== <bib-entry> | <preamble-entry> | <string-entry>
+<entry>     :== <bib-entry>
 <bib-entry> :== '@'<type> '{' <key> (',' <fields>)'}'
-<type>      :== 'book' | ...
+<type>      :== <value>
 <fields> :== <field> ("," <fields>)
-<field>     :== <name> '=' <seperator><value><seperator>
-<seperator> :== ',' | '"'
+<field>     :== <name> '=' <field_value>
+<field_value> :== <braced_value> | <quoted_value> | <number> | <month>
+<braced_value> :== '{'+ <value> '}'+
+<quoted_value> :== '"'<value>'"'
 <key>       :== <value>
 <value>     :== [a-zA-Z0-9+_-:.{}%]+
 <name>      :== [a-zA-Z]+
+<month> :== [a-zA-Z]{3}
 <number> :== [0-9]+
 
 <seperator> need to be balanced -> " needs to be closed with " and { needs to be closed with }.

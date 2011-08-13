@@ -1,5 +1,7 @@
 import cookielib, urllib2
 from urllib2 import HTTPError
+import timeit
+import time
 
 base_url = 'http://127.0.0.1:8000/'
 #base_url = 'http://du865.o1.gondor.io/'

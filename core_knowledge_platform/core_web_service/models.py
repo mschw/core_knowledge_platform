@@ -40,6 +40,10 @@ class Esteem(models.Model):
     """Represents the esteem a User can obtain."""
     value = models.IntegerField(max_length=10, default=0)
 
+
+    class Meta:
+        ordering = ['-value']
+
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.value)
 
@@ -91,8 +95,24 @@ class Publication(models.Model):
     tags = models.ManyToManyField(Tag, blank=True, null=True)
     keywords = models.ManyToManyField(Keyword, blank=True, null=True)
 
+    average_rating = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
+    
+
+    class Meta:
+        ordering = ['-average_rating']
+
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.title)
+
+    def _calculate_average_rating(self):
+        sum_of_values = 0
+        number = self.rating_set.count()
+        for rating in self.rating_set.all():
+            sum_of_values = sum_of_values + rating.rating
+        if number != 0:
+            return sum_of_values / number
+        else:
+            return 0.0
 
     def clean(self):
         """Perform custom validation."""
@@ -120,9 +140,17 @@ class Publication(models.Model):
         """Check if a publication has all fields that are required according to its type.
         
         The required fields for a publication are based on the BibTeX standard that can
-        be found under: amath.colorado.edu/documentation/LaTeX/reference/faq/bibtex.pdf.
+        be found under: `BibTeX <http://amath.colorado.edu/documentation/LaTeX/reference/faq/bibtex.pdf>`_.
+
         Arguments:
             publication: the publication object to be validated.
+
+        Returns:
+            True when the publication fulfills the requirements.
+
+        Raises:
+            MissingValueException when values are missing.
+
         """
         if self.publication_type:
             publication_type = self.publication_type.lower()
@@ -192,6 +220,10 @@ class Rating(models.Model):
     rating = models.IntegerField(max_length=1, choices=CHOICES)
     publication = models.ForeignKey(Publication)
 
+
+    class Meta:
+        ordering = ['-rating']
+
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.rating)
 
@@ -227,6 +259,10 @@ class UserProfile(models.Model):
     authenticated_professional = models.BooleanField()
     institution = models.CharField(max_length=255, blank=True, null=True)
     research_areas = models.ManyToManyField(ResearchArea, blank=True, null=True)
+
+
+    class Meta:
+        order_with_respect_to = 'esteem'
 
     def __unicode__(self):
         return u'%s - %s' % (self.user.id, self.user.username)

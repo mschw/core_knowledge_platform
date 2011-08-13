@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<user xmlns="http://{{ url }}"
+<quser xmlns="http://{{ url }}"
     xmlns:atom="http://www.w3.org/2005/atom">
     <username>
-        {{ user.username }}
+        {{ quser.username }}
     </username>
     <first_name>
-        {{ user.first_name }}
+        {{ quser.first_name }}
     </first_name>
     <last_name>
-        {{ user.last_name }}
+        {{ quser.last_name }}
     </last_name>
     <email>
-        {{ user.email }}
+        {{ quser.email }}
     </email>
     <degree>
-        {{ user.profile.degree }}
+        {{ quser.profile.degree }}
     </degree>
     <institution>
-        {{ user.profile.institution }}
+        {{ quser.profile.institution }}
     </institution>
     <authenticated_professional>
-        {{ user.profile.authenticated_professional }}
+        {{ quser.profile.authenticated_professional }}
     </authenticated_professional>
     <esteem>
-        <atom:link rel="esteem" type="application/xml" href="http://{{ url }}/esteem/{{ user.profile.esteem.id }}"/>
+        <atom:link rel="esteem" type="application/xml" href="http://{{ url }}/esteem/{{ quser.profile.esteem.id }}"/>
     </esteem>
     <research_areas>
-        {% for area in user.profile.research_areas.all %}
+        {% for area in quser.profile.research_areas.all %}
         <research_area>
             <atom:link rel='research_area' type="application/xml" href="http://{{ url }}/researcharea/{{ area.id }}"/>
         </research_area>
         {% endfor %}
     </research_areas>
     <fields>    
-        {% for field in user.profile.profilefield_set.all %}
+        {% for field in quser.profile.profilefield_set.all %}
         <{{ field.key }}>
             {{ field.value }}
         </{{ field.key }}>
         {% endfor %}
     </fields>
-</user>
+</quser>

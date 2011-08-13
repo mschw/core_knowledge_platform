@@ -12,7 +12,7 @@ Contents:
     :maxdepth: 2
 
     webservice.rst
-    models.rst
+    impl.rst
 
 Indices and tables
 ==================

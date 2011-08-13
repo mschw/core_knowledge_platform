@@ -1,19 +1,20 @@
-from core_web_service.business_logic.access import check_priviledges_for_referee
-from core_web_service.business_logic.access import check_priviledges_for_editor
-from abc import ABCMeta, abstractmethod
-import pdb
+"""This module provides the functionality for the web service consumer to insert
+new data."""
+
 import logging
+from abc import ABCMeta, abstractmethod
 from xml.etree.ElementTree import XML, ParseError
 
 import core_web_service.business_logic.access as access
 from core_web_service.bibtex_parser.bibtex_parser import BibtexParser
+from core_web_service.business_logic.access import check_priviledges_for_referee, check_priviledges_for_editor
 from core_web_service.models import Rating, PeerReview, PeerReviewTemplate, Tag, Esteem, Vote, Author, Publication, ProfileField, FurtherField, Keyword, User, Comment, PaperGroup, ReferenceMaterial, MissingValueException
 
 logger = logging.getLogger('myproject.custom')
 
 
 class InvalidDataException(Exception):
-    """Raise when an insert is attempted that has no data."""
+    """Raise when an insert is attempted with incorrect data."""
     def __init__(self, message):
         super(InvalidDataException, self).__init__()
         self.message = message
@@ -24,6 +25,8 @@ class InvalidDataException(Exception):
 
 class Inserter(object):
     """Abstracts insertion logic via strategy pattern.
+
+    A requester should be requested via the :py:func:`get_inserter` method.
     """
     __metaclass__ = ABCMeta
     def __init__(self):

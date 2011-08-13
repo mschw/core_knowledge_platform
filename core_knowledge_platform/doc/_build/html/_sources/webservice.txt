@@ -105,7 +105,7 @@ To insert a publication ``POST`` the appropriate data to:
 
 To insert an author ``POST`` the appropriate data to:
 
-``/author/``.
+``/author/``
 
 This will insert a new object into the database and return the location the
 object can be retrieved from.
@@ -119,4 +119,4 @@ resource url.
 
 To update an existing publication the ``PUT`` request needs to be sent to:
 
-``/publication/{id}``.
+``/publication/{id}``

@@ -7,14 +7,18 @@ from django.contrib.auth.models import User
 
 
 def check_priviledges_for_editor(user):
-    """Validate if a user still fulfills the requirements to be an editor."""
+    """Validate if a user still fulfills the requirements to be an editor.
+    
+    If not the user will be deleted from the editor group."""
     papergroups = PaperGroup.objects.filter(editors__id__in=[user.id])
     if not papergroups:
         # TODO: remove editor role
         user.groups.remove('editor')
 
 def check_priviledges_for_referee(user):
-    """Validate if a user still fulfills the requirements to be a referee."""
+    """Validate if a user still fulfills the requirements to be a referee.
+    
+    If not the user will be deleted from the referee group."""
     papergroups = PaperGroup.objects.filter(referees__id__in=[user.id])
     if not papergroups:
         user.groups.remove('referee')

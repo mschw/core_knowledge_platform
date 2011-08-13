@@ -5,6 +5,8 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from core_web_service.models import Comment, Esteem, PaperGroup, UserProfile
 from core_web_service.models import Vote
+from core_web_service.models import Publication
+from core_web_service.models import Rating
 
 logger = logging.getLogger('myproject.custom')
 
@@ -37,7 +39,18 @@ def automatically_create_esteem_for_new_user(sender, **kwargs):
         esteem.save()
         user_profile.esteem = esteem
 
-# TODO: calculate esteem based on comments.
+@receiver(pre_save, sender=Publication)
+def calculate_average_rating(sender, **kwargs):
+    """docstring for calculate_average_rating"""
+    publication = kwargs['instance']
+    publication.average_rating = publication._calculate_average_rating()
+
+@receiver(post_save, sender=Rating)
+def recalculate_average_rating(sender, **kwargs):
+    rating = kwargs['instance']
+    publication = rating.publication
+    publication.save()
+
 @receiver(post_save, sender=Vote)
 def recalculate_esteem_for_user(sender, **kwargs):
     """Use the information from a vote to recalculate the esteem of a user."""

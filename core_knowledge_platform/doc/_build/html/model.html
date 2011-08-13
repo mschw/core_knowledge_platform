@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Web-service models: &mdash; Core Knowledge Platform 2.0 v0 documentation</title>
+    <title>Model layer &mdash; Core Knowledge Platform 2.0 v0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,7 +22,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Core Knowledge Platform 2.0 v0 documentation" href="index.html" /> 
+    <link rel="top" title="Core Knowledge Platform 2.0 v0 documentation" href="index.html" />
+    <link rel="up" title="Implementation:" href="impl.html" />
+    <link rel="next" title="Business-Logic layer" href="logic.html" />
+    <link rel="prev" title="Implementation:" href="impl.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,7 +37,14 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="logic.html" title="Business-Logic layer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="impl.html" title="Implementation:"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li>
+          <li><a href="impl.html" accesskey="U">Implementation:</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -43,9 +53,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-core_web_service.models">
-<span id="web-service-models"></span><h1>Web-service models:<a class="headerlink" href="#module-core_web_service.models" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+  <div class="section" id="model-layer">
+<h1>Model layer<a class="headerlink" href="#model-layer" title="Permalink to this headline">¶</a></h1>
+<p>The model layer specifies the classes used by the Django <strong>ORM</strong>.</p>
+<span class="target" id="module-core_web_service.models"></span><dl class="class">
 <dt id="core_web_service.models.Author">
 <em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">Author</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.Author" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an author in the model.
@@ -61,8 +72,7 @@ Authors are not equal to Users.</p>
 <dl class="class">
 <dt id="core_web_service.models.Esteem">
 <em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">Esteem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.Esteem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents the esteem a User can obtain.
-Esteem is tied to a User and a specific tag.</p>
+<dd><p>Represents the esteem a User can obtain.</p>
 </dd></dl>
 
 <dl class="class">
@@ -75,6 +85,18 @@ Esteem is tied to a User and a specific tag.</p>
 <dt id="core_web_service.models.Keyword">
 <em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">Keyword</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.Keyword" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores keywords for a publication that were specified by the author.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="core_web_service.models.Message">
+<em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">Message</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple message that can be sent from one user to another.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="core_web_service.models.MissingValueException">
+<em class="property">exception </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">MissingValueException</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#core_web_service.models.MissingValueException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise when a required attribute is missing.</p>
 </dd></dl>
 
 <dl class="class">
@@ -96,6 +118,12 @@ Esteem is tied to a User and a specific tag.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="core_web_service.models.PermissionProxy">
+<em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">PermissionProxy</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.PermissionProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy to adjust the display of permissions for the admin interface.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="core_web_service.models.ProfileField">
 <em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">ProfileField</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.ProfileField" title="Permalink to this definition">¶</a></dt>
 <dd><p>A key-value storage for further fields of the user profile.</p>
@@ -105,6 +133,28 @@ Esteem is tied to a User and a specific tag.</p>
 <dt id="core_web_service.models.Publication">
 <em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">Publication</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.Publication" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to store publication metadata in the system.</p>
+<dl class="method">
+<dt id="core_web_service.models.Publication.clean">
+<tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#core_web_service.models.Publication.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform custom validation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.models.Publication.validate_required_fields">
+<tt class="descname">validate_required_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#core_web_service.models.Publication.validate_required_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a publication has all fields that are required according to its type.</p>
+<p>The required fields for a publication are based on the BibTeX standard that can
+be found under: <a class="reference external" href="http://amath.colorado.edu/documentation/LaTeX/reference/faq/bibtex.pdf">BibTeX</a>.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>publication: the publication object to be validated.</dd>
+<dt>Returns:</dt>
+<dd>True when the publication fulfills the requirements.</dd>
+<dt>Raises:</dt>
+<dd>MissingValueException when values are missing.</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -118,6 +168,12 @@ Esteem is tied to a User and a specific tag.</p>
 <em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">ReferenceMaterial</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.ReferenceMaterial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a reference to special material associated with a publications.
 This material can be any kind of file that is referenced via a url.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="core_web_service.models.ResearchArea">
+<em class="property">class </em><tt class="descclassname">core_web_service.models.</tt><tt class="descname">ResearchArea</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.models.ResearchArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store research areas for users.</p>
 </dd></dl>
 
 <dl class="class">
@@ -146,6 +202,12 @@ This material can be any kind of file that is referenced via a url.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="impl.html"
+                        title="previous chapter">Implementation:</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="logic.html"
+                        title="next chapter">Business-Logic layer</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/model.txt"
@@ -177,7 +239,14 @@ This material can be any kind of file that is referenced via a url.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="logic.html" title="Business-Logic layer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="impl.html" title="Implementation:"
+             >previous</a> |</li>
+        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li>
+          <li><a href="impl.html" >Implementation:</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

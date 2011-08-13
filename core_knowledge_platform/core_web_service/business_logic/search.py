@@ -1,3 +1,5 @@
+"""This module implements the search functionality of the service."""
+
 from core_web_service.models import ResearchArea
 from core_web_service.models import UserProfile
 from django.db.models import Q
@@ -18,7 +20,7 @@ def build_query(search_query):
     Will create a Q object for each query and return a list of these queries.
     
     Attributes:
-        search_query: a dictionary with search_term: search_value pairs.
+        search_query: a dictionary with `search_term: search_value pairs`.
 
     Returns:
         query: a list of Q-objects containing the query.
@@ -43,8 +45,8 @@ def _get_search_type(search_items):
     """Return the type of search to be performed.
 
     Attempts to obtain the searchtype key from the dictionary.
-    If the key is not present returns an _or_ search.
-    Else returns the searchtype and removes it from the searchdict.
+    If the key is not present returns an *or* search.
+    Else returns the searchtype and removes the search-key from the searchdict.
     """
     if isinstance(search_items, QueryDict):
         search_items = search_items.copy()
@@ -96,7 +98,18 @@ def search_tags(search_items):
 
 def search_publications(publication_terms=None, author_terms=None,
         keyword_terms=None, tag_terms=None):
-    """Return publications that match the provided conditions."""
+    """Return publications that match the provided conditions.
+    
+    Arguments:
+        publication_terms: the terms that will be searched in a the publication table.
+        author_terms: terms that will be searched in the author table.
+        keyword_terms: terms that will be searched in the keyword table.
+        tag_terms: terms that will be searched in the tag table.
+
+    Returns:
+        A list of publications that match all given terms across all tables.
+        
+        """
     logger.info('Searching publication with %s %s %s %s' % (publication_terms,
         author_terms, keyword_terms, tag_terms))
     if publication_terms:
@@ -125,7 +138,7 @@ def search_user(search_items):
     except KeyError:
         pass
     query = build_query(search_items)
-    result = User.objects.filter(reduce(operator.or_, query))
+    result = User.objects.filter(reduce(operator.or_, query)).order_by('profile.esteem')
     return result
 
 def get_related_tags(tag):
@@ -144,7 +157,16 @@ def get_related_tags(tag):
     return sorted_list
 
 def get_related_keywords(keyword):
-    """Return keywords that were used as well, when the provided keyword was used."""
+    """Return keywords that were used as well, when the provided keyword was used.
+    Sorts keywords according to their number of occurences in other publications.
+
+    Argument:
+        keyword: a :py:class:`core_web_service.models.Keyword` object.
+
+    Returns:
+        A sorted list of keywords according to their number of occurences
+    
+    """
     publication_with_tag = Publication.objects.filter(keywords__id__in=[keyword.id])
     relevance_keywords = dict()
     for publication in publication_with_tag:
@@ -159,7 +181,17 @@ def get_related_keywords(keyword):
     return sorted_list
 
 def get_related_users_for_keyword(keyword):
-    """Return a list of users that research in the given area."""
+    """Return a list of users that research in the given area.
+
+    Matching is performed based on keyword and researcharea title.
+
+    Argument:
+        keyword: a :py:class:`core_web_service.models.Keyword` object.
+
+    Returns:
+        A sorted list of users according to their number of occurences
+    
+    """
     users = User.objects.all()
     related_users = []
     for user in users:
@@ -175,7 +207,12 @@ def get_related_users_for_keyword(keyword):
     return related_users
 
 def get_related_users_for_publication(publication):
-    """Return a list of users that might be intersted in the paper."""
+    """Return a list of users that might be intersted in the paper.
+    
+    Returns:
+        A list of users.
+        
+    """
     interested_users = []
     for keyword in publication.keywords.all():
         users = get_related_users_for_keyword(keyword)
@@ -225,10 +262,6 @@ def get_publications_by_authors(authors):
     return all_publications
 
 def get_related_publications(publication):
-    # TODO: Implement some kind of rating.
-    # FIXME: rank papers higher from the same author.
-    # Chack for related papers based on keywords and tags - rate keywords higher than tags.
-    # Value keywords higher than tags.
     """Return a set of publications that are related to the argument.
     
     Will search publications that use the same tags, keywords or are written by 

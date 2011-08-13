@@ -1,4 +1,5 @@
 import re
+import pdb
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -42,6 +43,7 @@ class RestView(object):
         METHOD_NOT_ALLOWED_STATUS: the HTTP-method-not-allowed status (405).
         UNSUPPORTED_MEDIA_TYPE_STATUS: the HTTP-unsupported-media type status code (415).
         INTERNAL_SERVER_ERROR_STATUS: the HTTP-internal-server-error status code (500).
+
     """
     OK_STATUS = 200
     CREATED_STATUS = 201
@@ -57,7 +59,9 @@ class RestView(object):
     allowed_formats = ('xml', 'json', 'bibtex')
 
     def __call__(self, request, *args, **kwargs):
-        """Calls the appropriate function corresponding to the HTTP-method."""
+        """Calls the appropriate function corresponding to the HTTP-method.
+        
+        """
         logger.info("Request received: %s" % (request.path))
         logger.info("User of request: %s" % (request.user.username))
         method = nonalpha_re.sub('', request.method.upper())
@@ -73,22 +77,20 @@ class RestView(object):
                     return RestView.unsupported_format_requested(accepted_format)
         except KeyError:
             return RestView.unsupported_format_requested('No format specified')
-        #try:
-        #    content_type = RestView.get_content_type(request)
-        #    valid_request = False
-        #    for f in RestView.allowed_formats:
-        #        if f in content_type:
-        #            valid_request = True
-        #        if not valid_request:
-        #            return RestView.unsupported_format_requested(accepted_format)
-        #except KeyError:
-        #    # TODO: Decide if action is necessary ? GET has no content.
-        #    pass
         return getattr(self, method)(request, *args, **kwargs)
 
     @staticmethod
     def validate_sent_format(request):
-        """Determine whether a sent format is accepted by the web service."""
+        """Determine whether a sent format is accepted by the web service.
+        
+        Arguments:
+            request: the request objects received from Django.
+            
+        Returns:
+            True: The format is accepted.
+            False: The format is not accepted.
+
+        """
         sent_format = RestView.get_content_type(request)
         for f in RestView.allowed_formats:
             if f in sent_format:
@@ -97,29 +99,52 @@ class RestView(object):
 
     @staticmethod
     def method_not_allowed(method):
-        """Returns a response indicating that the called method is not allowed."""
+        """Returns a response indicating that the called method is not allowed.
+        
+        Arguments:
+            method: The HTTP method used to call the service.
+            
+        """
         logger.error("Unsupported method requested: %s" % (method))
-        response = HttpResponse('The called method is not allowed on this resouce: %s' % (method))
+        response = HttpResponse('The called method is not allowed on this resouce: %s'
+                % (method))
         response.status_code = RestView.METHOD_NOT_ALLOWED_STATUS
         return response
 
     @staticmethod
     def unsupported_format_requested(formats):
-        """Return a message stating that none of the accepted formats can be returned by the service."""
+        """Return a message stating that none of the accepted formats can be returned
+        by the service.
+        
+        Arguments:
+            formats: the format that was requests to be returned by the service.
+        
+        Returns:
+            HttpResponse: A response indicating that the media type is not supported.
+            
+        """
         logger.error("Unsupported format requested: %s" % (formats))
-        response = HttpResponse('The allowed response type is not supported by the service: %s' % (formats))
+        response = HttpResponse('The allowed response type is not supported by the service: %s'
+                % (formats))
         response.status_code = RestView.UNSUPPORTED_MEDIA_TYPE_STATUS
         return response
 
     @staticmethod
     def unsupported_format_sent(sent_format):
-        """Return a message stating that the sent format can not be interpreted by the web service.
+        """Return a message stating that the sent format can not be interpreted by 
+        the web service.
         
         Arguments:
             sent_format: the format sent by a request.
+
+        Returns:
+            response: HttpResponse indicating that the sent format is not supported.
+
         """
         logger.error("Unsupported format sent: %s" % (sent_format))
-        response = HttpResponse('The sent format %s can not be understood by the service - please sent one of the following: %s' % (sent_format, RestView.allowed_formats))
+        response = HttpResponse('The sent format %s can not be understood by the\
+                service - please sent one of the following: %s'
+                % (sent_format, RestView.allowed_formats))
         response.status_code = RestView.BAD_REQUEST_STATUS
         return response
 
@@ -133,7 +158,8 @@ class RestView(object):
         Attributes:
             request: the django request object.
             template_name: the name of the template that needs to be loaded.
-            dictionary: a dictionary containing specific values of the subclass that need to be replaced in the template.
+            dictionary: a dictionary containing specific values of the subclass"""\
+                    """that need to be replaced in the template.
 
         Returns:
             response: the response object with the rendered template.
@@ -162,20 +188,36 @@ class RestView(object):
 
     @staticmethod
     def _get_allowed_response_types(request):
-        """Will return a list of all allowed responses."""
+        """Will return a list of all allowed responses.
+        
+        """
         accept_header = request.META['HTTP_ACCEPT']
         list_of_values = accept_header.split(',')
         return list_of_values
 
     @staticmethod
     def get_content_type(request):
-        """Returns the content type of a request."""
+        """Returns the content type of a request.
+        
+        """
         content_type = request.META['CONTENT_TYPE']
         return content_type
 
     @staticmethod
     def insert_object(request, name, id=None, **kwargs):
-        """Insert or update an object of type name into the database."""
+        """Insert or update an object of type name into the database.
+
+        Arguemnts:
+            request: The django request object.
+            name: the name of the object to be inserted.
+            id: the id of an existing object that should be updated.
+            **kwargs: any further arguments to the modify_<name> function.
+
+        Returns:
+            response: A HttpResponse object indicating whether the insertion was
+            successful or not.
+        
+        """
         try:
             content_type = RestView.get_content_type(request)
             data = request.raw_post_data
@@ -208,7 +250,9 @@ class Authors(RestView):
     def GET(request):
         """Return a list of links to authors in the system.
         
-        If queried with parameters, a search will be performed."""
+        If queried with parameters, a search will be performed.
+        
+        """
         get_parameters = request.GET
         if get_parameters:
             author_list = search.search_authors(get_parameters)
@@ -430,7 +474,9 @@ class PeerReviews(RestView):
     def GET(request, publication_id):
         """Return a list of peer reviews for a certain publication.
         
-        If the publication is still in review only editors may see reviews."""
+        If the publication is still in review only editors may see reviews.
+        
+        """
         try:
             peer_reviews = PeerReview.objects.filter(publication__id=publication_id)
             values = {'peerreviews': peer_reviews}
@@ -507,7 +553,7 @@ class PeerReviewDetail(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def DETELE(request, peerreview_id):
-        """docstring for DETELE"""
+        """Delete the peer review from the system."""
         peerreview = PeerReview.objects.get(id=peerreview_id)
         peerreview.delete()
         response = HttpResponse("Delete %s with id %s" % ('peerreview', peerreview_id))
@@ -532,6 +578,7 @@ class PeerReviewTemplates(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def POST(request, values):
+        """Create a new peer review template."""
         return RestView.insert_object(request, 'peerreviewtemplate')
 
 
@@ -556,13 +603,14 @@ class PeerReviewTemplateDetail(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def PUT(request, template_id):
+        """Modify an existing peer review template."""
         return RestView.insert_object(request, 'peerreviewtemplate', template_id)
 
     @staticmethod
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def DELETE(request, peerreviewtemplate_id):
-        """docstring for DELETE"""
+        """Delete an existing template."""
         peerreviewtemplate = PeerReviewTemplate.objects.get(id=peerreviewtemplate_id)
         peerreviewtemplate.delete()
         response = HttpResponse("Delete %s with id %s" % ('peerreviewtemplate', peerreviewtemplate_id))
@@ -604,7 +652,7 @@ class Publications(RestView):
 
     @staticmethod
     def related_publications(request, publication_id):
-        """docstring for related_publications"""
+        """Returns publications that are related to the current publication."""
         publication = Publication.objects.get(id=publication_id)
         publications = search.get_related_publications(publication)
         values = {'publications': publications}
@@ -775,7 +823,7 @@ class ReferenceMaterials(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def POST(request):
-        """docstring for POST"""
+        """Insert a new reference material object."""
         return RestView.insert_object(request, 'referencematerial')
 
 
@@ -786,7 +834,7 @@ class ReferenceMaterialDetail(RestView):
 
     @staticmethod
     def GET(request, material_id):
-        """docstring for GET"""
+        """Return reference material for given id."""
         reference_material = ReferenceMaterial.objects.get(id=material_id)
         values = {'referencematerial': reference_material}
         response = RestView.render_response(request, 'referencematerial', values)
@@ -796,7 +844,7 @@ class ReferenceMaterialDetail(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def PUT(request, material_id):
-        """docstring for PUT"""
+        """Modify an existing reference material."""
         return RestView.insert_object(request, 'referencematerial', material_id)
 
     @staticmethod
@@ -867,7 +915,7 @@ class Tags(RestView):
 
     @staticmethod
     def related_tags(request, tag_id):
-        """docstring for related_tags"""
+        """Return tags related to the tag with the given id."""
         tag = Tag.objects.get(id=tag_id)
         tags = search.get_related_tags(tag)
         values = {'tags': tags}
@@ -878,7 +926,7 @@ class Tags(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def POST(request):
-        """docstring for POST"""
+        """Insert a new tag."""
         return RestView.insert_object(request, 'tag')
 
 
@@ -899,7 +947,7 @@ class TagDetail(RestView):
     @csrf_exempt
     @login_required(login_url='/user/login/')
     def PUT(request, tag_id):
-        """Insert a tag."""
+        """Modify an tag."""
         return RestView.insert_object(request, 'tag', tag_id)
 
     @staticmethod
@@ -920,7 +968,7 @@ class Overview(RestView):
 
     @staticmethod
     def GET(request):
-        """docstring for GET"""
+        """Return the overview template."""
         response = RestView.render_response(request, 'overview')
         return response
 
@@ -999,21 +1047,20 @@ class Users(RestView):
     @staticmethod
     def GET(request, user_search=None):
         """Search for users."""
-        # TODO: allow searching for users:
-        # - with name
-        # - with associated tag
-        # - order by rating
+        # TODO - order by rating
         if user_search:
             query = QueryDict(user_search)
             users = search.search_user(query)
         else:
             users = User.objects.all()
+        users = list(users)
+        users = sorted(users, key = lambda user: user.profile.esteem.value, reverse=True)
         values = {'users': users}
         return RestView.render_response(request, 'users', values)
 
     @staticmethod
     def related_users_for_publication(request, publication_id):
-        """docstring for related_users"""
+        """Return users related to the user with given id."""
         publication = Publication.objects.get(id=publication_id)
         users = search.get_related_users_for_publication(publication)
         values = {'users': users}
@@ -1038,7 +1085,7 @@ class UserDetail(RestView):
     def GET(request, user_id):
         """Return the information for a given user."""
         user = User.objects.get(id=user_id)
-        values = {'user': user}
+        values = {'quser': user}
         return RestView.render_response(request, template_name='user', dictionary=values)
 
     @staticmethod

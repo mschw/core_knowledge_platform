@@ -1,5 +1,3 @@
-import pdb
-import re
 from collections import defaultdict
 from pyparsing import Word, alphanums, nums, Optional, Suppress, ZeroOrMore, Group, nestedExpr, QuotedString, originalTextFor 
 
@@ -12,7 +10,10 @@ def remove_parentheses(orig_string, loc, tokens):
     return text
 
 class BibtexParser(object):
-    """Class used to parse BibTeX entries to Python objects."""
+    """Class used to parse BibTeX entries to Python objects.
+    
+    Call bib_entry.parseString(string) to parse a single item.
+    bib_entry.searchString(string) to parse multiple entries in a single string."""
 
     at = Suppress('@')
     left_brace = Suppress('{')
@@ -44,7 +45,9 @@ class BibtexParser(object):
         pass
     
     def parse_to_bibtex(self, bibtex_string):
-        """Will parse a supplied bibtex string to a dict."""
+        """Will parse a supplied bibtex string to a dict.
+
+        DEPRECATED: only used for testing purposes."""
         if not bibtex_string:
             raise ValueError("Supplied string was not a valid BibTeX entry.")
         else:
