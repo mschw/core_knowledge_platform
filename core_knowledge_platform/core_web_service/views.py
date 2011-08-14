@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 import core_web_service.business_logic.access as access
 from core_web_service.business_logic import search, insert
 from core_web_service.business_logic.insert import InvalidDataException
+from core_web_service.business_logic.metadata_decorators import OaiPmhDecorator
 from core_web_service.models import Author, Comment, Esteem, PaperGroup, PeerReview, PeerReviewTemplate, Publication, Tag, Rating, ReferenceMaterial, User, Keyword, ResearchArea, Vote
 
 import logging
@@ -233,9 +234,9 @@ class RestView(object):
             else:
                 response.status_code = RestView.CREATED_STATUS
             response['location'] = '%s/%s/%s' % (service_url, name, inserted_object.id)
-        except InvalidDataException, e:
-            logger.error(e)
-            response = HttpResponse(e.message)
+        except InvalidDataException, exc:
+            logger.error(exc)
+            response = HttpResponse(exc.message)
             response.status_code = RestView.BAD_REQUEST_STATUS
         logger.info('Insertion successful.')
         return response
@@ -321,12 +322,13 @@ class Comments(RestView):
                 values = {'comment': comment}
                 response = RestView.render_response(request, 'comments', values)
             except Publication.DoesNotExist:
-                response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
+                response = HttpResponse("The publication with ID %s does not exist" 
+                        % (publication_id))
                 response.status_code = RestView.NOT_FOUND_STATUS
         else:
-                comment = Comment.objects.all()
-                values = {'comment': comment}
-                response = RestView.render_response(request, 'comments', values)
+            comment = Comment.objects.all()
+            values = {'comment': comment}
+            response = RestView.render_response(request, 'comments', values)
         return response
 
     @staticmethod
@@ -482,7 +484,8 @@ class PeerReviews(RestView):
             values = {'peerreviews': peer_reviews}
             response = RestView.render_response(request, 'peerreviews', values)
         except PeerReview.DoesNotExist:
-            response = HttpResponse("No peer reviews exist for publicaiton with id %s" % (publication_id))
+            response = HttpResponse("No peer reviews exist for publicaiton with id %s"
+                    % (publication_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 
@@ -717,7 +720,7 @@ class PublicationDetail(RestView):
         return response
 
     @staticmethod
-    def GET(request, publication_id):
+    def GET(request, publication_id, meta=None):
         """Returns the information about the publication.
         
         If a publication is in review only an editor or referee of the reviewing
@@ -726,9 +729,17 @@ class PublicationDetail(RestView):
             publication = Publication.objects.get(id=publication_id)
             if publication.review_status == 3:
                 return PublicationDetail._get_restricted_publication(request, publication)
-            else:
-                values = {'publication': publication}
-                response = RestView.render_response(request, 'publication', values)
+            if meta:
+                oai = OaiPmhDecorator()
+                try:
+                    publication = oai.decorate_publication(publication)
+                except InvalidDataException, exc:
+                    logger.error(exc)
+                    response = HttpResponse(exc.message)
+                    response.status_code = RestView.BAD_REQUEST_STATUS
+                    return response
+            values = {'publication': publication}
+            response = RestView.render_response(request, 'publication', values)
         except Publication.DoesNotExist:
             response = HttpResponse("The publication with ID %s does not exist" % (publication_id))
             response.status_code = RestView.NOT_FOUND_STATUS

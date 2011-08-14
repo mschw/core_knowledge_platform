@@ -4,14 +4,19 @@ metadata to objects."""
 from oaipmh.client import Client
 from oaipmh.error import IdDoesNotExistError
 from oaipmh.metadata import MetadataRegistry, oai_dc_reader
+from core_web_service.business_logic.insert import InvalidDataException
 import logging
+import pdb
 
 logger = logging.getLogger('myproject.custom')
 
 def built_citeseer_uri(doi):
     """Built a correct uri from the provided doi and base-url."""
     DOI_PREFIX = 'oai:CiteSeerXPSU:'
-    return DOI_PREFIX + doi
+    if doi:
+        return DOI_PREFIX + doi
+    else:
+        raise InvalidDataException("DOI invalid. Can not query metadata.")
 
 class OaiPmhDecorator(object):
     """Query a web service and add metadata to an object.
@@ -48,14 +53,11 @@ class OaiPmhDecorator(object):
 
     def decorate_publication(self, publication):
         """Decorate a publication with the metadata for this object."""
-        decorated_publication = None
         doi = self.built_uri(publication.doi)
         if doi:
             metadata = self.query_service(doi, publication)
-            self.add_decoration_to_publication(publication, metadata)
-        else:
-            decorated_publication = publication
-        return decorated_publication
+            publication = self.add_decoration_to_publication(publication, metadata)
+        return publication
 
     def add_decoration_to_publication(self, publication, metadata):
         publication.decorated = dict()
@@ -68,6 +70,7 @@ class OaiPmhDecorator(object):
                     publication.decorated[data] = value
             except KeyError, e:
                 logger.error("Decorator key not found %s for DOI: %s" % (data, doi))
+        return publication
 
     def query_service(self, doi, publication):
         try:
@@ -77,8 +80,4 @@ class OaiPmhDecorator(object):
         except IdDoesNotExistError, e:
             logger.error("Querying metadata for doi %s failed: %s" % (doi, e))
             # TODO: raise exception?
-            raise e
-
-    def decorate_author(self, author):
-        """docstring for decorate_author"""
-        pass
+            raise InvalidDataException(e)
