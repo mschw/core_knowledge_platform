@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Overview &mdash; Core Knowledge Platform 2.0 v0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Core Knowledge Platform 2.0 v0 documentation" href="index.html" />
+    <link rel="next" title="Implementation:" href="impl.html" />
+    <link rel="prev" title="Welcome to Core Knowledge Platform 2.0’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="impl.html" title="Implementation:"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Core Knowledge Platform 2.0’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>Every interaction with the web service should be conducted through HTTP.
+To allow the web service to respond with the appropriate data format HTTP-headers are used:
+all queries to the web service <em>must</em> set the following headers:</p>
+<dl class="docutils">
+<dt>ACCEPT:</dt>
+<dd>tells the web service which format to return.</dd>
+<dt>CONTENT-TYPE:</dt>
+<dd>tells the web service which format was sent.</dd>
+</dl>
+<p>Currently <em>most</em> resources of the web service allow only one format: <tt class="docutils literal"><span class="pre">application/xml</span></tt>.</p>
+<div class="section" id="data-retrieval">
+<span id="id1"></span><h2>Data retrieval<a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
+<p>To obtain data from the service issue a GET request to one of the following addresses:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">publication/</span></tt></dt>
+<dd>Retrieve a list of all publications.</dd>
+<dt><tt class="docutils literal"><span class="pre">publication/{id}</span></tt></dt>
+<dd>Retrieve all information for a specific publication.</dd>
+<dt><tt class="docutils literal"><span class="pre">authors/</span></tt></dt>
+<dd>Retrieve a list of all authors.</dd>
+<dt><tt class="docutils literal"><span class="pre">authors/{id}</span></tt></dt>
+<dd>Retrieve all information for a specific authors.</dd>
+<dt><tt class="docutils literal"><span class="pre">comment/{id}</span></tt></dt>
+<dd>Retrieve a specific comment.</dd>
+<dt><tt class="docutils literal"><span class="pre">peerreviewtemplate/</span></tt></dt>
+<dd>Retrieve a list of available peer review templates.</dd>
+<dt><tt class="docutils literal"><span class="pre">peerreviewtemplate/{id}</span></tt></dt>
+<dd>Retrieve a concrete peer review template.</dd>
+<dt><tt class="docutils literal"><span class="pre">tag/</span></tt></dt>
+<dd>Retrieve a list of all tags.</dd>
+<dt><tt class="docutils literal"><span class="pre">tag/{id}</span></tt></dt>
+<dd>Retrieve a specific tag.</dd>
+</dl>
+<p>These resources can be accessed without being logged in.
+The following resources require a user to be logged in:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">peerreview/{id}</span></tt></dt>
+<dd>Retrieve a concrete peer review.</dd>
+</dl>
+<div class="section" id="login-logout">
+<h3>Login &amp; Logout<a class="headerlink" href="#login-logout" title="Permalink to this headline">¶</a></h3>
+<p>If a resource requires a login the client can login via a <tt class="docutils literal"><span class="pre">POST</span></tt> request to
+the following address:
+<tt class="docutils literal"><span class="pre">user/login/</span></tt></p>
+<p>To logout from the system a simple <tt class="docutils literal"><span class="pre">GET</span></tt> request to <tt class="docutils literal"><span class="pre">/user/logout/</span></tt> is
+enough.</p>
+</div>
+<div class="section" id="searching">
+<h3>Searching<a class="headerlink" href="#searching" title="Permalink to this headline">¶</a></h3>
+<p>Searching authors and publications is possible:</p>
+<div class="section" id="publications">
+<h4>Publications<a class="headerlink" href="#publications" title="Permalink to this headline">¶</a></h4>
+<p>Just append key-value-pairs to the url according to the following schema:</p>
+<p><tt class="docutils literal"><span class="pre">/publication/{name=value&amp;name2=value2}/author/{name=value&amp;...}/keyword/{..}</span></tt></p>
+<p>Sub-searches will be executed via OR:
+all publications with name = value OR name2=value2</p>
+<p>The results of the sub-searches will be concatenated using the AND operator:
+all publications where AND where the authors is AND where the keyword is</p>
+</div>
+<div class="section" id="authors">
+<h4>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h4>
+<p>Do not forget that in this case the search uses a query string.</p>
+<p><tt class="docutils literal"><span class="pre">/authors/?{name=value}</span></tt></p>
+</div>
+</div>
+</div>
+<div class="section" id="data-insertion">
+<h2>Data Insertion<a class="headerlink" href="#data-insertion" title="Permalink to this headline">¶</a></h2>
+<p>When inserting data it is important to distinguish between an initial insertion
+of a modification of data:</p>
+<div class="section" id="initial-insert">
+<h3>Initial insert<a class="headerlink" href="#initial-insert" title="Permalink to this headline">¶</a></h3>
+<p>The initial insertion is performed via <tt class="docutils literal"><span class="pre">POST</span></tt> requests to the root urls of
+a resource.</p>
+<p>To insert a publication <tt class="docutils literal"><span class="pre">POST</span></tt> the appropriate data to:</p>
+<p><tt class="docutils literal"><span class="pre">/publication/</span></tt></p>
+<p>To insert an author <tt class="docutils literal"><span class="pre">POST</span></tt> the appropriate data to:</p>
+<p><tt class="docutils literal"><span class="pre">/author/</span></tt></p>
+<p>This will insert a new object into the database and return the location the
+object can be retrieved from.</p>
+</div>
+<div class="section" id="updating-data">
+<h3>Updating data<a class="headerlink" href="#updating-data" title="Permalink to this headline">¶</a></h3>
+<p>To update data the <tt class="docutils literal"><span class="pre">PUT</span></tt> request is used - it will be send to the specific
+resource url.</p>
+<p>To update an existing publication the <tt class="docutils literal"><span class="pre">PUT</span></tt> request needs to be sent to:</p>
+<p><tt class="docutils literal"><span class="pre">/publication/{id}</span></tt></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#data-retrieval">Data retrieval</a><ul>
+<li><a class="reference internal" href="#login-logout">Login &amp; Logout</a></li>
+<li><a class="reference internal" href="#searching">Searching</a><ul>
+<li><a class="reference internal" href="#publications">Publications</a></li>
+<li><a class="reference internal" href="#authors">Authors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-insertion">Data Insertion</a><ul>
+<li><a class="reference internal" href="#initial-insert">Initial insert</a></li>
+<li><a class="reference internal" href="#updating-data">Updating data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Core Knowledge Platform 2.0&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="impl.html"
+                        title="next chapter">Implementation:</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/webservice.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="impl.html" title="Implementation:"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Core Knowledge Platform 2.0’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Florian Bergmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
