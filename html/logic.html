@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Business-Logic layer &mdash; Core Knowledge Platform 2.0 v0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Core Knowledge Platform 2.0 v0 documentation" href="index.html" />
+    <link rel="up" title="Implementation:" href="impl.html" />
+    <link rel="prev" title="Model layer" href="model.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="model.html" title="Model layer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li>
+          <li><a href="impl.html" accesskey="U">Implementation:</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="business-logic-layer">
+<h1>Business-Logic layer<a class="headerlink" href="#business-logic-layer" title="Permalink to this headline">¶</a></h1>
+<p>This site describe the implementation of the business logic in the system.</p>
+<p>The business logic module contain multiple sub-modules:</p>
+<div class="section" id="module-core_web_service.business_logic.access">
+<span id="access"></span><h2>Access<a class="headerlink" href="#module-core_web_service.business_logic.access" title="Permalink to this headline">¶</a></h2>
+<p>This module is used to perform access verification based on user objects that need
+certain priviledges.</p>
+<dl class="function">
+<dt id="core_web_service.business_logic.access.check_priviledges_for_editor">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">check_priviledges_for_editor</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.check_priviledges_for_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate if a user still fulfills the requirements to be an editor.</p>
+<p>If not the user will be deleted from the editor group.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.check_priviledges_for_referee">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">check_priviledges_for_referee</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.check_priviledges_for_referee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate if a user still fulfills the requirements to be a referee.</p>
+<p>If not the user will be deleted from the referee group.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.user_in_group_for_publication">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">user_in_group_for_publication</tt><big>(</big><em>user</em>, <em>publication</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.user_in_group_for_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the user is in a group refereeing the publication, false else.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_access_to_peer_review_for_user">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_access_to_peer_review_for_user</tt><big>(</big><em>peerreview</em>, <em>user</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_access_to_peer_review_for_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if a user may see the peer review, false otherwise.</p>
+<p>A user can see a peerreview if the publication is publicly accessible.
+If it is still in review only an editor or the peerreviewer may see the peer review.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>peerreview: a peerreview object.
+user: a user object.</dd>
+<dt>Returns:</dt>
+<dd>True if user is editor fo publication, false otherwise.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_editor_for_publication">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_editor_for_publication</tt><big>(</big><em>user</em>, <em>publication</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_editor_for_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true of the user is an editor and the publication is being
+reviewed by a group the user is an editor of.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_referee_for_publication">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_referee_for_publication</tt><big>(</big><em>user</em>, <em>publication</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_referee_for_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if a user is a referee.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_referee_or_editor">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_referee_or_editor</tt><big>(</big><em>user</em>, <em>papergroup_id</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_referee_or_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if a user is an editor/referee in a special group, false otherwise.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_user_is_editor">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_user_is_editor</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_user_is_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the user is an editor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_user_is_peerreviewer">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_user_is_peerreviewer</tt><big>(</big><em>peerreview</em>, <em>user</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_user_is_peerreviewer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the user has written the peer review, false otherwise.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.access.validate_user_is_referee">
+<tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_user_is_referee</tt><big>(</big><em>user</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_user_is_referee" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the user is a referee.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-core_web_service.business_logic.insert">
+<span id="insertion"></span><h2>Insertion<a class="headerlink" href="#module-core_web_service.business_logic.insert" title="Permalink to this headline">¶</a></h2>
+<p>This module provides the functionality for the web service consumer to insert
+new data.</p>
+<dl class="class">
+<dt id="core_web_service.business_logic.insert.Inserter">
+<em class="property">class </em><tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">Inserter</tt><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstracts insertion logic via strategy pattern.</p>
+<p>A requester should be requested via the <a class="reference internal" href="#core_web_service.business_logic.insert.get_inserter" title="core_web_service.business_logic.insert.get_inserter"><tt class="xref py py-func docutils literal"><span class="pre">get_inserter()</span></tt></a> method.</p>
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_author">
+<tt class="descname">modify_author</tt><big>(</big><em>data</em>, <em>author_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify an author object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_comment">
+<tt class="descname">modify_comment</tt><big>(</big><em>data</em>, <em>comment_id=None</em>, <em>user_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a comment object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_esteem">
+<tt class="descname">modify_esteem</tt><big>(</big><em>data</em>, <em>esteem_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_esteem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify an esteem object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_papergroup">
+<tt class="descname">modify_papergroup</tt><big>(</big><em>data</em>, <em>papergroup_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_papergroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a papergroup object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_peerreview">
+<tt class="descname">modify_peerreview</tt><big>(</big><em>data</em>, <em>peer_review_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_peerreview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a peer review object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_peerreviewtemplate">
+<tt class="descname">modify_peerreviewtemplate</tt><big>(</big><em>data</em>, <em>template_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_peerreviewtemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a template object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_publication">
+<tt class="descname">modify_publication</tt><big>(</big><em>data</em>, <em>publication_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a publication object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_rating">
+<tt class="descname">modify_rating</tt><big>(</big><em>data</em>, <em>rating_id</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a rating object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_reference_material">
+<tt class="descname">modify_reference_material</tt><big>(</big><em>data</em>, <em>material_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_reference_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a reference material object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_tag">
+<tt class="descname">modify_tag</tt><big>(</big><em>data</em>, <em>tag_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a tag object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_user">
+<tt class="descname">modify_user</tt><big>(</big><em>data</em>, <em>user_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a user from the provided values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.Inserter.modify_vote">
+<tt class="descname">modify_vote</tt><big>(</big><em>data</em>, <em>vote_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.Inserter.modify_vote" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for modify_vote</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="core_web_service.business_logic.insert.InvalidDataException">
+<em class="property">exception </em><tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">InvalidDataException</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.InvalidDataException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise when an insert is attempted with incorrect data.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="core_web_service.business_logic.insert.JsonInserter">
+<em class="property">class </em><tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">JsonInserter</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.JsonInserter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to insert objects based on json representations.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="core_web_service.business_logic.insert.XmlInserter">
+<em class="property">class </em><tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">XmlInserter</tt><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to insert objects based on xml representations.</p>
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_author">
+<tt class="descname">modify_author</tt><big>(</big><em>data</em>, <em>author_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify an author object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_comment">
+<tt class="descname">modify_comment</tt><big>(</big><em>data</em>, <em>comment_id=None</em>, <em>user_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a comment object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_esteem">
+<tt class="descname">modify_esteem</tt><big>(</big><em>data</em>, <em>esteem_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_esteem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify an esteem object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_keyword">
+<tt class="descname">modify_keyword</tt><big>(</big><em>data</em>, <em>keyword_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a keyword object according to the specified values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_papergroup">
+<tt class="descname">modify_papergroup</tt><big>(</big><em>data</em>, <em>papergroup_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_papergroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a papergroup object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_peerreview">
+<tt class="descname">modify_peerreview</tt><big>(</big><em>data</em>, <em>peer_review_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_peerreview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a peer review object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_peerreviewtemplate">
+<tt class="descname">modify_peerreviewtemplate</tt><big>(</big><em>data</em>, <em>template_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_peerreviewtemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a template object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_publication">
+<tt class="descname">modify_publication</tt><big>(</big><em>data</em>, <em>publication_id=None</em>, <em>requester=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a publication object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_rating">
+<tt class="descname">modify_rating</tt><big>(</big><em>data</em>, <em>rating_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a rating object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_reference_material">
+<tt class="descname">modify_reference_material</tt><big>(</big><em>data</em>, <em>material_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_reference_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a reference material object according to the specified value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="core_web_service.business_logic.insert.XmlInserter.modify_tag">
+<tt class="descname">modify_tag</tt><big>(</big><em>data</em>, <em>tag_id=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.XmlInserter.modify_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or modify a tag object according to the specified value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.insert.get_inserter">
+<tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">get_inserter</tt><big>(</big><em>content_type</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.get_inserter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an inserter based on the provided content-type.</p>
+<p>Factory function that returns a fitting parser based on the content-type that
+should be inserted.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>content_type: the content-type the user wants to insert - should be either</dt>
+<dd>xml or json.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>inserter: an inserter that can be used to insert the given format.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.insert.insert_bibtex_publication">
+<tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">insert_bibtex_publication</tt><big>(</big><em>bibtex</em>, <em>owner</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.insert_bibtex_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will insert a publication from a bibtex string.</p>
+<p>This function will parse the bibtex format and perform the following transformations:
+- Keywords will be transformed into keywords.
+- Each fields not suitable for the publication table will be inserted into a</p>
+<blockquote>
+<div>key-value-pair into the furtherfields table.</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>bibtex: the bibtex for an entry.
+owner: the user object that will insert the publication.</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="module-core_web_service.bibtex_parser.bibtex_parser">
+<span id="bibtex-parser"></span><h3>BibTeX-Parser<a class="headerlink" href="#module-core_web_service.bibtex_parser.bibtex_parser" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="core_web_service.bibtex_parser.bibtex_parser.BibtexParser">
+<em class="property">class </em><tt class="descclassname">core_web_service.bibtex_parser.bibtex_parser.</tt><tt class="descname">BibtexParser</tt><a class="headerlink" href="#core_web_service.bibtex_parser.bibtex_parser.BibtexParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class used to parse BibTeX entries to Python objects.</p>
+<p>Call bib_entry.parseString(string) to parse a single item.
+bib_entry.searchString(string) to parse multiple entries in a single string.</p>
+<dl class="method">
+<dt id="core_web_service.bibtex_parser.bibtex_parser.BibtexParser.parse_to_bibtex">
+<tt class="descname">parse_to_bibtex</tt><big>(</big><em>bibtex_string</em><big>)</big><a class="headerlink" href="#core_web_service.bibtex_parser.bibtex_parser.BibtexParser.parse_to_bibtex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will parse a supplied bibtex string to a dict.</p>
+<p>DEPRECATED: only used for testing purposes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.bibtex_parser.bibtex_parser.remove_parentheses">
+<tt class="descclassname">core_web_service.bibtex_parser.bibtex_parser.</tt><tt class="descname">remove_parentheses</tt><big>(</big><em>orig_string</em>, <em>loc</em>, <em>tokens</em><big>)</big><a class="headerlink" href="#core_web_service.bibtex_parser.bibtex_parser.remove_parentheses" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for remove_parentheses</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-core_web_service.business_logic.search">
+<span id="search"></span><h2>Search<a class="headerlink" href="#module-core_web_service.business_logic.search" title="Permalink to this headline">¶</a></h2>
+<p>This module implements the search functionality of the service.</p>
+<dl class="function">
+<dt id="core_web_service.business_logic.search.build_query">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">build_query</tt><big>(</big><em>search_query</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.build_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the query for a given dictionary.</p>
+<p>Will create a Q object for each query and return a list of these queries.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>search_query: a dictionary with <cite>search_term: search_value pairs</cite>.</dd>
+<dt>Returns:</dt>
+<dd>query: a list of Q-objects containing the query.</dd>
+<dt>Raises:</dt>
+<dd>AttributeError: when a search_value is not present for a search_term.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_publications_by_author">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_publications_by_author</tt><big>(</big><em>author</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_publications_by_author" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all publications that were written by the provided author.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_publications_by_authors">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_publications_by_authors</tt><big>(</big><em>authors</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_publications_by_authors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all publications that were written by one or more of the provided authors.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_publications_by_keyword">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_publications_by_keyword</tt><big>(</big><em>keyword</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_publications_by_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all publications with the associated keyword.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_publications_by_keywords">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_publications_by_keywords</tt><big>(</big><em>keywords</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_publications_by_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all publications that have one or more of the provided keywords.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_publications_by_tag">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_publications_by_tag</tt><big>(</big><em>tag</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_publications_by_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all publications with the associated tag.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_publications_by_tags">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_publications_by_tags</tt><big>(</big><em>tags</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_publications_by_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all publications that have one or more of the provided tags.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_related_keywords">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_related_keywords</tt><big>(</big><em>keyword</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_related_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return keywords that were used as well, when the provided keyword was used.
+Sorts keywords according to their number of occurences in other publications.</p>
+<dl class="docutils">
+<dt>Argument:</dt>
+<dd>keyword: a <a class="reference internal" href="model.html#core_web_service.models.Keyword" title="core_web_service.models.Keyword"><tt class="xref py py-class docutils literal"><span class="pre">core_web_service.models.Keyword</span></tt></a> object.</dd>
+<dt>Returns:</dt>
+<dd>A sorted list of keywords according to their number of occurences</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_related_publications">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_related_publications</tt><big>(</big><em>publication</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_related_publications" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a set of publications that are related to the argument.</p>
+<p>Will search publications that use the same tags, keywords or are written by 
+the same author.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>publication: A publication that is used as base for relations.</dd>
+<dt>Returns:</dt>
+<dd>Set: a set of publications that might be related to the current.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_related_tags">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_related_tags</tt><big>(</big><em>tag</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_related_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return tags that were used as well, when the provided tag was used.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_related_users_for_keyword">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_related_users_for_keyword</tt><big>(</big><em>keyword</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_related_users_for_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of users that research in the given area.</p>
+<p>Matching is performed based on keyword and researcharea title.</p>
+<dl class="docutils">
+<dt>Argument:</dt>
+<dd>keyword: a <a class="reference internal" href="model.html#core_web_service.models.Keyword" title="core_web_service.models.Keyword"><tt class="xref py py-class docutils literal"><span class="pre">core_web_service.models.Keyword</span></tt></a> object.</dd>
+<dt>Returns:</dt>
+<dd>A sorted list of users according to their number of occurences</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.get_related_users_for_publication">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_related_users_for_publication</tt><big>(</big><em>publication</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_related_users_for_publication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of users that might be intersted in the paper.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list of users.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.search_authors">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">search_authors</tt><big>(</big><em>search_items</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.search_authors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search authors matching the provided arguments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.search_keywords">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">search_keywords</tt><big>(</big><em>search_items</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.search_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search keywords matching the provided arguements.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>search_items: a dictionary containing the search terms.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.search_publications">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">search_publications</tt><big>(</big><em>publication_terms=None</em>, <em>author_terms=None</em>, <em>keyword_terms=None</em>, <em>tag_terms=None</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.search_publications" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return publications that match the provided conditions.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>publication_terms: the terms that will be searched in a the publication table.
+author_terms: terms that will be searched in the author table.
+keyword_terms: terms that will be searched in the keyword table.
+tag_terms: terms that will be searched in the tag table.</dd>
+<dt>Returns:</dt>
+<dd>A list of publications that match all given terms across all tables.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.search_tags">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">search_tags</tt><big>(</big><em>search_items</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.search_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search tags matching the provided arguments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.business_logic.search.search_user">
+<tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">search_user</tt><big>(</big><em>search_items</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.search_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return users that match the provided conditions.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Business-Logic layer</a><ul>
+<li><a class="reference internal" href="#module-core_web_service.business_logic.access">Access</a></li>
+<li><a class="reference internal" href="#module-core_web_service.business_logic.insert">Insertion</a><ul>
+<li><a class="reference internal" href="#module-core_web_service.bibtex_parser.bibtex_parser">BibTeX-Parser</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-core_web_service.business_logic.search">Search</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="model.html"
+                        title="previous chapter">Model layer</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/logic.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="model.html" title="Model layer"
+             >previous</a> |</li>
+        <li><a href="index.html">Core Knowledge Platform 2.0 v0 documentation</a> &raquo;</li>
+          <li><a href="impl.html" >Implementation:</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Florian Bergmann.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
