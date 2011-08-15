@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>View layer &mdash; Core Knowledge Platform 2.0 v0 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -19,10 +19,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="search" title="Search" href="search.html" />
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="Core Knowledge Platform 2.0 v0 documentation" href="index.html" />
     <link rel="up" title="Implementation:" href="impl.html" />
     <link rel="next" title="Model layer" href="model.html" />
@@ -62,6 +61,277 @@ taken.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">The functions in this layer will perform the access validations.</p>
 </div>
+<span class="target" id="module-core_web_service.views"></span><dl class="function">
+<dt id="core_web_service.views.AuthorDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">AuthorDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.AuthorDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to handle requests directet to a particular author resource.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.Authors">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">Authors</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.Authors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to handle requests directed to the Authors resource.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.CommentDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">CommentDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.CommentDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles requests for a specific comment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.Comments">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">Comments</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.Comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles request for lists of comments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.EsteemDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">EsteemDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.EsteemDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles requests for esteem values of a user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.Keywords">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">Keywords</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.Keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of keywords.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="core_web_service.views.Overview">
+<em class="property">class </em><tt class="descclassname">core_web_service.views.</tt><tt class="descname">Overview</tt><a class="headerlink" href="#core_web_service.views.Overview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays an overview over the webservice.</p>
+<dl class="staticmethod">
+<dt id="core_web_service.views.Overview.GET">
+<em class="property">static </em><tt class="descname">GET</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#core_web_service.views.Overview.GET" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the overview template.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PaperGroupDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PaperGroupDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PaperGroupDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display information about a specific papergroup.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PaperGroups">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PaperGroups</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PaperGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display an overview over the available papergroups.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PeerReviewDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PeerReviewDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PeerReviewDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST request for a specific peer review.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PeerReviewTemplateDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PeerReviewTemplateDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PeerReviewTemplateDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST requests for a specific template.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PeerReviewTemplates">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PeerReviewTemplates</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PeerReviewTemplates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST request for lists of templates.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PeerReviews">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PeerReviews</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PeerReviews" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of peer reviews.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.PublicationDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">PublicationDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.PublicationDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to handle rendering of the publication detail view.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.Publications">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">Publications</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.Publications" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to handle rendering of the publication list view.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.RatingDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">RatingDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.RatingDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST requests for ratings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.ReferenceMaterialDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">ReferenceMaterialDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.ReferenceMaterialDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST requests for reference material.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.ReferenceMaterials">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">ReferenceMaterials</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.ReferenceMaterials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle Rest requests for reference materials.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.ResearchAreas">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">ResearchAreas</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.ResearchAreas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rest interface for research areas.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="core_web_service.views.RestView">
+<em class="property">class </em><tt class="descclassname">core_web_service.views.</tt><tt class="descname">RestView</tt><a class="headerlink" href="#core_web_service.views.RestView" title="Permalink to this definition">¶</a></dt>
+<dd><p>A superclass for RESTlike views.</p>
+<p>The class will call the appropriate method of a subclass based on the
+HTTP-request: get, post, put, ...</p>
+<p>Subclasses need to set the allowed methods in a tuple <em>allowed_methods</em>.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>allowed_methods: lists the HTTP-methods a subclass will respond to.
+OK_STATUS: the HTTP-ok status code (200).
+CREATED_STATUS: the HTTP-created status code (201).
+NO_CONTENT_STATUS: the HTTP-no-content status code (204).
+BAD_REQUEST_STATUS: the HTTP-bad-request status code (400).
+UNAUTHORIZED_STATUS: the HTTP-unauthorized status code (401).
+FORBIDDEN_STATUS: the HTTP-forbidden status code (403).
+METHOD_NOT_ALLOWED_STATUS: the HTTP-method-not-allowed status (405).
+UNSUPPORTED_MEDIA_TYPE_STATUS: the HTTP-unsupported-media type status code (415).
+INTERNAL_SERVER_ERROR_STATUS: the HTTP-internal-server-error status code (500).</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.get_content_type">
+<em class="property">static </em><tt class="descname">get_content_type</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.get_content_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the content type of a request.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.insert_object">
+<em class="property">static </em><tt class="descname">insert_object</tt><big>(</big><em>request</em>, <em>name</em>, <em>id=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.insert_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert or update an object of type name into the database.</p>
+<dl class="docutils">
+<dt>Arguemnts:</dt>
+<dd>request: The django request object.
+name: the name of the object to be inserted.
+id: the id of an existing object that should be updated.
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: any further arguments to the modify_&lt;name&gt; function.</dd>
+<dt>Returns:</dt>
+<dd>response: A HttpResponse object indicating whether the insertion was
+successful or not.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.method_not_allowed">
+<em class="property">static </em><tt class="descname">method_not_allowed</tt><big>(</big><em>method</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.method_not_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a response indicating that the called method is not allowed.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>method: The HTTP method used to call the service.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.render_response">
+<em class="property">static </em><tt class="descname">render_response</tt><big>(</big><em>request</em>, <em>template_name</em>, <em>dictionary=None</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.render_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render an appropriate template an returns the response object.</p>
+<p>Will determine which template to use based on the HTTP accept header.
+Loads the type of template for the given name and will render it.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>request: the django request object.
+template_name: the name of the template that needs to be loaded.
+dictionary: a dictionary containing specific values of the subclassthat need to be replaced in the template.</dd>
+<dt>Returns:</dt>
+<dd>response: the response object with the rendered template.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.unsupported_format_requested">
+<em class="property">static </em><tt class="descname">unsupported_format_requested</tt><big>(</big><em>formats</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.unsupported_format_requested" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a message stating that none of the accepted formats can be returned
+by the service.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>formats: the format that was requests to be returned by the service.</dd>
+<dt>Returns:</dt>
+<dd>HttpResponse: A response indicating that the media type is not supported.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.unsupported_format_sent">
+<em class="property">static </em><tt class="descname">unsupported_format_sent</tt><big>(</big><em>sent_format</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.unsupported_format_sent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a message stating that the sent format can not be interpreted by 
+the web service.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>sent_format: the format sent by a request.</dd>
+<dt>Returns:</dt>
+<dd>response: HttpResponse indicating that the sent format is not supported.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="core_web_service.views.RestView.validate_sent_format">
+<em class="property">static </em><tt class="descname">validate_sent_format</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#core_web_service.views.RestView.validate_sent_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether a sent format is accepted by the web service.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>request: the request objects received from Django.</dd>
+<dt>Returns:</dt>
+<dd>True: The format is accepted.
+False: The format is not accepted.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.TagDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">TagDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.TagDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST requests for a specific tag.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.Tags">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">Tags</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.Tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST requests for tags.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.UserDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">UserDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.UserDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display user details.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.Users">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">Users</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.Users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to create user accounts.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.VoteDetail">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">VoteDetail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.VoteDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle REST requests for votes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.login">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">login</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a user in.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="core_web_service.views.logout">
+<tt class="descclassname">core_web_service.views.</tt><tt class="descname">logout</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#core_web_service.views.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a user out.</p>
+</dd></dl>
+
 </div>
 
 
@@ -78,7 +348,7 @@ taken.</p>
                         title="next chapter">Model layer</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/view.txt"
+    <li><a href="sources/view.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
