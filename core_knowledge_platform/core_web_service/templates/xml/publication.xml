@@ -73,12 +73,12 @@
     <ratings>
         {% for rating in publication.rating_set.all %}
         <rating>
-            <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}"/>
+            <atom:link rel="rating" type="application/xml" href="http://{{ url }}/rating/{{ rating.id }}">{{ rating.rating }}</atom:link>
         </rating>
         {% endfor %}
     </ratings>
     <owner>
-        <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}" />
+        <atom:link rel="owner" type="application/xml" href="http://{{ url }}/user/{{ publication.owner.id }}">{{ publication.owner.username }}</atom:link>
     </owner>
     {# Publication is under review #}
     {% if publication.review_status == 3 %}
@@ -90,7 +90,7 @@
                     <authors>    
                         {% for author in publication.authors.all %}
                         <author>
-                            <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
+                            <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}">{{ author.name }}</atom:link>
                         </author>
                         {% endfor %}
                     </authors>
@@ -101,7 +101,7 @@
         <authors>    
             {% for author in publication.authors.all %}
             <author>
-                <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}" />
+                <atom:link rel="author" type="application/xml" href="http://{{ url }}/author/{{ author.id }}">{{ author.name }}</atom:link>
             </author>
             {% endfor %}
         </authors>
@@ -109,21 +109,21 @@
     <comments>    
         {% for comment in publication.comment_set.all %}
         <comment>
-            <atom:link rel="comment" type="application/xml" href="http://{{ url }}/comment/{{ comment.id }}" />
+            <atom:link rel="comment" type="application/xml" href="http://{{ url }}/comment/{{ comment.id }}">{{ comment.title }}</atom:link>
         </comment>
         {% endfor %}
     </comments>
     <tags>
         {% for tag in publication.tags.all %}
         <tag>
-            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" ></atom:link>
+            <atom:link rel="tag" type="application/xml" href="http://{{ url }}/tag/{{ tag.id }}" >{{ tag.name }}</atom:link>
         </tag>
         {% endfor %}
     </tags>
     <keywords>
         {% for keyword in publication.keywords.all %}
         <keyword>
-            <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}" ></atom:link>
+            <atom:link rel="keyword" type="application/xml" href="http://{{ url }}/keyword/{{ keyword.id }}" >{{ keyword.keyword }}</atom:link>
         </keyword>
         {% endfor %}
     </keywords>

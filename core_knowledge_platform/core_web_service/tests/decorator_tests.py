@@ -3,7 +3,7 @@ from django.utils import unittest
 from django.contrib.auth.models import User
 from core_web_service.models import Publication
 from core_web_service.business_logic.metadata_decorators import OaiPmhDecorator
-from oaipmh.error import IdDoesNotExistError
+from core_web_service.business_logic.insert import InvalidDataException
 
 
 class DecoratorTests(unittest.TestCase):
@@ -31,4 +31,4 @@ class DecoratorTests(unittest.TestCase):
 
     def test_invalid_doi(self):
         self.publication.doi = 'wrongdoi'
-        self.assertRaises(IdDoesNotExistError ,self.decorator.decorate_publication, self.publication)
+        self.assertRaises(InvalidDataException, self.decorator.decorate_publication, self.publication)
