@@ -5,7 +5,7 @@
         <atom:link rel="user" type="application/xml" href="http://{{ url }}/user/{{ peerreview.peer_reviewer.id }}"/>
     </peerreviewer>
     <publication>
-        <atom:link rel="publicaiton" type="application/xml" href="http://{{ url }}/publication/{{ peerreview.publication.id }}"/>
+        <atom:link rel="publication" type="application/xml" href="http://{{ url }}/publication/{{ peerreview.publication.id }}"/>
     </publication>
     <template>
         <atom:link rel="template" type="application/xml" href="http://{{ url }}/peerreviewtemplate/{{ peerreview.template.id }}"/>

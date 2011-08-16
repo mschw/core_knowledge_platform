@@ -134,8 +134,15 @@
         </referencematerial>
         {% endfor %}
     </referencematerials>
+    <peerreviews>
+        {% for peerreview in publication.peerreview_set.all %}
+        <peerreview>
+            <atom:link rel="peerreview" type="application/xml" href="http://{{ url }}/peerreview/{{ peerreview.id }}"/>
+        </peerreview>
+        {% endfor %}
+    </peerreviews>
     <fields>
-        {% for field in publication.furtherfield.all %}
+        {% for field in publication.furtherfield_set.all %}
             <{{ field.key }}>
             {{ field.value }}
             </{{ field.key }}>

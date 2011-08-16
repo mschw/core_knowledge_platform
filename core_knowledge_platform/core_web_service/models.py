@@ -229,14 +229,16 @@ class Rating(models.Model):
 
 
 class PaperGroup(models.Model):
-    """Store an editor for a certain group."""
+    """Represents a peer review group.
+    
+    These groups will peer review the publications."""
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     blind_review = models.BooleanField()
     editors = models.ManyToManyField(User, related_name='papergroup_editors')
     referees = models.ManyToManyField(User, related_name='papergroup_referees', null=True, blank=True)
-    publications = models.ManyToManyField(Publication)
-    tags = models.ManyToManyField(Tag)
+    publications = models.ManyToManyField(Publication, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     def __unicode__(self):
         return u'%s - %s' % (self.id, self.title)
