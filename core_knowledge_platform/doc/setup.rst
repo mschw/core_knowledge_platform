@@ -80,7 +80,12 @@ https://docs.djangoproject.com/en/dev/howto/deployment/modwsgi/
 Create a new user for the MySQL database and change the appropriate values in
 the ``settings.py`` file.
 
-9. Template paths
------------------
+9. Adjust paths
+---------------
 
 Adjust the template paths in the settings.py file to point to the directory of the templates.
+
+Setup the staticfiles module and the web server to serve static files:
+
+https://docs.djangoproject.com/en/dev/howto/static-files/
+
