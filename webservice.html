@@ -67,31 +67,103 @@ all queries to the web service <em>must</em> set the following headers:</p>
 <span id="id1"></span><h2>Data retrieval<a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
 <p>To obtain data from the service issue a GET request to one of the following addresses:</p>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">publication/</span></tt></dt>
-<dd>Retrieve a list of all publications.</dd>
-<dt><tt class="docutils literal"><span class="pre">publication/{id}</span></tt></dt>
-<dd>Retrieve all information for a specific publication.</dd>
 <dt><tt class="docutils literal"><span class="pre">authors/</span></tt></dt>
 <dd>Retrieve a list of all authors.</dd>
 <dt><tt class="docutils literal"><span class="pre">authors/{id}</span></tt></dt>
 <dd>Retrieve all information for a specific authors.</dd>
+<dt><tt class="docutils literal"><span class="pre">comment/</span></tt></dt>
+<dd>Retrieve a list of all comments.</dd>
 <dt><tt class="docutils literal"><span class="pre">comment/{id}</span></tt></dt>
 <dd>Retrieve a specific comment.</dd>
+<dt><tt class="docutils literal"><span class="pre">comment/publication/{id}</span></tt></dt>
+<dd>Retrieve a list of all comments for a certain publication.</dd>
+<dt><tt class="docutils literal"><span class="pre">esteem/{id}</span></tt></dt>
+<dd>Retrieve a specific esteem object.</dd>
+<dt><tt class="docutils literal"><span class="pre">keyword/</span></tt></dt>
+<dd>Retrieve a list of all keywords.</dd>
+<dt><tt class="docutils literal"><span class="pre">keyword/{id}</span></tt></dt>
+<dd>Retrieve a specific keyword.</dd>
+<dt><tt class="docutils literal"><span class="pre">keyword/related/{id}</span></tt></dt>
+<dd>Retrieve a list of keywords related to the keyword with the provided id.</dd>
+<dt><tt class="docutils literal"><span class="pre">papergroup/</span></tt></dt>
+<dd>Retrieve a list of papergroups.</dd>
 <dt><tt class="docutils literal"><span class="pre">peerreviewtemplate/</span></tt></dt>
 <dd>Retrieve a list of available peer review templates.</dd>
 <dt><tt class="docutils literal"><span class="pre">peerreviewtemplate/{id}</span></tt></dt>
 <dd>Retrieve a concrete peer review template.</dd>
+<dt><tt class="docutils literal"><span class="pre">peerreview/publication/{id}</span></tt></dt>
+<dd>Retrieve all peer review for a specific publication.</dd>
+<dt><tt class="docutils literal"><span class="pre">publication/</span></tt></dt>
+<dd>Retrieve a list of all publications.</dd>
+<dt><tt class="docutils literal"><span class="pre">publication/{id}</span></tt></dt>
+<dd>Retrieve all information for a specific publication.</dd>
+<dt><tt class="docutils literal"><span class="pre">publication/related/{id}</span></tt></dt>
+<dd>Retrieve a list of publications probably related to the one with the
+provided id.</dd>
+<dt><tt class="docutils literal"><span class="pre">rating/</span></tt></dt>
+<dd>Retrieve a list of all ratings.</dd>
+<dt><tt class="docutils literal"><span class="pre">rating/{id}</span></tt></dt>
+<dd>Retrieve a specific rating.</dd>
+<dt><tt class="docutils literal"><span class="pre">referencematerial/{id}</span></tt></dt>
+<dd>Retrieve a specific reference material.</dd>
+<dt><tt class="docutils literal"><span class="pre">researcharea/</span></tt></dt>
+<dd>Retrieve a list of all research areas.</dd>
+<dt><tt class="docutils literal"><span class="pre">researcharea/{id}</span></tt></dt>
+<dd>Retrieve a specific research area.</dd>
 <dt><tt class="docutils literal"><span class="pre">tag/</span></tt></dt>
 <dd>Retrieve a list of all tags.</dd>
 <dt><tt class="docutils literal"><span class="pre">tag/{id}</span></tt></dt>
 <dd>Retrieve a specific tag.</dd>
+<dt><tt class="docutils literal"><span class="pre">tag/related/{id}</span></tt></dt>
+<dd>Retrieve a list of tags probably related to the one with the provided id.</dd>
+<dt><tt class="docutils literal"><span class="pre">user/</span></tt></dt>
+<dd>Retrieve a list of all registered users in the system.</dd>
+<dt><tt class="docutils literal"><span class="pre">user/{id}</span></tt></dt>
+<dd>Retrieve a specific user.</dd>
+<dt><tt class="docutils literal"><span class="pre">user/related/publication/{id}</span></tt></dt>
+<dd>Retrieve users that might be related to a given publication.</dd>
+<dt><tt class="docutils literal"><span class="pre">user/login/</span></tt></dt>
+<dd>Log a user in.</dd>
+<dt><tt class="docutils literal"><span class="pre">user/logout/</span></tt></dt>
+<dd>Log a user out.</dd>
+<dt><tt class="docutils literal"><span class="pre">vote/</span></tt></dt>
+<dd>Retrieve a list of all votes.</dd>
+<dt><tt class="docutils literal"><span class="pre">vote/{id}</span></tt></dt>
+<dd>Retrieve a specific vote object.</dd>
 </dl>
-<p>These resources can be accessed without being logged in.
-The following resources require a user to be logged in:</p>
+<p>These resources can be accessed without being logged in.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The following resources require a user to be logged in and maybe have special privileges.</p>
+</div>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">papergroup/{id}</span></tt></dt>
+<dd>Retrieve a specific papergroup.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">only available to editors and referees.</p>
+</div>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">peerreview/{id}</span></tt></dt>
 <dd>Retrieve a concrete peer review.</dd>
 </dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">during the review process only available to editors and the referee that added the review.</p>
+</div>
+<div class="section" id="using-citeseerx-integration">
+<h3>Using CiteSeerX Integration<a class="headerlink" href="#using-citeseerx-integration" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to retrieve more information from CiteSeerX if the correct <em>DOI</em>
+is set in a publication object.</p>
+<p>To perform this retrieval issue a <tt class="docutils literal"><span class="pre">GET</span></tt> request for a specific publication
+with the following url:</p>
+<p><tt class="docutils literal"><span class="pre">publication/{id}/meta=True</span></tt></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Using the CiteSeerX bridge is very slow due to the CiteSeerX servers response time.</p>
+</div>
+</div>
 <div class="section" id="login-logout">
 <h3>Login &amp; Logout<a class="headerlink" href="#login-logout" title="Permalink to this headline">¶</a></h3>
 <p>If a resource requires a login the client can login via a <tt class="docutils literal"><span class="pre">POST</span></tt> request to
@@ -107,8 +179,10 @@ enough.</p>
 <h4>Publications<a class="headerlink" href="#publications" title="Permalink to this headline">¶</a></h4>
 <p>Just append key-value-pairs to the url according to the following schema:</p>
 <p><tt class="docutils literal"><span class="pre">/publication/{name=value&amp;name2=value2}/author/{name=value&amp;...}/keyword/{..}</span></tt></p>
-<p>Sub-searches will be executed via OR:
-all publications with name = value OR name2=value2</p>
+<p>Sub-searches will be executed via <em>OR</em>:
+all publications with name = value <em>OR</em> name2=value2</p>
+<p>If you want to perform <em>AND</em> searches provide the following parameter:
+<tt class="docutils literal"><span class="pre">searchtype=and</span></tt></p>
 <p>The results of the sub-searches will be concatenated using the AND operator:
 all publications where AND where the authors is AND where the keyword is</p>
 </div>
@@ -124,13 +198,24 @@ all publications where AND where the authors is AND where the keyword is</p>
 <p>When inserting data it is important to distinguish between an initial insertion
 of a modification of data:</p>
 <div class="section" id="initial-insert">
-<h3>Initial insert<a class="headerlink" href="#initial-insert" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3>Initial insert<a class="headerlink" href="#initial-insert" title="Permalink to this headline">¶</a></h3>
 <p>The initial insertion is performed via <tt class="docutils literal"><span class="pre">POST</span></tt> requests to the root urls of
 a resource.</p>
 <p>To insert a publication <tt class="docutils literal"><span class="pre">POST</span></tt> the appropriate data to:</p>
 <p><tt class="docutils literal"><span class="pre">/publication/</span></tt></p>
 <p>To insert an author <tt class="docutils literal"><span class="pre">POST</span></tt> the appropriate data to:</p>
 <p><tt class="docutils literal"><span class="pre">/author/</span></tt></p>
+<p>The other urls to post to are as follows:</p>
+<p><tt class="docutils literal"><span class="pre">referencematerial/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">comment/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">keyword/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">papergroup/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">peerreviewtemplate/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">rating/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">researcharea/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">tag/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">user/</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">vote/</span></tt></p>
 <p>This will insert a new object into the database and return the location the
 object can be retrieved from.</p>
 </div>
@@ -140,6 +225,12 @@ object can be retrieved from.</p>
 resource url.</p>
 <p>To update an existing publication the <tt class="docutils literal"><span class="pre">PUT</span></tt> request needs to be sent to:</p>
 <p><tt class="docutils literal"><span class="pre">/publication/{id}</span></tt></p>
+<p>The urls for the other resources follow the same schema - see <a class="reference internal" href="#initial-insert">initial_insert</a></p>
+</div>
+<div class="section" id="deleting-data">
+<h3>Deleting data<a class="headerlink" href="#deleting-data" title="Permalink to this headline">¶</a></h3>
+<p>To delete data the <tt class="docutils literal"><span class="pre">DELETE</span></tt> request is used - it will be sent to the same
+resource urls as the <tt class="docutils literal"><span class="pre">PUT</span></tt> request.</p>
 </div>
 </div>
 </div>
@@ -154,6 +245,7 @@ resource url.</p>
   <ul>
 <li><a class="reference internal" href="#">Overview</a><ul>
 <li><a class="reference internal" href="#data-retrieval">Data retrieval</a><ul>
+<li><a class="reference internal" href="#using-citeseerx-integration">Using CiteSeerX Integration</a></li>
 <li><a class="reference internal" href="#login-logout">Login &amp; Logout</a></li>
 <li><a class="reference internal" href="#searching">Searching</a><ul>
 <li><a class="reference internal" href="#publications">Publications</a></li>
@@ -165,6 +257,7 @@ resource url.</p>
 <li><a class="reference internal" href="#data-insertion">Data Insertion</a><ul>
 <li><a class="reference internal" href="#initial-insert">Initial insert</a></li>
 <li><a class="reference internal" href="#updating-data">Updating data</a></li>
+<li><a class="reference internal" href="#deleting-data">Deleting data</a></li>
 </ul>
 </li>
 </ul>
