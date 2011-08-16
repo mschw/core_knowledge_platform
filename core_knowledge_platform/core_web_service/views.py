@@ -383,7 +383,7 @@ class EsteemDetail(RestView):
     allowed_methods = ("GET", "PUT")
     
     @staticmethod
-    def GET(request, esteem_id=None, user_id=None):
+    def GET(request, esteem_id=None):
         """Return esteem for a certain user.
         
         Attributes:
@@ -395,15 +395,8 @@ class EsteemDetail(RestView):
                 esteem = Esteem.objects.get(id=esteem_id)
                 values = {'esteem': esteem}
                 response = RestView.render_response(request, 'esteem', values)
-            if user_id:
-                esteem = Esteem.objects.filter(user__id=user_id)
-                values = {'esteem': esteem}
-                response = RestView.render_response(request, 'esteem', values)
-        except User.DoesNotExist:
-            response = HttpResponse("The user with ID %s does not exist." % (user_id))
-            response.status_code = RestView.NOT_FOUND_STATUS
         except Esteem.DoesNotExist:
-            response = HttpResponse("No esteem found for user with ID %s." % (user_id))
+            response = HttpResponse("No esteem found for esteem with ID %s." % (esteem_id))
             response.status_code = RestView.NOT_FOUND_STATUS
         return response
 

@@ -13,6 +13,7 @@ Contents:
 
     webservice.rst
     impl.rst
+    setup.rst
 
 Indices and tables
 ==================
