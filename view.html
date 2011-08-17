@@ -213,10 +213,13 @@ INTERNAL_SERVER_ERROR_STATUS: the HTTP-internal-server-error status code (500).<
 <dd><p>Insert or update an object of type name into the database.</p>
 <dl class="docutils">
 <dt>Arguemnts:</dt>
-<dd>request: The django request object.
-name: the name of the object to be inserted.
-id: the id of an existing object that should be updated.
-<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: any further arguments to the modify_&lt;name&gt; function.</dd>
+<dd><p class="first">request: The django request object.
+name: the name of the object to be inserted.</p>
+<blockquote>
+<div>Must match the name of the modify_&lt;name&gt; inserter function.</div></blockquote>
+<p class="last">id: the id of an existing object that should be updated.
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: any further arguments to the modify_&lt;name&gt; function.</p>
+</dd>
 <dt>Returns:</dt>
 <dd>response: A HttpResponse object indicating whether the insertion was
 successful or not.</dd>

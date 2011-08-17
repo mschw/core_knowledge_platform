@@ -24,6 +24,7 @@
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="Core Knowledge Platform 2.0 v0 documentation" href="index.html" />
     <link rel="up" title="Implementation:" href="impl.html" />
+    <link rel="next" title="Setup the service" href="setup.html" />
     <link rel="prev" title="Model layer" href="model.html" /> 
   </head>
   <body>
@@ -36,6 +37,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup the service"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="model.html" title="Model layer"
              accesskey="P">previous</a> |</li>
@@ -95,7 +99,7 @@ user: a user object.</dd>
 <dl class="function">
 <dt id="core_web_service.business_logic.access.validate_editor_for_publication">
 <tt class="descclassname">core_web_service.business_logic.access.</tt><tt class="descname">validate_editor_for_publication</tt><big>(</big><em>user</em>, <em>publication</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.access.validate_editor_for_publication" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return true of the user is an editor and the publication is being
+<dd><p>Return true if the user is an editor and the publication is being
 reviewed by a group the user is an editor of.</p>
 </dd></dl>
 
@@ -222,7 +226,8 @@ new data.</p>
 <dl class="class">
 <dt id="core_web_service.business_logic.insert.JsonInserter">
 <em class="property">class </em><tt class="descclassname">core_web_service.business_logic.insert.</tt><tt class="descname">JsonInserter</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.insert.JsonInserter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to insert objects based on json representations.</p>
+<dd><p>Example of second type of inserter.</p>
+<p>NOT IMPLEMENTED.</p>
 </dd></dl>
 
 <dl class="class">
@@ -441,6 +446,14 @@ the same author.</p>
 <dt id="core_web_service.business_logic.search.get_related_tags">
 <tt class="descclassname">core_web_service.business_logic.search.</tt><tt class="descname">get_related_tags</tt><big>(</big><em>tag</em><big>)</big><a class="headerlink" href="#core_web_service.business_logic.search.get_related_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return tags that were used as well, when the provided tag was used.</p>
+<p>Sorts related tags by the number of publications they are used in in 
+association with the provided tag.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>tag: the tag for which related tags shall be returned.</dd>
+<dt>Returns:</dt>
+<dd>A list of tags.</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -534,6 +547,9 @@ tag_terms: terms that will be searched in the tag table.</dd>
   <h4>Previous topic</h4>
   <p class="topless"><a href="model.html"
                         title="previous chapter">Model layer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="setup.html"
+                        title="next chapter">Setup the service</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="sources/logic.txt"
@@ -565,6 +581,9 @@ tag_terms: terms that will be searched in the tag table.</dd>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup the service"
+             >next</a> |</li>
         <li class="right" >
           <a href="model.html" title="Model layer"
              >previous</a> |</li>
