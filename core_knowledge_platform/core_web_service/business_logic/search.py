@@ -4,7 +4,9 @@ from core_web_service.models import ResearchArea
 from core_web_service.models import UserProfile
 from django.db.models import Q
 from django.http import QueryDict
+from django.core.exceptions import FieldError
 from core_web_service.models import Author, Publication, Keyword
+from core_web_service.business_logic.insert import InvalidDataException
 import pdb
 import operator
 from django.contrib.auth.models import User
@@ -58,12 +60,26 @@ def _get_search_type(search_items):
     return (search_type, search_items)
 
 def _perform_search(search_class, search_type, query):
-    """Will perform a search on the class with the given search_type."""
-    if search_type == 'and':
-        result = search_class.objects.filter(reduce(operator.and_, query))
-    else:
-        result = search_class.objects.filter(reduce(operator.or_, query))
-    return result
+    """Will perform a search on the class with the given search_type.
+    
+    Arguments:
+        search_class: The model class the search is performed on.
+        search_type: the type of search: and/or
+        query: the query build by the build_query function
+    
+    Returns:
+        The results of the raise
+    
+    Raises:
+        InvalidDataException when a field does not exist in the model."""
+    try:
+        if search_type == 'and':
+            result = search_class.objects.filter(reduce(operator.and_, query))
+        else:
+            result = search_class.objects.filter(reduce(operator.or_, query))
+        return result
+    except FieldError, e:
+        raise InvalidDataException(e.message)
 
 def search_authors(search_items):
     """Search authors matching the provided arguments."""
@@ -142,7 +158,16 @@ def search_user(search_items):
     return result
 
 def get_related_tags(tag):
-    """Return tags that were used as well, when the provided tag was used."""
+    """Return tags that were used as well, when the provided tag was used.
+    
+    Sorts related tags by the number of publications they are used in in 
+    association with the provided tag.
+    
+    Arguments:
+        tag: the tag for which related tags shall be returned.
+    
+    Returns:
+        A list of tags."""
     publication_with_tag = Publication.objects.filter(tags__id__in=[tag.id])
     relevance_tags = dict()
     for publication in publication_with_tag:

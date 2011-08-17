@@ -1,3 +1,5 @@
+"""Module to act upon receiving signals from the django framework."""
+
 import pdb
 import logging
 from django.contrib.auth.models import Group
@@ -9,9 +11,6 @@ from core_web_service.models import Publication
 from core_web_service.models import Rating
 
 logger = logging.getLogger('myproject.custom')
-
-
-"""Module to act upon receiving signals from the django framework."""
 
 @receiver(post_save, sender=PaperGroup)
 def handle_assignment_to_papergroup_groups(sender, **kwargs):
@@ -30,7 +29,7 @@ def handle_assignment_to_papergroup_groups(sender, **kwargs):
 
 @receiver(pre_save, sender=UserProfile)
 def automatically_create_esteem_for_new_user(sender, **kwargs):
-    """docstring for automatically_create_esteem_for_new_user"""
+    """Create an esteem value for a user if it does not exist."""
     user_profile = kwargs['instance']
     try:
         esteem = user_profile.esteem
@@ -41,12 +40,13 @@ def automatically_create_esteem_for_new_user(sender, **kwargs):
 
 @receiver(pre_save, sender=Publication)
 def calculate_average_rating(sender, **kwargs):
-    """docstring for calculate_average_rating"""
+    """Update the average rating of a publication."""
     publication = kwargs['instance']
     publication.average_rating = publication._calculate_average_rating()
 
 @receiver(post_save, sender=Rating)
 def recalculate_average_rating(sender, **kwargs):
+    """Update the average rating of a publication."""
     rating = kwargs['instance']
     publication = rating.publication
     publication.save()

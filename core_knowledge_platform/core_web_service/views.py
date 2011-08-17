@@ -211,6 +211,7 @@ class RestView(object):
         Arguemnts:
             request: The django request object.
             name: the name of the object to be inserted.
+                Must match the name of the modify_<name> inserter function.
             id: the id of an existing object that should be updated.
             **kwargs: any further arguments to the modify_<name> function.
 
@@ -254,14 +255,19 @@ class Authors(RestView):
         If queried with parameters, a search will be performed.
         
         """
-        get_parameters = request.GET
-        if get_parameters:
-            author_list = search.search_authors(get_parameters)
-        else:
-            author_list = Author.objects.all()
-        values = {'author_list': author_list}
-        response = RestView.render_response(request, 'authors', values)
-        return response
+        try:
+            get_parameters = request.GET
+            if get_parameters:
+                author_list = search.search_authors(get_parameters)
+            else:
+                author_list = Author.objects.all()
+            values = {'author_list': author_list}
+            response = RestView.render_response(request, 'authors', values)
+            return response
+        except InvalidDataException, e:
+            response = HttpResponse(e)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
 
     @staticmethod
     @csrf_exempt
@@ -426,12 +432,21 @@ class Keywords(RestView):
     
     @staticmethod
     def related_keywords(request, keyword_id):
-        """Return keywords related to the provided one."""
-        keyword = Keyword.objects.get(id=keyword_id)
-        keywords = search.get_related_keywords(keyword)
-        values = {'keyword': keywords}
-        response = RestView.render_response(request, 'keyword', values)
-        return response
+        """Return keywords related to the provided one.
+        
+        If queried with parameters a search will be performed.
+        
+        """
+        try:
+            keyword = Keyword.objects.get(id=keyword_id)
+            keywords = search.get_related_keywords(keyword)
+            values = {'keyword': keywords}
+            response = RestView.render_response(request, 'keyword', values)
+            return response
+        except InvalidDataException, e:
+            response = HttpResponse(e)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
 
     @staticmethod
     @csrf_exempt
@@ -626,34 +641,44 @@ class Publications(RestView):
         
         If called with a query string the publications will be searched,
         otherwise all publications will be returned."""
-        pub_parameters = None
-        auth_parameters = None
-        key_parameters = None
-        tag_parameters = None
-        if pub_search:
-            pub_parameters = QueryDict(pub_search)
-        if auth_search:
-            auth_parameters = QueryDict(auth_search)
-        if key_search:
-            key_parameters = QueryDict(key_search)
-        if tag_search:
-            tag_parameters = QueryDict(tag_search)
-        publication_list = search.search_publications(pub_parameters, auth_parameters,
-                key_parameters, tag_parameters)
-        if not access.validate_user_is_editor(request.user):
-            publication_list = publication_list.exclude(review_status=Publication.IN_REVIEW_STATUS)
-        values = {'publication_list': publication_list}
-        response = RestView.render_response(request, 'publications', values)
-        return response
+        try:
+            pub_parameters = None
+            auth_parameters = None
+            key_parameters = None
+            tag_parameters = None
+            if pub_search:
+                pub_parameters = QueryDict(pub_search)
+            if auth_search:
+                auth_parameters = QueryDict(auth_search)
+            if key_search:
+                key_parameters = QueryDict(key_search)
+            if tag_search:
+                tag_parameters = QueryDict(tag_search)
+            publication_list = search.search_publications(pub_parameters, auth_parameters,
+                    key_parameters, tag_parameters)
+            if not access.validate_user_is_editor(request.user):
+                publication_list = publication_list.exclude(review_status=Publication.IN_REVIEW_STATUS)
+            values = {'publication_list': publication_list}
+            response = RestView.render_response(request, 'publications', values)
+            return response
+        except InvalidDataException, e:
+            response = HttpResponse(e)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
 
     @staticmethod
     def related_publications(request, publication_id):
         """Returns publications that are related to the current publication."""
-        publication = Publication.objects.get(id=publication_id)
-        publications = search.get_related_publications(publication)
-        values = {'publications': publications}
-        response = RestView.render_response(request, 'publications', values)
-        return response
+        try:
+            publication = Publication.objects.get(id=publication_id)
+            publications = search.get_related_publications(publication)
+            values = {'publications': publications}
+            response = RestView.render_response(request, 'publications', values)
+            return response
+        except InvalidDataException, e:
+            response = HttpResponse(e)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
 
     @staticmethod
     @csrf_exempt
@@ -920,11 +945,16 @@ class Tags(RestView):
     @staticmethod
     def related_tags(request, tag_id):
         """Return tags related to the tag with the given id."""
-        tag = Tag.objects.get(id=tag_id)
-        tags = search.get_related_tags(tag)
-        values = {'tags': tags}
-        response = RestView.render_response(request, 'tags', values)
-        return response
+        try:
+            tag = Tag.objects.get(id=tag_id)
+            tags = search.get_related_tags(tag)
+            values = {'tags': tags}
+            response = RestView.render_response(request, 'tags', values)
+            return response
+        except InvalidDataException, e:
+            response = HttpResponse(e)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
 
     @staticmethod
     @csrf_exempt
@@ -1052,15 +1082,20 @@ class Users(RestView):
     def GET(request, user_search=None):
         """Search for users."""
         # TODO - order by rating
-        if user_search:
-            query = QueryDict(user_search)
-            users = search.search_user(query)
-        else:
-            users = User.objects.all()
-        users = list(users)
-        users = sorted(users, key = lambda user: user.profile.esteem.value, reverse=True)
-        values = {'users': users}
-        return RestView.render_response(request, 'users', values)
+        try:
+            if user_search:
+                query = QueryDict(user_search)
+                users = search.search_user(query)
+            else:
+                users = User.objects.all()
+            users = list(users)
+            users = sorted(users, key = lambda user: user.profile.esteem.value, reverse=True)
+            values = {'users': users}
+            return RestView.render_response(request, 'users', values)
+        except InvalidDataException, e:
+            response = HttpResponse(e)
+            response.status_code = RestView.BAD_REQUEST_STATUS
+            return response
 
     @staticmethod
     def related_users_for_publication(request, publication_id):

@@ -521,7 +521,9 @@ class XmlInserter(Inserter):
 
 
 class JsonInserter(Inserter):
-    """Used to insert objects based on json representations."""
+    """Example of second type of inserter.
+
+    NOT IMPLEMENTED."""
     def __init__(self, arg):
         super(JsonInserter, self).__init__()
         self.arg = arg

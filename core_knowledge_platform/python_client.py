@@ -3,7 +3,8 @@ from urllib2 import HTTPError
 import timeit
 import time
 
-base_url = 'http://127.0.0.1:8000/'
+#base_url = 'http://127.0.0.1:8000/'
+base_url = 'http://192.168.56.101/'
 #base_url = 'http://du865.o1.gondor.io/'
 cookies = cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))

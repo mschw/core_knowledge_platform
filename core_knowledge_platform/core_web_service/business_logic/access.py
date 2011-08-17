@@ -61,7 +61,7 @@ def validate_referee_or_editor(user, papergroup_id):
     return valid
 
 def validate_editor_for_publication(user, publication):
-    """Return true of the user is an editor and the publication is being
+    """Return true if the user is an editor and the publication is being
     reviewed by a group the user is an editor of."""
     is_editor = False
     papergroups = PaperGroup.objects.filter(editors__id__in=[user.id])
