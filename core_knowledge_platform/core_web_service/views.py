@@ -440,7 +440,7 @@ class Keywords(RestView):
         try:
             keyword = Keyword.objects.get(id=keyword_id)
             keywords = search.get_related_keywords(keyword)
-            values = {'keyword': keywords}
+            values = {'keywords': keywords}
             response = RestView.render_response(request, 'keyword', values)
             return response
         except InvalidDataException, e:
@@ -672,7 +672,7 @@ class Publications(RestView):
         try:
             publication = Publication.objects.get(id=publication_id)
             publications = search.get_related_publications(publication)
-            values = {'publications': publications}
+            values = {'publication_list': publications}
             response = RestView.render_response(request, 'publications', values)
             return response
         except InvalidDataException, e:
